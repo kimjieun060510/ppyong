@@ -241,6 +241,17 @@ canvas#game {
   text-align: center;
 }
 
+.soak-panel {
+  background: #d7f4ff;
+}
+
+.countdown {
+  margin: 8px 0 0;
+  font-size: 64px;
+  line-height: 1;
+  color: #1a6a8a;
+}
+
 #controls {
   position: fixed;
   left: calc(8px + var(--safe-left));
@@ -273,6 +284,84 @@ canvas#game {
   position: relative;
 }
 
+.stick-dir {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.stick-dir.north {
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 14px solid rgba(255, 255, 255, 0.92);
+}
+
+.stick-dir.south {
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 14px solid rgba(255, 255, 255, 0.92);
+}
+
+.stick-dir.east {
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 14px solid rgba(255, 255, 255, 0.92);
+}
+
+.stick-dir.west {
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-right: 14px solid rgba(255, 255, 255, 0.92);
+}
+
+.stick-label {
+  position: absolute;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(43, 58, 36, 0.55);
+  pointer-events: none;
+  z-index: 1;
+  line-height: 1;
+}
+
+.stick-label.north {
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.stick-label.south {
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.stick-label.east {
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.stick-label.west {
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 #stick.active #stick-base {
   background: rgba(255, 255, 255, 0.32);
   border-color: rgba(255, 255, 255, 0.72);
@@ -290,6 +379,7 @@ canvas#game {
   top: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  z-index: 2;
 }
 
 #btn-hammer {

@@ -5,7 +5,9 @@
   const WORLD_H = 1320;
   const ROUND_TIME = 40;
   const TOTAL_ROUNDS = 6;
+  const SOAK_TIME = 5;
   const POND = { x: 430, y: 980, rx: 170, ry: 92 };
+  const SAFE_SPAWN = { x: WORLD_W * 0.55, y: WORLD_H * 0.42 };
 
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
@@ -28,6 +30,8 @@
     stick: document.getElementById("stick"),
     stickBase: document.getElementById("stick-base"),
     stickKnob: document.getElementById("stick-knob"),
+    soaked: document.getElementById("soaked"),
+    soakCount: document.getElementById("soak-count"),
   };
 
   const UPGRADE_DEFS = [
@@ -97,6 +101,7 @@
   let totalCaught = 0;
   let demoTime = 0;
   let hammerPulse = 0;
+  let soaked = 0;
 
   function rng(seed) {
     let s = seed >>> 0;
@@ -159,6 +164,10 @@
     if (name === "buy") tone(520, 0.16, "triangle", 0.05, 780);
     if (name === "miss") tone(180, 0.14, "sine", 0.04, 90);
     if (name === "swing") tone(240, 0.06, "triangle", 0.03, 120);
+    if (name === "splash") {
+      tone(90, 0.22, "sine", 0.06, 40);
+      tone(220, 0.16, "triangle", 0.04, 80);
+    }
   }
 
   function upgradeValue(id) {
@@ -178,8 +187,8 @@
 
   function makePlayer() {
     return {
-      x: WORLD_W * 0.55,
-      y: WORLD_H * 0.42,
+      x: SAFE_SPAWN.x,
+      y: SAFE_SPAWN.y,
       facing: 0,
       runT: 0,
       swingT: 0,
@@ -360,7 +369,7 @@
   }
 
   function trySwing(auto) {
-    if (!player || player.swingCd > 0) return;
+    if (!player || player.swingCd > 0 || soaked > 0) return;
     const range = upgradeValue("range");
     const targets = [];
     for (const hole of holes) {
@@ -399,8 +408,10 @@
     show("shop", false);
     show("roundOver", false);
     show("result", false);
+    show("soaked", false);
     show("hud", true);
     show("controls", true);
+    soaked = 0;
     resetStick();
     el.round.textContent = String(round);
   }
@@ -517,6 +528,29 @@
     }
   }
 
+  function fallInWater() {
+    if (soaked > 0 || scene !== "play") return;
+    soaked = SOAK_TIME;
+    combo = 0;
+    comboTimer = 0;
+    resetStick();
+    shake = 10;
+    sfx("splash");
+    burst(player.x, player.y - 8, "#9fe7ff", 18);
+    burst(player.x, player.y - 4, "#5ec3d8", 10);
+    show("soaked", true);
+    el.soakCount.textContent = String(SOAK_TIME);
+  }
+
+  function recoverFromWater() {
+    soaked = 0;
+    player.x = SAFE_SPAWN.x;
+    player.y = SAFE_SPAWN.y;
+    player.runT = 0;
+    show("soaked", false);
+    burst(player.x, player.y - 10, "#fff", 8);
+  }
+
   function updatePlayer(dt) {
     let ix = joy.x;
     let iy = joy.y;
@@ -529,16 +563,15 @@
       ix /= len;
       iy /= len;
     }
-    if (len > 0.12) {
+    if (len > 0.12 && soaked <= 0) {
       player.facing = Math.atan2(iy, ix);
       player.runT += dt * 10;
       const sp = upgradeValue("move");
-      const nx = player.x + ix * sp * dt;
-      const ny = player.y + iy * sp * dt;
-      if (!inPond(nx, player.y, -8)) player.x = nx;
-      if (!inPond(player.x, ny, -8)) player.y = ny;
+      player.x += ix * sp * dt;
+      player.y += iy * sp * dt;
       player.x = clamp(player.x, 36, WORLD_W - 36);
       player.y = clamp(player.y, 48, WORLD_H - 36);
+      if (inPond(player.x, player.y, -14)) fallInWater();
     } else {
       player.runT *= 0.85;
     }
@@ -570,6 +603,8 @@
   }
 
   function endRound() {
+    soaked = 0;
+    show("soaked", false);
     if (round >= TOTAL_ROUNDS) {
       scene = "result";
       show("controls", false);
@@ -598,6 +633,15 @@
       return;
     }
     if (scene === "play") {
+      if (soaked > 0) {
+        soaked -= dt;
+        el.soakCount.textContent = String(Math.max(1, Math.ceil(soaked)));
+        updateMoles(dt);
+        updateFx(dt);
+        if (soaked <= 0) recoverFromWater();
+        syncHud();
+        return;
+      }
       playTime += dt;
       timeLeft -= dt;
       updatePlayer(dt);
@@ -688,9 +732,11 @@
     const p = player;
     const swing = p.swingT > 0 ? 1 - p.swingT / 0.2 : 0;
     const run = Math.sin(p.runT) * 5;
+    const wet = soaked > 0;
     drawShadow(p.x, p.y, 16, 8);
     ctx.save();
-    ctx.translate(p.x, p.y);
+    ctx.translate(p.x, p.y + (wet ? 10 : 0));
+    if (wet) ctx.globalAlpha = 0.72;
     const flip = Math.cos(p.facing) < 0 ? -1 : 1;
     ctx.scale(flip, 1);
 
@@ -704,7 +750,7 @@
     ctx.lineTo(6 - run * 0.3, 16);
     ctx.stroke();
 
-    ctx.fillStyle = "#ffd15c";
+    ctx.fillStyle = wet ? "#7ec8e8" : "#ffd15c";
     ctx.beginPath();
     ctx.ellipse(0, -8, 14, 16, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -888,8 +934,8 @@
       ensureAudio();
       if (timeLeft <= 0 && round < TOTAL_ROUNDS) {
         round += 1;
-        player.x = WORLD_W * 0.55;
-        player.y = WORLD_H * 0.42;
+        player.x = SAFE_SPAWN.x;
+        player.y = SAFE_SPAWN.y;
         startRound();
       } else {
         scene = "play";

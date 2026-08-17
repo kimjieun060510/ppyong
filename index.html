@@ -49,6 +49,7 @@
         <ul class="howto">
           <li>이동: 키보드 WASD / 왼쪽 동그라미를 끌어서</li>
           <li>공격: 스페이스 · 근처로 달려가기 · 오른쪽 뿅망치</li>
+          <li>연못에 빠지면 5초 동안 허우적거려요</li>
         </ul>
         <button id="btn-start" type="button" class="primary">게임 시작</button>
       </div>
@@ -87,9 +88,25 @@
       </div>
     </div>
 
+    <div id="soaked" class="overlay hidden">
+      <div class="panel soak-panel">
+        <h2>풍덩!</h2>
+        <p class="lead">물에 빠졌어요. 잠시 허우적거리는 중...</p>
+        <p id="soak-count" class="countdown">5</p>
+      </div>
+    </div>
+
     <div id="controls" class="hidden">
       <div id="stick" aria-label="이동">
         <div id="stick-base">
+          <span class="stick-dir north" aria-hidden="true"></span>
+          <span class="stick-dir east" aria-hidden="true"></span>
+          <span class="stick-dir south" aria-hidden="true"></span>
+          <span class="stick-dir west" aria-hidden="true"></span>
+          <span class="stick-label north">북</span>
+          <span class="stick-label east">동</span>
+          <span class="stick-label south">남</span>
+          <span class="stick-label west">서</span>
           <div id="stick-knob"></div>
         </div>
       </div>
