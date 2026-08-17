@@ -21,7 +21,14 @@
     titleMe: document.getElementById("title-me"),
     titleHello: document.getElementById("title-hello"),
     titleWallet: document.getElementById("title-wallet"),
+    titleStageLabel: document.getElementById("title-stage-label"),
     profileWallet: document.getElementById("profile-wallet"),
+    profileHeading: document.getElementById("profile-heading"),
+    profileHome: document.getElementById("profile-home"),
+    profileCustom: document.getElementById("profile-custom"),
+    profileStages: document.getElementById("profile-stages"),
+    profileMe: document.getElementById("profile-me"),
+    profileStageNow: document.getElementById("profile-stage-now"),
     stageRow: document.getElementById("stage-row"),
     score: document.getElementById("score-count"),
     profile: document.getElementById("profile"),
@@ -530,35 +537,47 @@
     {
       id: "park-1",
       name: "공원 낮",
-      hint: "같은 공원, 기본 속도",
+      hint: "구멍이 천천히 열리고, 동물도 조금 오래 나와 있어요",
       unlockScore: 0,
       tint: null,
       trap: 0.16,
       intervalBoost: 0,
       maxUpAdd: 0,
       burstAdd: 0,
+      stayMin: 2.1,
+      stayVar: 1.2,
+      riseTime: 0.32,
+      hideTime: 0.18,
     },
     {
       id: "park-2",
       name: "공원 노을",
-      hint: "같은 공원, 조금 더 바빠요",
+      hint: "구멍이 더 자주 열리고, 동물이 빨리 들어가요",
       unlockScore: 90,
       tint: "rgba(255,120,50,0.18)",
       trap: 0.24,
-      intervalBoost: 0.03,
-      maxUpAdd: 10,
+      intervalBoost: 0.045,
+      maxUpAdd: 12,
       burstAdd: 2,
+      stayMin: 1.25,
+      stayVar: 0.7,
+      riseTime: 0.22,
+      hideTime: 0.11,
     },
     {
       id: "park-3",
       name: "공원 밤",
-      hint: "같은 공원, 구멍이 더 자주 열려요",
+      hint: "구멍이 아주 자주 열리고, 눈 깜짝할 새 들어가요",
       unlockScore: 160,
       tint: "rgba(18,28,70,0.36)",
       trap: 0.3,
-      intervalBoost: 0.05,
-      maxUpAdd: 22,
+      intervalBoost: 0.075,
+      maxUpAdd: 24,
       burstAdd: 4,
+      stayMin: 0.75,
+      stayVar: 0.45,
+      riseTime: 0.16,
+      hideTime: 0.07,
     },
   ];
 
@@ -603,6 +622,7 @@
   const APPLE_CLIENT_ID = "";
   let account = null;
   let profileStep = 0;
+  let profilePage = "home";
   let runScore = 0;
   let progress = {
     wallet: 0,
@@ -878,20 +898,33 @@
     show("profile", false);
     show("briefing", false);
     show("title", true);
-    if (el.profileAccount) {
-      el.profileAccount.textContent = account
-        ? account.apple
-          ? account.email || "Apple ID"
-          : "로컬 계정"
-        : "Apple ID";
-    }
+    const st = currentStage();
+    if (el.titleStageLabel) el.titleStageLabel.textContent = st.name;
     if (el.titleHello) {
       const who = account && account.name ? `${account.name}님, ` : "";
-      const st = currentStage();
-      el.titleHello.textContent = `${who}${st.name}. ${st.hint}`;
+      el.titleHello.textContent = `${who}${st.hint}`;
     }
     syncWalletUI();
-    mountStageRow();
+  }
+
+  function updateProfileHome() {
+    const st = currentStage();
+    if (el.profileStageNow) {
+      const best = progress.best[st.id] || 0;
+      el.profileStageNow.textContent = `현재 단계: ${st.name}${best ? ` · 최고 ${best}점` : ""}`;
+    }
+  }
+
+  function showProfilePage(page) {
+    profilePage = page;
+    if (el.profileHome) el.profileHome.classList.toggle("hidden", page !== "home");
+    if (el.profileCustom) el.profileCustom.classList.toggle("hidden", page !== "custom");
+    if (el.profileStages) el.profileStages.classList.toggle("hidden", page !== "stages");
+    const titles = { home: "프로필", custom: "캐릭터 꾸미기", stages: "스테이지" };
+    if (el.profileHeading) el.profileHeading.textContent = titles[page] || "프로필";
+    if (page === "custom") renderProfileStep();
+    if (page === "stages") mountStageRow();
+    if (page === "home") updateProfileHome();
   }
 
   function syncWalletUI() {
@@ -914,7 +947,9 @@
       const name = document.createElement("b");
       name.textContent = st.name;
       const hint = document.createElement("small");
-      hint.textContent = locked ? `${st.unlockScore}점으로 해금` : st.hint;
+      const best = progress.best[st.id] || 0;
+      if (locked) hint.textContent = `${st.unlockScore}점으로 해금`;
+      else hint.textContent = best ? `${st.hint} · 최고 ${best}점` : st.hint;
       btn.append(name, hint);
       btn.disabled = locked;
       btn.addEventListener("click", () => {
@@ -922,10 +957,7 @@
         progress.stageId = st.id;
         persistProgress();
         mountStageRow();
-        if (el.titleHello) {
-          const who = account && account.name ? `${account.name}님, ` : "";
-          el.titleHello.textContent = `${who}${st.name}. ${st.hint}`;
-        }
+        updateProfileHome();
       });
       root.append(btn);
     });
@@ -947,6 +979,7 @@
         : "Apple ID";
     }
     renderProfileStep();
+    showProfilePage(avatar.complete ? "home" : "custom");
   }
 
   function openBriefing() {
@@ -1240,7 +1273,7 @@
       state: "rise",
       t: 0,
       height: 0,
-      stay: 2.1 + Math.random() * 1.2,
+      stay: currentStage().stayMin + Math.random() * currentStage().stayVar,
       bob: Math.random() * Math.PI * 2,
     };
     if (scene === "play") sfx("pop");
@@ -1480,7 +1513,7 @@
     const st = currentStage();
     const t = playTime + (round - 1) * 18;
     return {
-      interval: Math.max(0.03, 0.1 - t * 0.0025 - st.intervalBoost),
+      interval: Math.max(0.02, 0.1 - t * 0.0025 - st.intervalBoost),
       maxUp: Math.min(80, 32 + Math.floor(t / 5) + st.maxUpAdd),
       burst: (t > 24 ? 8 : t > 8 ? 6 : 4) + st.burstAdd,
     };
@@ -1501,7 +1534,7 @@
       if (!m) continue;
       m.bob += dt * 8;
       if (m.state === "rise") {
-        m.t += dt / 0.32;
+        m.t += dt / (currentStage().riseTime || 0.32);
         m.height = clamp(m.t, 0, 1);
         if (m.t >= 1) {
           m.state = "up";
@@ -1515,7 +1548,7 @@
           m.t = 0;
         }
       } else if (m.state === "hide") {
-        m.t += dt / 0.18;
+        m.t += dt / (currentStage().hideTime || 0.18);
         m.height = 1 - clamp(m.t, 0, 1);
         if (m.t >= 1) {
           hole.mole = null;
@@ -2698,7 +2731,7 @@
     const back = document.getElementById("btn-profile-back");
     const next = document.getElementById("btn-profile-next");
     back.disabled = profileStep === 0 && !avatar.complete;
-    back.textContent = profileStep === 0 ? "타이틀로" : "이전";
+    back.textContent = profileStep === 0 ? "프로필로" : "이전";
     next.textContent = profileStep === 2 ? "완료" : "다음";
     if (profileStep === 1) mountOutfitCards();
     if (profileStep === 2) mountHammerCards();
@@ -2709,7 +2742,7 @@
   function finishProfile() {
     avatar.complete = true;
     persistAvatar();
-    showTitle();
+    showProfilePage("home");
   }
 
   function drawAvatarPreviews() {
@@ -2761,6 +2794,22 @@
     });
     if (el.titleMe && scene === "title") {
       const cv = el.titleMe;
+      const g = cv.getContext("2d");
+      paintPreviewBg(g, cv.width, cv.height);
+      g.save();
+      g.translate(cv.width / 2, cv.height * 0.92);
+      g.scale(cv.width / 78, cv.width / 78);
+      drawAvatar(g, {
+        gender: avatar.gender,
+        outfitId: avatar.outfitId,
+        runT: performance.now() / 140,
+        swingT: 0.08,
+        flip: false,
+      });
+      g.restore();
+    }
+    if (el.profileMe && scene === "profile" && profilePage === "home") {
+      const cv = el.profileMe;
       const g = cv.getContext("2d");
       paintPreviewBg(g, cv.width, cv.height);
       g.save();
@@ -2955,9 +3004,22 @@
       ensureAudio();
       openProfile();
     });
+    document.getElementById("btn-page-custom").addEventListener("click", () => {
+      profileStep = 0;
+      showProfilePage("custom");
+    });
+    document.getElementById("btn-page-stages").addEventListener("click", () => {
+      showProfilePage("stages");
+    });
+    document.getElementById("btn-profile-to-title").addEventListener("click", () => {
+      showTitle();
+    });
+    document.getElementById("btn-stages-back").addEventListener("click", () => {
+      showProfilePage("home");
+    });
     document.getElementById("btn-profile-back").addEventListener("click", () => {
       if (profileStep === 0) {
-        if (avatar.complete) showTitle();
+        if (avatar.complete) showProfilePage("home");
         return;
       }
       profileStep -= 1;

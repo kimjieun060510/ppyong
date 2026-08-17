@@ -68,10 +68,9 @@
       <div class="panel title-panel">
         <p class="eyebrow">PPYONG</p>
         <h1>뿅</h1>
-        <p class="stage" id="title-stage-label">공원편</p>
+        <p class="stage" id="title-stage-label">공원 낮</p>
         <p class="lead" id="title-hello">공원 구멍마다 누군가 고개를 내민다.</p>
         <p class="wallet-line" id="title-wallet">보유 코인 0</p>
-        <div id="stage-row" class="stage-row"></div>
         <canvas id="title-me" width="220" height="250"></canvas>
         <ul class="howto">
           <li>이동: 키보드 WASD / 왼쪽 동그라미를 끌어서 공원 여기저기를 뛰어다녀요</li>
@@ -87,27 +86,50 @@
     <div id="profile" class="overlay hidden">
       <div class="panel shop-panel">
         <div class="shop-head">
-          <h2>프로필</h2>
+          <h2 id="profile-heading">프로필</h2>
           <p id="profile-account">Apple ID</p>
         </div>
         <p class="wallet-line" id="profile-wallet">보유 코인 0</p>
-        <p class="picker-label" id="profile-step-label">1. 성별을 정하세요</p>
-        <div id="profile-step-gender" class="profile-step">
-          <div class="char-row" id="profile-chars"></div>
-        </div>
-        <div id="profile-step-outfit" class="profile-step hidden">
-          <div class="outfit-grid" id="profile-outfits"></div>
-        </div>
-        <div id="profile-step-hammer" class="profile-step hidden">
-          <div class="hammer-grid" id="profile-hammers"></div>
-        </div>
-        <div class="profile-nav">
-          <button id="btn-profile-back" type="button">이전</button>
-          <button id="btn-profile-next" type="button" class="primary">다음</button>
-        </div>
         <p class="login-note">
           <button id="btn-logout" type="button" class="text-btn">로그아웃</button>
         </p>
+
+        <div id="profile-home" class="profile-page">
+          <canvas id="profile-me" width="220" height="250"></canvas>
+          <p class="lead" id="profile-stage-now">현재 단계: 공원 낮</p>
+          <div class="profile-menu">
+            <button id="btn-page-custom" type="button" class="primary">
+              캐릭터 꾸미기
+            </button>
+            <button id="btn-page-stages" type="button">스테이지</button>
+            <button id="btn-profile-to-title" type="button">타이틀로</button>
+          </div>
+        </div>
+
+        <div id="profile-custom" class="profile-page hidden">
+          <p class="picker-label" id="profile-step-label">1. 성별을 정하세요</p>
+          <div id="profile-step-gender" class="profile-step">
+            <div class="char-row" id="profile-chars"></div>
+          </div>
+          <div id="profile-step-outfit" class="profile-step hidden">
+            <div class="outfit-grid" id="profile-outfits"></div>
+          </div>
+          <div id="profile-step-hammer" class="profile-step hidden">
+            <div class="hammer-grid" id="profile-hammers"></div>
+          </div>
+          <div class="profile-nav">
+            <button id="btn-profile-back" type="button">이전</button>
+            <button id="btn-profile-next" type="button" class="primary">다음</button>
+          </div>
+        </div>
+
+        <div id="profile-stages" class="profile-page hidden">
+          <p class="picker-label">같은 공원, 단계만 고르세요</p>
+          <div id="stage-row" class="stage-list"></div>
+          <div class="profile-nav">
+            <button id="btn-stages-back" type="button">프로필로</button>
+          </div>
+        </div>
       </div>
     </div>
 
