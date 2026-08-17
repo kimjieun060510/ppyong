@@ -77,6 +77,193 @@
     },
   ];
 
+  const OUTFITS = [
+    {
+      id: "lemon",
+      name: "레몬 후디",
+      vibe: "데일리",
+      cut: "hoodie",
+      bottom: "shorts",
+      top: "#ffe34a",
+      topShade: "#e8c01c",
+      bottomGirl: "#ff7a28",
+      bottomBoy: "#2f4f9a",
+      shoesGirl: "#ff7a28",
+      shoesBoy: "#ffe34a",
+      shoeStripe: "#ffffff",
+      socks: "#ffffff",
+      sockStripe: "#ffe34a",
+      strings: "#ffffff",
+      clip: "#ff7a28",
+    },
+    {
+      id: "track",
+      name: "삼선 셋업",
+      vibe: "스트릿",
+      cut: "track",
+      bottom: "track",
+      top: "#1c1c1c",
+      topShade: "#111111",
+      bottomGirl: "#1c1c1c",
+      bottomBoy: "#1c1c1c",
+      shoesGirl: "#f5f5f5",
+      shoesBoy: "#f5f5f5",
+      shoeStripe: "#ff4d6d",
+      socks: "#ffffff",
+      sockStripe: "#1c1c1c",
+      stripes: "#ffffff",
+      clip: "#ff4d6d",
+    },
+    {
+      id: "anorak",
+      name: "네온 아노락",
+      vibe: "캠퍼스",
+      cut: "anorak",
+      bottom: "cargo",
+      top: "#8cff4d",
+      topShade: "#58c428",
+      panel: "#2a3d8f",
+      bottomGirl: "#5a6b82",
+      bottomBoy: "#5a6b82",
+      shoesGirl: "#ffffff",
+      shoesBoy: "#ffffff",
+      shoeStripe: "#8cff4d",
+      socks: "#ffffff",
+      sockStripe: "#2a3d8f",
+      clip: "#8cff4d",
+    },
+    {
+      id: "rugby",
+      name: "럭비 셔츠",
+      vibe: "프레피",
+      cut: "rugby",
+      bottom: "bermuda",
+      top: "#d62828",
+      topShade: "#b51d1d",
+      stripe: "#ffffff",
+      bottomGirl: "#3d4f3a",
+      bottomBoy: "#3d4f3a",
+      shoesGirl: "#f4efe4",
+      shoesBoy: "#f4efe4",
+      shoeStripe: "#d62828",
+      socks: "#ffffff",
+      sockStripe: "#d62828",
+      clip: "#d62828",
+    },
+    {
+      id: "cargo",
+      name: "카고 스트릿",
+      vibe: "Y2K",
+      cut: "tee",
+      bottom: "cargo",
+      top: "#9fd8ff",
+      topShade: "#6bb8ee",
+      bottomGirl: "#6b5a3e",
+      bottomBoy: "#6b5a3e",
+      shoesGirl: "#e8e0d4",
+      shoesBoy: "#e8e0d4",
+      shoeStripe: "#9fd8ff",
+      socks: "#ffffff",
+      sockStripe: "#6b5a3e",
+      clip: "#9fd8ff",
+    },
+    {
+      id: "tennis",
+      name: "테니스 클럽",
+      vibe: "스포츠",
+      cut: "polo",
+      bottom: "tennis",
+      top: "#ffffff",
+      topShade: "#e6e6e6",
+      accent: "#2db36a",
+      bottomGirl: "#ffffff",
+      bottomBoy: "#2db36a",
+      shoesGirl: "#ffffff",
+      shoesBoy: "#ffffff",
+      shoeStripe: "#2db36a",
+      socks: "#ffffff",
+      sockStripe: "#2db36a",
+      visor: "#2db36a",
+      clip: "#2db36a",
+    },
+    {
+      id: "ribbon",
+      name: "리본 가디건",
+      vibe: "리본룩",
+      cut: "cardigan",
+      bottom: "skirt",
+      top: "#ffd6e7",
+      topShade: "#f5b6cc",
+      inner: "#fff8fb",
+      bottomGirl: "#5a6db5",
+      bottomBoy: "#5a6db5",
+      shoesGirl: "#ff8ab8",
+      shoesBoy: "#ff8ab8",
+      shoeStripe: "#ffffff",
+      socks: "#ffffff",
+      sockStripe: "#ff8ab8",
+      ribbon: "#ff5e8a",
+      clip: "#ff5e8a",
+    },
+    {
+      id: "midnight",
+      name: "올블랙",
+      vibe: "미니멀",
+      cut: "hoodie",
+      bottom: "wide",
+      top: "#222226",
+      topShade: "#111114",
+      bottomGirl: "#1a1a1e",
+      bottomBoy: "#1a1a1e",
+      shoesGirl: "#111114",
+      shoesBoy: "#111114",
+      shoeStripe: "#8a8a90",
+      socks: "#2a2a2e",
+      sockStripe: "#55555c",
+      strings: "#8a8a90",
+      clip: "#8a8a90",
+    },
+    {
+      id: "cherry",
+      name: "체리 니트",
+      vibe: "페어코어",
+      cut: "knit",
+      bottom: "skirt",
+      top: "#ff5a6a",
+      topShade: "#e04050",
+      bottomGirl: "#3a5a9a",
+      bottomBoy: "#3a5a9a",
+      shoesGirl: "#ffffff",
+      shoesBoy: "#ffffff",
+      shoeStripe: "#ff5a6a",
+      socks: "#ffffff",
+      sockStripe: "#ff5a6a",
+      clip: "#ff5a6a",
+    },
+    {
+      id: "jersey",
+      name: "10번 져지",
+      vibe: "유니폼",
+      cut: "jersey",
+      bottom: "shorts",
+      top: "#3b6cff",
+      topShade: "#2a4fd0",
+      bottomGirl: "#3b6cff",
+      bottomBoy: "#3b6cff",
+      shoesGirl: "#ffffff",
+      shoesBoy: "#ffffff",
+      shoeStripe: "#ffd15c",
+      socks: "#ffffff",
+      sockStripe: "#3b6cff",
+      number: "#ffffff",
+      clip: "#ffd15c",
+    },
+  ];
+
+  const SKIN = "#f3c4a0";
+  const LINE = "#3a2418";
+  const HAIR = "#4a2c1c";
+
   const keys = Object.create(null);
   const joy = { x: 0, y: 0, pointerId: null };
   let viewW = 800;
@@ -113,6 +300,26 @@
   let slashes = [];
   let slashT = 0;
   let waterIFrames = 0;
+  let avatar = { gender: "girl", outfitId: "lemon" };
+
+  function loadAvatar() {
+    try {
+      const raw = JSON.parse(localStorage.getItem("mole-avatar") || "{}");
+      if (raw.gender === "girl" || raw.gender === "boy") avatar.gender = raw.gender;
+      if (OUTFITS.some((o) => o.id === raw.outfitId)) avatar.outfitId = raw.outfitId;
+    } catch (err) {
+      /* keep defaults */
+    }
+  }
+
+  function persistAvatar() {
+    localStorage.setItem("mole-avatar", JSON.stringify(avatar));
+    if (player) {
+      player.gender = avatar.gender;
+      player.outfitId = avatar.outfitId;
+    }
+    syncAvatarPickerUI();
+  }
 
   function rng(seed) {
     let s = seed >>> 0;
@@ -209,6 +416,8 @@
       swingT: 0,
       swingCd: 0,
       radius: 16,
+      gender: avatar.gender,
+      outfitId: avatar.outfitId,
     };
   }
 
@@ -802,6 +1011,10 @@
   function update(dt) {
     if (scene === "title") {
       demoTime += dt;
+      if (player) {
+        player.runT += dt * 8;
+        player.facing = Math.sin(demoTime * 0.8) >= 0 ? 0 : Math.PI;
+      }
       if (demoTime > 0.9) {
         demoTime = 0;
         spawnMole(Math.random() < 0.2);
@@ -1164,72 +1377,399 @@
     ctx.fill();
   }
 
+  function outfitOf(id) {
+    return OUTFITS.find((o) => o.id === id) || OUTFITS[0];
+  }
+
+  function fillRound(g, x, y, w, h, r, color) {
+    g.fillStyle = color;
+    g.beginPath();
+    if (g.roundRect) g.roundRect(x, y, w, h, r);
+    else {
+      g.rect(x, y, w, h);
+    }
+    g.fill();
+  }
+
+  function strokeRound(g, x, y, w, h, r) {
+    g.strokeStyle = LINE;
+    g.lineWidth = 1.5;
+    g.beginPath();
+    if (g.roundRect) g.roundRect(x, y, w, h, r);
+    else g.rect(x, y, w, h);
+    g.stroke();
+  }
+
+  function drawMallet(g, swing, gold) {
+    g.save();
+    g.translate(15, -30);
+    g.rotate(-0.85 + swing * 2.35);
+    fillRound(g, -2.2, -4, 4.4, 22, 1.8, "#d4a06a");
+    g.strokeStyle = LINE;
+    g.lineWidth = 1.2;
+    g.stroke();
+    fillRound(g, -3.2, -8, 6.4, 6, 1.6, "#4aa3e8");
+    fillRound(g, -13, -18, 26, 12, 4, gold ? "#ffd15c" : "#e23b3b");
+    g.strokeStyle = LINE;
+    g.lineWidth = 1.4;
+    g.stroke();
+    fillRound(g, -13, -18, 5, 12, 3, "#ffe34a");
+    fillRound(g, 8, -18, 5, 12, 3, "#ffe34a");
+    g.fillStyle = "#ffe34a";
+    g.beginPath();
+    g.arc(0, -19, 2.2, 0, Math.PI * 2);
+    g.fill();
+    g.restore();
+  }
+
+  function drawAvatar(g, spec) {
+    const o = outfitOf(spec.outfitId);
+    const girl = spec.gender !== "boy";
+    const run = Math.sin(spec.runT || 0) * 4.2;
+    const swing = spec.swingT > 0 ? 1 - spec.swingT / 0.2 : 0;
+    const t = performance.now() / 1000;
+    const wet = spec.wet;
+    const bounce = Math.abs(Math.sin(spec.runT || 0)) * -1.6;
+    const kick = wet ? Math.sin(t * 16) * 7 : run;
+    const bottom = girl ? o.bottomGirl : o.bottomBoy;
+    const shoes = girl ? o.shoesGirl : o.shoesBoy;
+    const skirt = girl && (o.bottom === "skirt" || o.bottom === "tennis");
+
+    g.save();
+    if (wet) g.globalAlpha = 0.8;
+    if (spec.trip) g.rotate(Math.sin(t * 10) * 0.28);
+    if (spec.flip) g.scale(-1, 1);
+    g.translate(0, bounce);
+
+    g.lineJoin = "round";
+    g.lineCap = "round";
+
+    [-1, 1].forEach((side) => {
+      const k = side < 0 ? kick : -kick;
+      fillRound(g, side * 5.5 - 3.6, -11 + k * 0.12, 7.2, 9, 2, o.socks);
+      g.fillStyle = o.sockStripe;
+      g.fillRect(side * 5.5 - 3, -6 + k * 0.12, 6, 1.4);
+      fillRound(g, side * 5.5 - 5.5, -4 + k * 0.1, 12, 5.5, 2.4, shoes);
+      g.fillStyle = o.shoeStripe;
+      g.fillRect(side * 5.5 - 4, -1.4 + k * 0.1, 9, 1.5);
+    });
+
+    if (skirt) {
+      g.fillStyle = bottom;
+      g.beginPath();
+      g.moveTo(-7, -22);
+      g.lineTo(-13, -10);
+      g.quadraticCurveTo(0, -7, 13, -10);
+      g.lineTo(7, -22);
+      g.closePath();
+      g.fill();
+      g.strokeStyle = LINE;
+      g.lineWidth = 1.4;
+      g.stroke();
+    } else {
+      const wide = o.bottom === "wide" || o.bottom === "cargo" ? 11 : 9;
+      fillRound(g, -wide, -22, wide * 2, o.bottom === "wide" ? 14 : 12, 4, bottom);
+      strokeRound(g, -wide, -22, wide * 2, o.bottom === "wide" ? 14 : 12, 4);
+      if (o.bottom === "cargo") {
+        fillRound(g, -wide - 1, -16, 6, 6, 1.5, o.topShade || bottom);
+        fillRound(g, wide - 5, -16, 6, 6, 1.5, o.topShade || bottom);
+      }
+      if (o.cut === "track" && o.stripes) {
+        g.strokeStyle = o.stripes;
+        g.lineWidth = 1.3;
+        g.beginPath();
+        g.moveTo(-4, -20);
+        g.lineTo(-4, -11);
+        g.moveTo(-2, -20);
+        g.lineTo(-2, -11);
+        g.stroke();
+      }
+    }
+
+    g.fillStyle = SKIN;
+    g.beginPath();
+    g.ellipse(-13, -28, 4.2, 3.4, -0.4, 0, Math.PI * 2);
+    g.fill();
+    g.beginPath();
+    g.ellipse(14, -27 + swing * -2, 4.4, 3.6, 0.2, 0, Math.PI * 2);
+    g.fill();
+
+    if (o.cut === "hoodie" || o.cut === "track") {
+      g.fillStyle = o.topShade;
+      g.beginPath();
+      g.ellipse(0, -40, 11, 7, 0, 0, Math.PI * 2);
+      g.fill();
+    }
+
+    fillRound(g, -11, -40, 22, 20, 7, spec.slash ? "#ffb3b3" : wet ? "#7ec8e8" : o.top);
+    strokeRound(g, -11, -40, 22, 20, 7);
+
+    if (o.cut === "anorak") {
+      fillRound(g, -11, -40, 8, 20, 6, o.panel);
+      g.fillStyle = "#d8dee8";
+      g.fillRect(-1, -38, 2, 16);
+    }
+    if (o.cut === "rugby") {
+      g.fillStyle = o.stripe;
+      g.fillRect(-11, -34, 22, 3.2);
+      g.fillRect(-11, -27, 22, 3.2);
+    }
+    if (o.cut === "track" && o.stripes) {
+      g.strokeStyle = o.stripes;
+      g.lineWidth = 1.4;
+      g.beginPath();
+      g.moveTo(8, -38);
+      g.lineTo(10, -22);
+      g.moveTo(10.4, -38);
+      g.lineTo(12.2, -22);
+      g.stroke();
+    }
+    if (o.cut === "polo") {
+      g.fillStyle = o.accent;
+      g.beginPath();
+      g.moveTo(-4, -40);
+      g.lineTo(0, -35);
+      g.lineTo(4, -40);
+      g.fill();
+    }
+    if (o.cut === "cardigan") {
+      fillRound(g, -6, -38, 12, 16, 4, o.inner);
+      g.strokeStyle = o.ribbon;
+      g.lineWidth = 1.6;
+      g.beginPath();
+      g.moveTo(0, -36);
+      g.lineTo(0, -24);
+      g.stroke();
+    }
+    if (o.cut === "jersey" && o.number) {
+      g.fillStyle = o.number;
+      g.font = "bold 9px Jua, sans-serif";
+      g.textAlign = "center";
+      g.fillText("10", 0, -26);
+    }
+    if (o.strings) {
+      g.strokeStyle = o.strings;
+      g.lineWidth = 1.3;
+      g.beginPath();
+      g.moveTo(-3, -39);
+      g.lineTo(-4, -32);
+      g.moveTo(3, -39);
+      g.lineTo(4, -32);
+      g.stroke();
+    }
+    if (o.cut === "hoodie" || o.cut === "tee") {
+      fillRound(g, -6, -28, 12, 6, 2, o.topShade);
+    }
+
+    g.fillStyle = SKIN;
+    g.beginPath();
+    g.ellipse(0, -48, 13.2, 14.2, 0, 0, Math.PI * 2);
+    g.fill();
+    g.strokeStyle = LINE;
+    g.lineWidth = 1.7;
+    g.stroke();
+
+    g.fillStyle = HAIR;
+    if (girl) {
+      g.beginPath();
+      g.ellipse(0, -54, 14.4, 10, 0, Math.PI, Math.PI * 2);
+      g.fill();
+      g.beginPath();
+      g.ellipse(-11.5, -46, 4.8, 8, 0.25, 0, Math.PI * 2);
+      g.ellipse(11.5, -46, 4.8, 8, -0.25, 0, Math.PI * 2);
+      g.fill();
+      g.beginPath();
+      g.ellipse(-5, -57, 6, 4.5, -0.4, 0, Math.PI * 2);
+      g.ellipse(6, -57, 6, 4.5, 0.35, 0, Math.PI * 2);
+      g.fill();
+    } else {
+      g.beginPath();
+      g.ellipse(0, -55, 13.4, 8.5, 0, 0, Math.PI * 2);
+      g.fill();
+      g.beginPath();
+      g.moveTo(-11, -54);
+      g.lineTo(-7, -64);
+      g.lineTo(-3, -55);
+      g.lineTo(1, -63);
+      g.lineTo(5, -55);
+      g.lineTo(9, -62);
+      g.lineTo(12, -52);
+      g.closePath();
+      g.fill();
+    }
+
+    if (o.ribbon) {
+      g.fillStyle = o.ribbon;
+      g.beginPath();
+      g.moveTo(-1, -64);
+      g.lineTo(-10, -70);
+      g.lineTo(-8, -60);
+      g.lineTo(0, -63);
+      g.lineTo(8, -60);
+      g.lineTo(10, -70);
+      g.lineTo(1, -64);
+      g.closePath();
+      g.fill();
+      g.beginPath();
+      g.arc(0, -63, 2.4, 0, Math.PI * 2);
+      g.fill();
+    } else if (o.visor) {
+      fillRound(g, -12, -62, 24, 5, 2, o.visor);
+      fillRound(g, -4, -64, 16, 4, 2, o.visor);
+    } else if (girl) {
+      fillRound(g, -12, -58, 7, 3.6, 1.4, o.clip);
+    }
+
+    g.fillStyle = "#1a120c";
+    g.beginPath();
+    g.ellipse(-5.2, -49, 2.6, 3.2, 0, 0, Math.PI * 2);
+    g.ellipse(5.2, -49, 2.6, 3.2, 0, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = "#fff";
+    g.beginPath();
+    g.arc(-4.2, -50.2, 0.9, 0, Math.PI * 2);
+    g.arc(6.2, -50.2, 0.9, 0, Math.PI * 2);
+    g.fill();
+    if (wet) {
+      g.strokeStyle = LINE;
+      g.lineWidth = 1.4;
+      g.beginPath();
+      g.moveTo(-6, -44);
+      g.lineTo(-2, -42);
+      g.moveTo(6, -44);
+      g.lineTo(2, -42);
+      g.stroke();
+    } else {
+      g.fillStyle = "#ff8aa5";
+      g.beginPath();
+      g.arc(0, -44.2, 1.7, 0, Math.PI * 2);
+      g.fill();
+      g.strokeStyle = LINE;
+      g.lineWidth = 1.3;
+      g.beginPath();
+      g.arc(0, -42.5, 3.2, 0.15, Math.PI - 0.15);
+      g.stroke();
+    }
+
+    drawMallet(g, swing + (wet ? Math.sin(t * 14) * 0.25 : 0), upgrades && upgrades.aoe);
+    g.restore();
+  }
+
   function drawPlayer() {
     const p = player;
-    const swing = p.swingT > 0 ? 1 - p.swingT / 0.2 : 0;
-    const run = Math.sin(p.runT) * 5;
     const wet = soaked > 0 && stunKind === "water";
     const trip = soaked > 0 && stunKind === "rabbit";
     const t = performance.now() / 1000;
     drawShadow(p.x, p.y, 16, 8);
     ctx.save();
-    ctx.translate(p.x, p.y + (wet ? 12 + Math.sin(t * 14) * 3 : 0));
-    if (wet) ctx.globalAlpha = 0.78;
-    if (trip) ctx.rotate(Math.sin(t * 10) * 0.28);
-    const flip = Math.cos(p.facing) < 0 ? -1 : 1;
-    ctx.scale(flip, 1);
-
-    ctx.strokeStyle = "#2b3a24";
-    ctx.lineWidth = 4;
-    ctx.lineCap = "round";
-    const flap = wet ? Math.sin(t * 16) * 10 : run;
-    ctx.beginPath();
-    ctx.moveTo(-8, 2);
-    ctx.lineTo(-16, wet ? -8 + flap : 8);
-    ctx.moveTo(8, 2);
-    ctx.lineTo(16, wet ? -8 - flap : 8);
-    ctx.moveTo(-6, 6);
-    ctx.lineTo(-6 + (wet ? flap * 0.4 : run * 0.3), 16);
-    ctx.moveTo(6, 6);
-    ctx.lineTo(6 - (wet ? flap * 0.4 : run * 0.3), 16);
-    ctx.stroke();
-
-    ctx.fillStyle = wet ? "#7ec8e8" : slashT > 0 ? "#ffb3b3" : "#ffd15c";
-    ctx.beginPath();
-    ctx.ellipse(0, -8, 14, 16, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = "#2b3a24";
-    ctx.beginPath();
-    ctx.arc(-5, -10, 2, 0, Math.PI * 2);
-    ctx.arc(5, -10, 2, 0, Math.PI * 2);
-    ctx.fill();
-    if (wet) {
-      ctx.strokeStyle = "#2b3a24";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(-6, -4);
-      ctx.lineTo(-2, -1);
-      ctx.moveTo(6, -4);
-      ctx.lineTo(2, -1);
-      ctx.stroke();
-    }
-    ctx.fillStyle = "#ff8aa5";
-    ctx.beginPath();
-    ctx.arc(0, -4, 2.4, 0, Math.PI * 2);
-    ctx.fill();
-
-    const ang = -1.1 + swing * 2.4 + (wet ? Math.sin(t * 14) * 0.8 : 0);
-    ctx.save();
-    ctx.translate(12, -6);
-    ctx.rotate(ang);
-    ctx.fillStyle = "#c47a3a";
-    ctx.fillRect(-3, -28, 6, 28);
-    ctx.fillStyle = upgrades.aoe ? "#ffd15c" : "#ff6b4a";
-    ctx.fillRect(-14, -42, 28, 18);
-    ctx.strokeRect(-14, -42, 28, 18);
+    ctx.translate(p.x, p.y + (wet ? 10 + Math.sin(t * 14) * 3 : 0));
+    drawAvatar(ctx, {
+      gender: p.gender || avatar.gender,
+      outfitId: p.outfitId || avatar.outfitId,
+      runT: p.runT,
+      swingT: p.swingT,
+      wet,
+      trip,
+      slash: slashT > 0,
+      flip: Math.cos(p.facing) < 0,
+    });
     ctx.restore();
-    ctx.restore();
+  }
+
+  function syncAvatarPickerUI() {
+    document.querySelectorAll(".char-card").forEach((b) => {
+      b.classList.toggle("selected", b.dataset.gender === avatar.gender);
+    });
+    document.querySelectorAll(".outfit-chip").forEach((b) => {
+      b.classList.toggle("selected", b.dataset.outfit === avatar.outfitId);
+    });
+  }
+
+  function mountAvatarPickers() {
+    [
+      ["title-chars", "title-outfits", false],
+      ["shop-chars", "shop-outfits", true],
+    ].forEach(([charId, outfitId, compact]) => {
+      const chars = document.getElementById(charId);
+      const outfits = document.getElementById(outfitId);
+      if (!chars || !outfits) return;
+      chars.innerHTML = "";
+      outfits.innerHTML = "";
+      ["girl", "boy"].forEach((gender) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "char-card";
+        btn.dataset.gender = gender;
+        const cv = document.createElement("canvas");
+        cv.width = compact ? 200 : 240;
+        cv.height = compact ? 210 : 270;
+        cv.dataset.previewGender = gender;
+        const label = document.createElement("span");
+        label.textContent = gender === "girl" ? "여자" : "남자";
+        btn.append(cv, label);
+        btn.addEventListener("click", () => {
+          avatar.gender = gender;
+          persistAvatar();
+        });
+        chars.append(btn);
+      });
+      OUTFITS.forEach((o) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "outfit-chip";
+        btn.dataset.outfit = o.id;
+        const sw = document.createElement("span");
+        sw.className = "outfit-swatch";
+        sw.style.setProperty("--sw-a", o.top);
+        sw.style.setProperty("--sw-b", o.bottomGirl);
+        const txt = document.createElement("span");
+        const name = document.createElement("b");
+        name.textContent = o.name;
+        const vibe = document.createElement("small");
+        vibe.textContent = o.vibe;
+        txt.append(name, vibe);
+        btn.append(sw, txt);
+        btn.addEventListener("click", () => {
+          avatar.outfitId = o.id;
+          persistAvatar();
+        });
+        outfits.append(btn);
+      });
+    });
+    syncAvatarPickerUI();
+  }
+
+  function drawAvatarPreviews() {
+    document.querySelectorAll("canvas[data-preview-gender]").forEach((cv) => {
+      if (cv.closest(".hidden")) return;
+      const g = cv.getContext("2d");
+      const w = cv.width;
+      const h = cv.height;
+      g.clearRect(0, 0, w, h);
+      const sky = g.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, "#8ecfff");
+      sky.addColorStop(0.52, "#c8ec8a");
+      sky.addColorStop(1, "#6bb34d");
+      g.fillStyle = sky;
+      g.fillRect(0, 0, w, h);
+      g.fillStyle = "rgba(255,255,255,0.82)";
+      g.beginPath();
+      g.ellipse(w * 0.24, h * 0.16, 22, 11, 0, 0, Math.PI * 2);
+      g.ellipse(w * 0.74, h * 0.12, 26, 13, 0, 0, Math.PI * 2);
+      g.fill();
+      g.save();
+      g.translate(w / 2, h * 0.92);
+      const s = w / 86;
+      g.scale(s, s);
+      drawAvatar(g, {
+        gender: cv.dataset.previewGender,
+        outfitId: avatar.outfitId,
+        runT: performance.now() / 140,
+        swingT: 0,
+        flip: false,
+      });
+      g.restore();
+    });
   }
 
   function drawWorld() {
@@ -1310,6 +1850,7 @@
     update(dt);
     ctx.clearRect(0, 0, viewW, viewH);
     drawWorld();
+    if (scene === "title" || scene === "shop") drawAvatarPreviews();
     requestAnimationFrame(loop);
   }
 
@@ -1432,6 +1973,8 @@
 
   function init() {
     resize();
+    loadAvatar();
+    mountAvatarPickers();
     placeDecor();
     holes = placeHoles();
     parkCanvas = bakePark();
