@@ -44,10 +44,14 @@
     profileHammers: document.getElementById("profile-hammers"),
     briefing: document.getElementById("briefing"),
     roundOver: document.getElementById("round-over"),
-    roundSummary: document.getElementById("round-summary"),
+    roundNum: document.getElementById("round-num"),
+    roundMoles: document.getElementById("round-moles"),
     result: document.getElementById("result"),
     resultTitle: document.getElementById("result-title"),
-    resultSummary: document.getElementById("result-summary"),
+    resultScore: document.getElementById("result-score"),
+    resultCoins: document.getElementById("result-coins"),
+    resultMoles: document.getElementById("result-moles"),
+    resultNote: document.getElementById("result-note"),
     controls: document.getElementById("controls"),
     coins: document.getElementById("coin-count"),
     combo: document.getElementById("combo-count"),
@@ -506,7 +510,7 @@
     {
       id: "park-1",
       name: "공원 낮",
-      hint: "느긋한 오후. 두더지가 여유롭다",
+      hint: "천천히",
       unlockScore: 0,
       tint: null,
       trap: 0.16,
@@ -521,7 +525,7 @@
     {
       id: "park-2",
       name: "공원 노을",
-      hint: "구멍 대란. 눈 깜빡하면 들어간다",
+      hint: "빠르게",
       unlockScore: 90,
       tint: "rgba(255,120,50,0.18)",
       trap: 0.24,
@@ -536,7 +540,7 @@
     {
       id: "park-3",
       name: "공원 밤",
-      hint: "한순간이다. 망설이면 놓친다",
+      hint: "아주 빠르게",
       unlockScore: 160,
       tint: "rgba(18,28,70,0.36)",
       trap: 0.3,
@@ -691,7 +695,7 @@
     return Math.max(1, Math.floor(score / 4));
   }
 
-  function settleRun(title) {
+  function settleRun(title, note) {
     const payout = scoreToCoins(runScore);
     progress.wallet += payout;
     const st = currentStage();
@@ -701,14 +705,19 @@
     let extra = "";
     if (next && runScore >= next.unlockScore && !progress.unlocked.includes(next.id)) {
       progress.unlocked.push(next.id);
-      extra = ` ${next.name} 열렸다!`;
+      extra = `${next.name}이 열렸습니다.`;
     } else if (next && !progress.unlocked.includes(next.id)) {
-      extra = ` ${next.name}까지 ${next.unlockScore}점!`;
+      extra = `${next.name}은 ${next.unlockScore}점이면 열립니다.`;
     }
     persistProgress();
     if (el.resultTitle) el.resultTitle.textContent = title;
-    if (el.resultSummary) {
-      el.resultSummary.textContent = `${runScore}점! 코인 +${payout} (지금 ${progress.wallet}) · 두더지 ${totalCaught}마리.${extra}`;
+    if (el.resultScore) el.resultScore.textContent = String(runScore);
+    if (el.resultCoins) el.resultCoins.textContent = `+${payout}`;
+    if (el.resultMoles) el.resultMoles.textContent = String(totalCaught);
+    if (el.resultNote) {
+      const text = [note, extra].filter(Boolean).join(" ");
+      el.resultNote.textContent = text;
+      el.resultNote.classList.toggle("hidden", !text);
     }
   }
 
@@ -860,9 +869,9 @@
         if (!isAppleCancel(err)) {
           const code = String((err && (err.code || err.error)) || "");
           if (code === "1000") {
-            alert("지금은 Apple 로그인을 열 수 없어요. 아이폰에서 다시 눌러 봐!");
+            alert("Apple 로그인을 열 수 없습니다. 잠시 후 다시 시도해 주세요.");
           } else {
-            alert("Apple 로그인이 막혔어. 잠시 후 다시 뛰어 봐!");
+            alert("Apple 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.");
           }
         }
       }
@@ -907,7 +916,7 @@
   function deleteAccount() {
     if (!account) return;
     const ok = window.confirm(
-      "뿅 기록을 전부 지울까? 코인이랑 코디도 사라진다!"
+      "캐릭터와 기록이 모두 삭제됩니다. 계속할까요?"
     );
     if (!ok) return;
     const id = account.id;
@@ -936,15 +945,13 @@
     const ready = loggedIn();
     if (el.guestBlock) el.guestBlock.classList.toggle("hidden", ready);
     if (el.playBlock) el.playBlock.classList.toggle("hidden", !ready);
-    const st = currentStage();
     if (el.titleHello) {
-      const who = account && account.name ? `${account.name}님, ` : "";
-      el.titleHello.textContent = ready
-        ? `${who}오늘 뛰는 공원은?`
-        : "구멍에서 고개가 쏙. 두더지만 잡고, 스컹크는 피해!";
+      const name = account && account.name && account.name !== "플레이어" ? account.name : "";
+      el.titleHello.textContent = name;
+      el.titleHello.classList.toggle("hidden", !name);
     }
     const start = document.getElementById("btn-start");
-    if (start) start.textContent = `${st.name}, 출발!`;
+    if (start) start.textContent = "시작";
     syncWalletUI();
     if (ready) {
       mountStageCards(el.titleStages, true);
@@ -956,7 +963,9 @@
     const st = currentStage();
     if (el.profileStageNow) {
       const best = progress.best[st.id] || 0;
-      el.profileStageNow.textContent = `다음 판: ${st.name}${best ? ` · 최고 ${best}` : ""}`;
+      el.profileStageNow.textContent = best
+        ? `다음 공원 · ${st.name} · 최고 ${best}`
+        : `다음 공원 · ${st.name}`;
     }
   }
 
@@ -965,7 +974,7 @@
     if (el.profileHome) el.profileHome.classList.toggle("hidden", page !== "home");
     if (el.profileCustom) el.profileCustom.classList.toggle("hidden", page !== "custom");
     if (el.profileStages) el.profileStages.classList.toggle("hidden", page !== "stages");
-    const titles = { home: "내 캐릭터", custom: "코디", stages: "기록" };
+    const titles = { home: "캐릭터", custom: "코디", stages: "공원" };
     if (el.profileHeading) el.profileHeading.textContent = titles[page] || "프로필";
     if (page === "custom") renderProfileStep();
     if (page === "stages") mountStageCards(el.stageRow, false);
@@ -992,8 +1001,8 @@
       name.textContent = st.name;
       const hint = document.createElement("small");
       const best = progress.best[st.id] || 0;
-      if (locked) hint.textContent = `${st.unlockScore}점`;
-      else if (compact) hint.textContent = best ? `최고 ${best}` : "GO";
+      if (locked) hint.textContent = `${st.unlockScore}점 필요`;
+      else if (compact) hint.textContent = best ? `최고 ${best}` : "기록 없음";
       else hint.textContent = best ? `${st.hint} · 최고 ${best}` : st.hint;
       btn.append(name, hint);
       btn.disabled = locked;
@@ -1005,7 +1014,7 @@
         mountStageCards(el.stageRow, false);
         updateProfileHome();
         const start = document.getElementById("btn-start");
-        if (start) start.textContent = `${st.name}, 출발!`;
+        if (start) start.textContent = "시작";
       });
       root.append(btn);
     });
@@ -1040,8 +1049,8 @@
     show("hud", false);
     show("controls", false);
     show("briefing", true);
-    const briefTitle = document.querySelector("#briefing h2");
-    if (briefTitle) briefTitle.textContent = `${currentStage().name} 수배서`;
+    const briefTitle = document.getElementById("briefing-title");
+    if (briefTitle) briefTitle.textContent = currentStage().name;
   }
 
   function beginPlay() {
@@ -1368,8 +1377,8 @@
       startStun(
         "skunk",
         2.4,
-        "GAME OVER",
-        "공원 공기가 끝났다..."
+        "게임 오버",
+        "스컹크가 공원을 덮었습니다."
       );
       el.soaked.classList.add("gas");
       el.soakCount.classList.add("hidden");
@@ -1378,7 +1387,7 @@
     if (kind === "rabbit") {
       burst(hole.x, hole.y - 18, "#ff9f43", 12);
       throwCarrots(player.x, player.y);
-      startStun("rabbit", RABBIT_TIME, "당근 함정!", "발이 미끄러워 꼼짝 마!");
+      startStun("rabbit", RABBIT_TIME, "당근", "3초 동안 움직일 수 없습니다.");
       return;
     }
     const loss = Math.max(12, Math.round(coins * 0.35));
@@ -1409,10 +1418,7 @@
     show("controls", false);
     show("hud", true);
     show("result", true);
-    settleRun("펑!");
-    if (reason && el.resultSummary) {
-      el.resultSummary.textContent = `${reason} ${el.resultSummary.textContent}`;
-    }
+    settleRun("게임 오버", reason);
   }
 
   function burst(x, y, color, n) {
@@ -1492,7 +1498,7 @@
     el.soaked.classList.remove("gas");
     el.soakCount.classList.remove("hidden");
     resetStick();
-    el.round.textContent = String(round);
+    el.round.textContent = `${round}/${TOTAL_ROUNDS}`;
   }
 
   function nextRound() {
@@ -1514,7 +1520,7 @@
     if (el.score) el.score.textContent = String(runScore);
     el.combo.textContent = String(combo);
     el.time.textContent = String(Math.ceil(timeLeft));
-    el.round.textContent = String(round);
+    el.round.textContent = `${round}/${TOTAL_ROUNDS}`;
   }
 
   function difficulty() {
@@ -1629,7 +1635,7 @@
     sfx("splash");
     burst(player.x, player.y - 8, "#9fe7ff", 18);
     burst(player.x, player.y - 4, "#5ec3d8", 10);
-    startStun("water", WATER_TIME, "풍덩!", "허우적! 시계는 그대로 간다");
+    startStun("water", WATER_TIME, "풍덩", "5초 동안 움직일 수 없습니다. 시간은 그대로 갑니다.");
   }
 
   function recoverFromStun() {
@@ -1646,7 +1652,7 @@
       burst(player.x, player.y - 10, "#9fe7ff", 8);
     }
     if (kind === "skunk") {
-      gameOver("스컹크가 공원을 덮쳤어!");
+      gameOver("스컹크가 공원을 덮었습니다.");
     }
   }
 
@@ -1737,12 +1743,13 @@
       show("controls", false);
       show("hud", true);
       show("result", true);
-      settleRun("공원 마감!");
+      settleRun("결과");
       return;
     }
     scene = "roundOver";
     show("roundOver", true);
-    el.roundSummary.textContent = `${round}라운드 · 두더지 ${roundCaught}마리 포획!`;
+    if (el.roundNum) el.roundNum.textContent = `${round} / ${TOTAL_ROUNDS}`;
+    if (el.roundMoles) el.roundMoles.textContent = String(roundCaught);
   }
 
   function update(dt) {
@@ -2763,7 +2770,7 @@
   }
 
   function renderProfileStep() {
-    const labels = ["누구로 뛸까?", "오늘 코디", "오늘의 뿅망치"];
+    const labels = ["캐릭터", "옷", "뿅망치"];
     if (el.profileStepLabel) el.profileStepLabel.textContent = labels[profileStep];
     el.profileStepGender.classList.toggle("hidden", profileStep !== 0);
     el.profileStepOutfit.classList.toggle("hidden", profileStep !== 1);
@@ -2772,7 +2779,7 @@
     const next = document.getElementById("btn-profile-next");
     back.disabled = profileStep === 0 && !avatar.complete;
     back.textContent = profileStep === 0 ? "돌아가기" : "이전";
-    next.textContent = profileStep === 2 ? "이 모습으로!" : "다음";
+    next.textContent = profileStep === 2 ? "완료" : "다음";
     if (profileStep === 1) mountOutfitCards();
     if (profileStep === 2) mountHammerCards();
     syncAvatarPickerUI();

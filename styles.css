@@ -68,28 +68,33 @@ canvas#game {
   pointer-events: none;
   background: rgba(255, 246, 228, 0.94);
   border: 3px solid #2b3a24;
-  border-radius: 999px;
-  padding: 5px 10px;
-  font-size: clamp(13px, 2.6vw, 18px);
+  border-radius: 14px;
+  padding: 4px 10px 5px;
+  font-size: clamp(15px, 2.8vw, 18px);
   box-shadow: 0 3px 0 #2b3a24;
   white-space: nowrap;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  line-height: 1.1;
-  min-height: 32px;
+  gap: 0;
+  line-height: 1.15;
+  min-height: 36px;
+}
+
+.chip .k {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #6b7a62;
+  line-height: 1.2;
 }
 
 .chip.coin {
   color: #9a6b00;
 }
 
-.chip.coin .icon {
-  display: inline-block;
-  width: 0.9em;
-  color: var(--gold);
-  text-shadow: 0 0 0 #c48a00;
+.chip.coin .k {
+  color: #b08628;
 }
 
 .chip.time {
@@ -171,9 +176,71 @@ canvas#game {
 
 .lead {
   margin: 0 0 16px;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.45;
   font-weight: 400;
+  color: #4a5a42;
+}
+
+.hello {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: var(--grass-dark);
+}
+
+.section-label {
+  margin: 12px 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--grass-dark);
+}
+
+.section-label:first-child {
+  margin-top: 0;
+}
+
+.stat-list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+
+.stat-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+.stat-list span {
+  font-size: 14px;
+  color: #6b7a62;
+}
+
+.stat-list b {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.note {
+  margin: 0 0 16px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--grass-dark);
+}
+
+.stage-now {
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: #4a5a42;
+  text-align: center;
 }
 
 .howto {
@@ -464,9 +531,13 @@ canvas#game {
   margin-bottom: 12px;
 }
 
+.panel h2 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
 .shop-head h2 {
   margin: 0;
-  font-size: 28px;
 }
 
 .stun-banner {
@@ -660,7 +731,7 @@ canvas#game {
 
 .wallet-line {
   margin: 0 0 12px;
-  font-size: 16px;
+  font-size: 15px;
   color: #9a6b00;
 }
 
@@ -925,8 +996,8 @@ canvas#game {
   .chip {
     width: 100%;
     min-width: 0;
-    font-size: 13px;
-    padding: 5px 4px;
+    font-size: 15px;
+    padding: 4px 4px 5px;
     box-shadow: 0 3px 0 #2b3a24;
   }
 
@@ -973,11 +1044,16 @@ canvas#game {
   }
 
   .chip {
-    font-size: 13px;
-    padding: 4px 9px;
-    min-height: 28px;
+    font-size: 14px;
+    padding: 3px 8px 4px;
+    min-height: 30px;
     box-shadow: 0 2px 0 #2b3a24;
     border-width: 2px;
+    border-radius: 12px;
+  }
+
+  .chip .k {
+    font-size: 9px;
   }
 
   #controls {
