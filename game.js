@@ -22,6 +22,7 @@
     roundOver: document.getElementById("round-over"),
     roundSummary: document.getElementById("round-summary"),
     result: document.getElementById("result"),
+    resultTitle: document.getElementById("result-title"),
     resultSummary: document.getElementById("result-summary"),
     controls: document.getElementById("controls"),
     coins: document.getElementById("coin-count"),
@@ -33,6 +34,8 @@
     stickKnob: document.getElementById("stick-knob"),
     soaked: document.getElementById("soaked"),
     soakCount: document.getElementById("soak-count"),
+    stunTitle: document.getElementById("stun-title"),
+    stunLead: document.getElementById("stun-lead"),
   };
 
   const UPGRADE_DEFS = [
@@ -103,6 +106,7 @@
   let demoTime = 0;
   let hammerPulse = 0;
   let soaked = 0;
+  let stunKind = null;
 
   function rng(seed) {
     let s = seed >>> 0;
@@ -168,6 +172,10 @@
     if (name === "splash") {
       tone(90, 0.22, "sine", 0.06, 40);
       tone(220, 0.16, "triangle", 0.04, 80);
+    }
+    if (name === "trap") {
+      tone(110, 0.2, "sawtooth", 0.07, 50);
+      tone(300, 0.12, "square", 0.04, 90);
     }
   }
 
@@ -310,13 +318,22 @@
     return c;
   }
 
+  function isTrap(kind) {
+    return kind === "skunk" || kind === "turtle" || kind === "raccoon";
+  }
+
   function spawnMole(forceGold = false) {
     const empty = holes.filter((h) => !h.mole);
     if (!empty.length) return;
     const hole = empty[(Math.random() * empty.length) | 0];
-    const gold = forceGold || Math.random() < 0.12;
+    let kind = "normal";
+    if (scene === "play" && !forceGold && Math.random() < 0.22) {
+      kind = ["skunk", "turtle", "raccoon"][(Math.random() * 3) | 0];
+    } else if (forceGold || Math.random() < 0.12) {
+      kind = "gold";
+    }
     hole.mole = {
-      kind: gold ? "gold" : "normal",
+      kind,
       state: "rise",
       t: 0,
       height: 0,
@@ -324,7 +341,7 @@
       bob: Math.random() * Math.PI * 2,
     };
     sfx("pop");
-    burst(hole.x, hole.y - 8, "#c9a36b", 7);
+    burst(hole.x, hole.y - 8, isTrap(kind) ? "#c45c5c" : "#c9a36b", 7);
   }
 
   function smashMole(hole) {
@@ -332,6 +349,14 @@
     if (!mole || mole.state === "hit" || mole.state === "hide") return false;
     mole.state = "hit";
     mole.t = 0;
+    if (isTrap(mole.kind)) {
+      combo = 0;
+      comboTimer = 0;
+      shake = 8;
+      sfx("trap");
+      applyTrap(mole.kind, hole);
+      return true;
+    }
     combo += 1;
     comboTimer = 2.1;
     const base = mole.kind === "gold" ? 12 : 5;
@@ -342,15 +367,53 @@
     shake = mole.kind === "gold" ? 8 : 5;
     sfx("hit");
     sfx("coin");
-    burst(hole.x, hole.y - 28, mole.kind === "gold" ? "#ffd15c" : "#fff", 14);
+    burst(hole.x, hole.y - 24, mole.kind === "gold" ? "#ffd15c" : "#fff", 14);
     floatTexts.push({
       x: hole.x,
-      y: hole.y - 40,
+      y: hole.y - 36,
       text: `+${gain}`,
       t: 0,
       color: "#9a6b00",
     });
     return true;
+  }
+
+  function applyTrap(kind, hole) {
+    if (kind === "skunk") {
+      burst(hole.x, hole.y - 18, "#6b4a9a", 16);
+      gameOver("스컹크를 잡아서 게임이 끝났어요.");
+      return;
+    }
+    if (kind === "turtle") {
+      burst(hole.x, hole.y - 18, "#7dcf6a", 12);
+      startStun("turtle", SOAK_TIME, "시간 정지!", "거북이를 잡아서 5초 동안 멈춥니다.");
+      return;
+    }
+    const loss = Math.max(12, Math.round(coins * 0.35));
+    coins = Math.max(0, coins - loss);
+    burst(hole.x, hole.y - 18, "#c9c0b4", 12);
+    floatTexts.push({
+      x: hole.x,
+      y: hole.y - 36,
+      text: `-${loss}`,
+      t: 0,
+      color: "#a33",
+    });
+    syncHud();
+  }
+
+  function gameOver(reason) {
+    soaked = 0;
+    stunKind = null;
+    scene = "result";
+    show("soaked", false);
+    show("controls", false);
+    show("hud", true);
+    show("result", true);
+    el.resultTitle.textContent = "이런!";
+    const best = Number(localStorage.getItem("mole-best") || 0);
+    if (totalCaught > best) localStorage.setItem("mole-best", String(totalCaught));
+    el.resultSummary.textContent = `${reason} 두더지 ${totalCaught}마리, 코인 ${coins}개였어요.`;
   }
 
   function burst(x, y, color, n) {
@@ -390,8 +453,13 @@
 
     if (!targets.length) return;
     const aoe = upgradeValue("aoe");
-    if (aoe) targets.forEach((t) => smashMole(t.hole));
-    else smashMole(targets[0].hole);
+    if (aoe) {
+      targets
+        .filter((t) => t.hole.mole && !isTrap(t.hole.mole.kind))
+        .forEach((t) => smashMole(t.hole));
+    } else {
+      smashMole(targets[0].hole);
+    }
   }
 
   function startRound() {
@@ -414,6 +482,7 @@
     show("hud", true);
     show("controls", true);
     soaked = 0;
+    stunKind = null;
     resetStick();
     el.round.textContent = String(round);
   }
@@ -515,7 +584,7 @@
         m.height = 1 - clamp(m.t, 0, 1);
         if (m.t >= 1) {
           hole.mole = null;
-          if (scene === "play") {
+          if (scene === "play" && !isTrap(m.kind)) {
             combo = 0;
             sfx("miss");
           }
@@ -528,27 +597,39 @@
     }
   }
 
-  function fallInWater() {
+  function startStun(kind, seconds, title, lead) {
     if (soaked > 0 || scene !== "play") return;
-    soaked = SOAK_TIME;
+    soaked = seconds;
+    stunKind = kind;
     combo = 0;
     comboTimer = 0;
     resetStick();
-    shake = 10;
+    shake = 8;
+    el.stunTitle.textContent = title;
+    el.stunLead.textContent = lead;
+    el.soakCount.textContent = String(Math.ceil(seconds));
+    show("soaked", true);
+  }
+
+  function fallInWater() {
+    if (soaked > 0 || scene !== "play") return;
     sfx("splash");
     burst(player.x, player.y - 8, "#9fe7ff", 18);
     burst(player.x, player.y - 4, "#5ec3d8", 10);
-    show("soaked", true);
-    el.soakCount.textContent = String(SOAK_TIME);
+    startStun("water", SOAK_TIME, "풍덩!", "물에 빠졌어요. 잠시 허우적거리는 중...");
   }
 
-  function recoverFromWater() {
+  function recoverFromStun() {
+    const kind = stunKind;
     soaked = 0;
-    player.x = SAFE_SPAWN.x;
-    player.y = SAFE_SPAWN.y;
-    player.runT = 0;
+    stunKind = null;
     show("soaked", false);
-    burst(player.x, player.y - 10, "#fff", 8);
+    if (kind === "water") {
+      player.x = SAFE_SPAWN.x;
+      player.y = SAFE_SPAWN.y;
+      player.runT = 0;
+      burst(player.x, player.y - 10, "#fff", 8);
+    }
   }
 
   function blockedByTree(x, y) {
@@ -608,12 +689,14 @@
 
   function endRound() {
     soaked = 0;
+    stunKind = null;
     show("soaked", false);
     if (round >= TOTAL_ROUNDS) {
       scene = "result";
       show("controls", false);
       show("hud", true);
       show("result", true);
+      el.resultTitle.textContent = "오늘 공원은 여기까지!";
       const best = Number(localStorage.getItem("mole-best") || 0);
       const score = totalCaught;
       if (score > best) localStorage.setItem("mole-best", String(score));
@@ -642,7 +725,7 @@
         el.soakCount.textContent = String(Math.max(1, Math.ceil(soaked)));
         updateMoles(dt);
         updateFx(dt);
-        if (soaked <= 0) recoverFromWater();
+        if (soaked <= 0) recoverFromStun();
         syncHud();
         return;
       }
@@ -682,48 +765,95 @@
     if (!m || m.height <= 0.02) return;
     const pop = m.height;
     const x = hole.x;
-    const y = hole.y - 6 - pop * 58;
-    drawShadow(hole.x, hole.y + 4, 18 + pop * 6, 8);
+    const y = hole.y + 1;
+    const rx = 32;
+    const ry = 26 * pop;
+    drawShadow(x, y + 4, 16 + pop * 8, 7);
+
     ctx.save();
-    ctx.fillStyle = m.kind === "gold" ? "#f0c43a" : "#8b542c";
     ctx.beginPath();
-    ctx.ellipse(x, y, 24, 30, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#3b2414";
-    ctx.lineWidth = 2;
+    ctx.rect(x - 44, y - 60, 88, 60);
+    ctx.clip();
+
+    if (m.kind === "skunk") {
+      ctx.fillStyle = "#2a2a32";
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#f3f3f3";
+      ctx.beginPath();
+      ctx.ellipse(x, y - 4, 7, ry * 0.85, 0, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (m.kind === "turtle") {
+      ctx.fillStyle = "#4f9a45";
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#2f6b2a";
+      ctx.beginPath();
+      ctx.ellipse(x, y - 2, rx * 0.62, ry * 0.55, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#c8e86a";
+      ctx.beginPath();
+      ctx.arc(x - 8, y - 8, 3.2, 0, Math.PI * 2);
+      ctx.arc(x + 9, y - 6, 2.6, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (m.kind === "raccoon") {
+      ctx.fillStyle = "#8a8178";
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#1c120c";
+      ctx.beginPath();
+      ctx.ellipse(x, y - ry * 0.35, 22, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = m.kind === "gold" ? "#f0c43a" : "#8b542c";
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.strokeStyle = "#2b1a10";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
     ctx.stroke();
-    ctx.fillStyle = "#f7c3d0";
+
+    const eyeY = y - ry * 0.42;
+    ctx.fillStyle = m.kind === "skunk" || m.kind === "raccoon" ? "#fff" : "#1c120c";
     ctx.beginPath();
-    ctx.ellipse(x, y + 2, 11, 8, 0, 0, Math.PI * 2);
+    ctx.arc(x - 9, eyeY, 3.4, 0, Math.PI * 2);
+    ctx.arc(x + 9, eyeY, 3.4, 0, Math.PI * 2);
     ctx.fill();
+    ctx.fillStyle = m.kind === "skunk" || m.kind === "raccoon" ? "#1c120c" : "#fff";
+    ctx.beginPath();
+    ctx.arc(x - 8.2, eyeY - 0.8, 1.1, 0, Math.PI * 2);
+    ctx.arc(x + 9.8, eyeY - 0.8, 1.1, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.fillStyle = "#ff8aa8";
     ctx.beginPath();
-    ctx.arc(x, y + 1, 5.5, 0, Math.PI * 2);
+    ctx.arc(x, y - ry * 0.12, 4.2, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#1c120c";
-    ctx.beginPath();
-    ctx.arc(x - 8, y - 10, 3.2, 0, Math.PI * 2);
-    ctx.arc(x + 8, y - 10, 3.2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.arc(x - 7, y - 11, 1.2, 0, Math.PI * 2);
-    ctx.arc(x + 9, y - 11, 1.2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = m.kind === "gold" ? "#d4a21a" : "#6e4122";
-    ctx.beginPath();
-    ctx.ellipse(x - 16, hole.y - 4, 8, 5, -0.4, 0, Math.PI * 2);
-    ctx.ellipse(x + 16, hole.y - 4, 8, 5, 0.4, 0, Math.PI * 2);
-    ctx.fill();
+
     if (m.kind === "gold") {
       ctx.fillStyle = "#ffe56b";
       ctx.beginPath();
-      ctx.moveTo(x - 12, y - 22);
-      ctx.lineTo(x, y - 38);
-      ctx.lineTo(x + 12, y - 22);
+      ctx.moveTo(x - 8, y - ry * 0.72);
+      ctx.lineTo(x, y - ry * 1.05);
+      ctx.lineTo(x + 8, y - ry * 0.72);
       ctx.closePath();
       ctx.fill();
-      ctx.strokeStyle = "#c48a00";
+    }
+    if (m.kind === "skunk") {
+      ctx.strokeStyle = "#c45c5c";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x - 12, eyeY - 7);
+      ctx.lineTo(x - 5, eyeY - 3);
+      ctx.moveTo(x + 12, eyeY - 7);
+      ctx.lineTo(x + 5, eyeY - 3);
       ctx.stroke();
     }
     ctx.restore();
@@ -747,7 +877,7 @@
     const p = player;
     const swing = p.swingT > 0 ? 1 - p.swingT / 0.2 : 0;
     const run = Math.sin(p.runT) * 5;
-    const wet = soaked > 0;
+    const wet = soaked > 0 && stunKind === "water";
     drawShadow(p.x, p.y, 16, 8);
     ctx.save();
     ctx.translate(p.x, p.y + (wet ? 10 : 0));
