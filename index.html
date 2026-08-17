@@ -33,6 +33,7 @@
           <span class="icon">●</span>
           <span id="coin-count">0</span>
         </div>
+        <div class="chip">점수 <span id="score-count">0</span></div>
         <div class="chip">콤보 <span id="combo-count">0</span></div>
       </div>
       <div class="hud-right">
@@ -67,8 +68,10 @@
       <div class="panel title-panel">
         <p class="eyebrow">PPYONG</p>
         <h1>뿅</h1>
-        <p class="stage">공원편</p>
+        <p class="stage" id="title-stage-label">공원편</p>
         <p class="lead" id="title-hello">공원 구멍마다 누군가 고개를 내민다.</p>
+        <p class="wallet-line" id="title-wallet">보유 코인 0</p>
+        <div id="stage-row" class="stage-row"></div>
         <canvas id="title-me" width="220" height="250"></canvas>
         <ul class="howto">
           <li>이동: 키보드 WASD / 왼쪽 동그라미를 끌어서 공원 여기저기를 뛰어다녀요</li>
@@ -87,6 +90,7 @@
           <h2>프로필</h2>
           <p id="profile-account">Apple ID</p>
         </div>
+        <p class="wallet-line" id="profile-wallet">보유 코인 0</p>
         <p class="picker-label" id="profile-step-label">1. 성별을 정하세요</p>
         <div id="profile-step-gender" class="profile-step">
           <div class="char-row" id="profile-chars"></div>

@@ -20,6 +20,10 @@
     title: document.getElementById("title"),
     titleMe: document.getElementById("title-me"),
     titleHello: document.getElementById("title-hello"),
+    titleWallet: document.getElementById("title-wallet"),
+    profileWallet: document.getElementById("profile-wallet"),
+    stageRow: document.getElementById("stage-row"),
+    score: document.getElementById("score-count"),
     profile: document.getElementById("profile"),
     profileAccount: document.getElementById("profile-account"),
     profileStepLabel: document.getElementById("profile-step-label"),
@@ -341,6 +345,65 @@
       sockStripe: "#1c2a6b",
       clip: "#ffd15c",
     },
+    {
+      id: "picnic",
+      name: "피크닉 체크",
+      vibe: "공원 낮",
+      for: "any",
+      cost: 80,
+      cut: "tee",
+      bottom: "skirt",
+      top: "#fff6e4",
+      topShade: "#e8d9b0",
+      bottomGirl: "#e23b3b",
+      bottomBoy: "#2f4f9a",
+      shoesGirl: "#fff6e4",
+      shoesBoy: "#fff6e4",
+      shoeStripe: "#e23b3b",
+      socks: "#ffffff",
+      sockStripe: "#e23b3b",
+      clip: "#e23b3b",
+    },
+    {
+      id: "sailor",
+      name: "세일러 룩",
+      vibe: "공원 연못",
+      for: "any",
+      cost: 140,
+      cut: "polo",
+      bottom: "bermuda",
+      top: "#ffffff",
+      topShade: "#e6e6e6",
+      accent: "#1c2a6b",
+      bottomGirl: "#1c2a6b",
+      bottomBoy: "#1c2a6b",
+      shoesGirl: "#ffffff",
+      shoesBoy: "#ffffff",
+      shoeStripe: "#1c2a6b",
+      socks: "#ffffff",
+      sockStripe: "#1c2a6b",
+      clip: "#e23b3b",
+    },
+    {
+      id: "nightglow",
+      name: "네온 나이트",
+      vibe: "공원 밤",
+      for: "any",
+      cost: 180,
+      cut: "hoodie",
+      bottom: "wide",
+      top: "#2a1248",
+      topShade: "#160a2a",
+      bottomGirl: "#111114",
+      bottomBoy: "#111114",
+      shoesGirl: "#7dff4a",
+      shoesBoy: "#7dff4a",
+      shoeStripe: "#9b6dff",
+      socks: "#2a2a2e",
+      sockStripe: "#9b6dff",
+      strings: "#7dff4a",
+      clip: "#7dff4a",
+    },
   ];
 
   const SKIN = "#f3c4a0";
@@ -439,6 +502,64 @@
       handle: "#c47a3a",
       grip: "#e23b3b",
     },
+    {
+      id: "pond-paddle",
+      name: "연못 노",
+      hint: "배 패들로 뿅",
+      tool: "paddle",
+      cost: 120,
+      color: "#c47a3a",
+      pattern: "solid",
+      handle: "#8a5a32",
+      grip: "#5a3518",
+    },
+    {
+      id: "park-racket",
+      name: "배드민턴 채",
+      hint: "공원 밤 랠리용",
+      tool: "racket",
+      cost: 180,
+      color: "#4aa3e8",
+      pattern: "solid",
+      handle: "#2b3a24",
+      grip: "#ffe34a",
+    },
+  ];
+
+  const STAGES = [
+    {
+      id: "park-1",
+      name: "공원 낮",
+      hint: "같은 공원, 기본 속도",
+      unlockScore: 0,
+      tint: null,
+      trap: 0.16,
+      intervalBoost: 0,
+      maxUpAdd: 0,
+      burstAdd: 0,
+    },
+    {
+      id: "park-2",
+      name: "공원 노을",
+      hint: "같은 공원, 조금 더 바빠요",
+      unlockScore: 90,
+      tint: "rgba(255,120,50,0.18)",
+      trap: 0.24,
+      intervalBoost: 0.03,
+      maxUpAdd: 10,
+      burstAdd: 2,
+    },
+    {
+      id: "park-3",
+      name: "공원 밤",
+      hint: "같은 공원, 구멍이 더 자주 열려요",
+      unlockScore: 160,
+      tint: "rgba(18,28,70,0.36)",
+      trap: 0.3,
+      intervalBoost: 0.05,
+      maxUpAdd: 22,
+      burstAdd: 4,
+    },
   ];
 
   const keys = Object.create(null);
@@ -482,12 +603,120 @@
   const APPLE_CLIENT_ID = "";
   let account = null;
   let profileStep = 0;
-  let avatar = {
-    gender: "girl",
-    outfitId: "lemon",
-    hammerId: "cherry-stripe",
-    complete: false,
+  let runScore = 0;
+  let progress = {
+    wallet: 0,
+    stageId: "park-1",
+    unlocked: ["park-1"],
+    ownedOutfits: [],
+    ownedHammers: [],
+    best: {},
   };
+
+  function progressKey() {
+    return account ? `ppyong-progress-${account.id}` : "ppyong-progress-guest";
+  }
+
+  function freeOutfitIds() {
+    return OUTFITS.filter((o) => !o.cost).map((o) => o.id);
+  }
+
+  function freeHammerIds() {
+    return HAMMER_DESIGNS.filter((h) => !h.cost).map((h) => h.id);
+  }
+
+  function loadProgress() {
+    progress = {
+      wallet: 0,
+      stageId: "park-1",
+      unlocked: ["park-1"],
+      ownedOutfits: freeOutfitIds(),
+      ownedHammers: freeHammerIds(),
+      best: {},
+    };
+    try {
+      const raw = JSON.parse(localStorage.getItem(progressKey()) || "{}");
+      if (typeof raw.wallet === "number") progress.wallet = Math.max(0, raw.wallet);
+      if (STAGES.some((s) => s.id === raw.stageId)) progress.stageId = raw.stageId;
+      if (Array.isArray(raw.unlocked)) {
+        progress.unlocked = STAGES.map((s) => s.id).filter(
+          (id) => raw.unlocked.includes(id) || id === "park-1"
+        );
+      }
+      if (Array.isArray(raw.ownedOutfits)) {
+        progress.ownedOutfits = [...new Set([...freeOutfitIds(), ...raw.ownedOutfits])];
+      }
+      if (Array.isArray(raw.ownedHammers)) {
+        progress.ownedHammers = [...new Set([...freeHammerIds(), ...raw.ownedHammers])];
+      }
+      if (raw.best && typeof raw.best === "object") progress.best = raw.best;
+    } catch (err) {
+      /* keep defaults */
+    }
+    if (!progress.unlocked.includes(progress.stageId)) progress.stageId = "park-1";
+  }
+
+  function persistProgress() {
+    localStorage.setItem(progressKey(), JSON.stringify(progress));
+    syncWalletUI();
+  }
+
+  function currentStage() {
+    return STAGES.find((s) => s.id === progress.stageId) || STAGES[0];
+  }
+
+  function ownsOutfit(id) {
+    const o = outfitOf(id);
+    return !o.cost || progress.ownedOutfits.includes(id);
+  }
+
+  function ownsHammer(id) {
+    const h = hammerOf(id);
+    return !h.cost || progress.ownedHammers.includes(id);
+  }
+
+  function buyOutfit(id) {
+    const o = outfitOf(id);
+    if (!o.cost || ownsOutfit(id) || progress.wallet < o.cost) return false;
+    progress.wallet -= o.cost;
+    progress.ownedOutfits.push(id);
+    persistProgress();
+    return true;
+  }
+
+  function buyHammer(id) {
+    const h = hammerOf(id);
+    if (!h.cost || ownsHammer(id) || progress.wallet < h.cost) return false;
+    progress.wallet -= h.cost;
+    progress.ownedHammers.push(id);
+    persistProgress();
+    return true;
+  }
+
+  function scoreToCoins(score) {
+    return Math.max(1, Math.floor(score / 4));
+  }
+
+  function settleRun(title) {
+    const payout = scoreToCoins(runScore);
+    progress.wallet += payout;
+    const st = currentStage();
+    progress.best[st.id] = Math.max(progress.best[st.id] || 0, runScore);
+    const idx = STAGES.findIndex((s) => s.id === st.id);
+    const next = STAGES[idx + 1];
+    let extra = "";
+    if (next && runScore >= next.unlockScore && !progress.unlocked.includes(next.id)) {
+      progress.unlocked.push(next.id);
+      extra = ` ${next.name} 해금!`;
+    } else if (next && !progress.unlocked.includes(next.id)) {
+      extra = ` 다음 단계까지 점수 ${next.unlockScore}점이 필요해요.`;
+    }
+    persistProgress();
+    if (el.resultTitle) el.resultTitle.textContent = title;
+    if (el.resultSummary) {
+      el.resultSummary.textContent = `점수 ${runScore}점 → 코인 +${payout} (보유 ${progress.wallet}). 두더지 ${totalCaught}마리.${extra}`;
+    }
+  }
 
   function outfitsFor(gender) {
     return OUTFITS.filter((o) => o.for === gender || o.for === "any");
@@ -498,9 +727,13 @@
   }
 
   function ensureOutfitForGender() {
-    const list = outfitsFor(avatar.gender);
-    if (!list.some((o) => o.id === avatar.outfitId)) {
-      avatar.outfitId = list[0].id;
+    const list = outfitsFor(avatar.gender).filter((o) => ownsOutfit(o.id));
+    const pick = list.length ? list : outfitsFor(avatar.gender);
+    if (!pick.some((o) => o.id === avatar.outfitId)) {
+      avatar.outfitId = pick[0].id;
+    }
+    if (!ownsHammer(avatar.hammerId)) {
+      avatar.hammerId = freeHammerIds()[0];
     }
   }
 
@@ -592,6 +825,7 @@
   function finishLogin(next) {
     account = next;
     persistAccount();
+    loadProgress();
     loadAvatar();
     if (avatar.complete) showTitle();
     else openProfile();
@@ -653,8 +887,48 @@
     }
     if (el.titleHello) {
       const who = account && account.name ? `${account.name}님, ` : "";
-      el.titleHello.textContent = `${who}공원 구멍마다 누군가 고개를 내민다.`;
+      const st = currentStage();
+      el.titleHello.textContent = `${who}${st.name}. ${st.hint}`;
     }
+    syncWalletUI();
+    mountStageRow();
+  }
+
+  function syncWalletUI() {
+    const text = `보유 코인 ${progress.wallet}`;
+    if (el.titleWallet) el.titleWallet.textContent = text;
+    if (el.profileWallet) el.profileWallet.textContent = text;
+  }
+
+  function mountStageRow() {
+    const root = el.stageRow;
+    if (!root) return;
+    root.innerHTML = "";
+    STAGES.forEach((st) => {
+      const locked = !progress.unlocked.includes(st.id);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "stage-chip";
+      if (progress.stageId === st.id) btn.classList.add("selected");
+      if (locked) btn.classList.add("locked");
+      const name = document.createElement("b");
+      name.textContent = st.name;
+      const hint = document.createElement("small");
+      hint.textContent = locked ? `${st.unlockScore}점으로 해금` : st.hint;
+      btn.append(name, hint);
+      btn.disabled = locked;
+      btn.addEventListener("click", () => {
+        if (locked) return;
+        progress.stageId = st.id;
+        persistProgress();
+        mountStageRow();
+        if (el.titleHello) {
+          const who = account && account.name ? `${account.name}님, ` : "";
+          el.titleHello.textContent = `${who}${st.name}. ${st.hint}`;
+        }
+      });
+      root.append(btn);
+    });
   }
 
   function openProfile() {
@@ -664,6 +938,7 @@
     show("title", false);
     show("briefing", false);
     show("profile", true);
+    syncWalletUI();
     if (el.profileAccount) {
       el.profileAccount.textContent = account
         ? account.apple
@@ -685,6 +960,8 @@
     show("hud", false);
     show("controls", false);
     show("briefing", true);
+    const briefTitle = document.querySelector("#briefing h2");
+    if (briefTitle) briefTitle.textContent = `${currentStage().name}에 나오는 녀석들`;
   }
 
   function beginPlay() {
@@ -786,6 +1063,7 @@
     comboTimer = 0;
     round = 1;
     totalCaught = 0;
+    runScore = 0;
     playTime = 0;
   }
 
@@ -952,7 +1230,7 @@
     if (!empty.length) return;
     const hole = empty[(Math.random() * empty.length) | 0];
     let kind = "normal";
-    if (scene === "play" && !forceGold && Math.random() < 0.22) {
+    if (scene === "play" && !forceGold && Math.random() < currentStage().trap) {
       kind = ["skunk", "rabbit", "raccoon"][(Math.random() * 3) | 0];
     } else if (forceGold || Math.random() < 0.12) {
       kind = "gold";
@@ -987,6 +1265,7 @@
     const base = mole.kind === "gold" ? 12 : 5;
     const gain = Math.round(base * upgradeValue("luck") * (1 + Math.min(combo, 12) * 0.08));
     coins += gain;
+    runScore += gain;
     roundCaught += 1;
     totalCaught += 1;
     shake = mole.kind === "gold" ? 8 : 5;
@@ -1051,10 +1330,10 @@
     show("controls", false);
     show("hud", true);
     show("result", true);
-    el.resultTitle.textContent = "이런!";
-    const best = Number(localStorage.getItem("mole-best") || 0);
-    if (totalCaught > best) localStorage.setItem("mole-best", String(totalCaught));
-    el.resultSummary.textContent = `${reason} 두더지 ${totalCaught}마리, 코인 ${coins}개였어요.`;
+    settleRun("이런!");
+    if (reason && el.resultSummary) {
+      el.resultSummary.textContent = `${reason} ${el.resultSummary.textContent}`;
+    }
   }
 
   function burst(x, y, color, n) {
@@ -1191,17 +1470,19 @@
 
   function syncHud() {
     el.coins.textContent = String(coins);
+    if (el.score) el.score.textContent = String(runScore);
     el.combo.textContent = String(combo);
     el.time.textContent = String(Math.ceil(timeLeft));
     el.round.textContent = String(round);
   }
 
   function difficulty() {
+    const st = currentStage();
     const t = playTime + (round - 1) * 18;
     return {
-      interval: Math.max(0.035, 0.1 - t * 0.0025),
-      maxUp: Math.min(70, 32 + Math.floor(t / 5)),
-      burst: t > 24 ? 8 : t > 8 ? 6 : 4,
+      interval: Math.max(0.03, 0.1 - t * 0.0025 - st.intervalBoost),
+      maxUp: Math.min(80, 32 + Math.floor(t / 5) + st.maxUpAdd),
+      burst: (t > 24 ? 8 : t > 8 ? 6 : 4) + st.burstAdd,
     };
   }
 
@@ -1413,11 +1694,7 @@
       show("controls", false);
       show("hud", true);
       show("result", true);
-      el.resultTitle.textContent = "오늘은 여기까지!";
-      const best = Number(localStorage.getItem("mole-best") || 0);
-      const score = totalCaught;
-      if (score > best) localStorage.setItem("mole-best", String(score));
-      el.resultSummary.textContent = `두더지 ${totalCaught}마리, 코인 ${coins}개 모았어요. 최고 기록 ${Math.max(best, score)}마리!`;
+      settleRun("오늘은 여기까지!");
       return;
     }
     scene = "roundOver";
@@ -1510,239 +1787,205 @@
     });
   }
 
-  function drawAnimalFace(kind, x, faceY) {
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.strokeStyle = INK;
+  function animalPalette(kind) {
+    if (kind === "gold") return { fur: "#e8c423", paw: "#d4a318", line: "#6a4a12" };
+    if (kind === "skunk") return { fur: "#1c1c22", paw: "#141418", line: INK };
+    if (kind === "rabbit") return { fur: "#ead4b4", paw: "#e2c8a6", line: "#5a4030" };
+    if (kind === "raccoon") return { fur: "#8b8176", paw: "#3a3530", line: INK };
+    return { fur: "#8a542c", paw: "#7a4a26", line: INK };
+  }
 
-    if (kind === "rabbit") {
-      ctx.fillStyle = "#fff";
+  function drawPaw(px, py, side, color, line) {
+    ctx.fillStyle = color;
+    ctx.strokeStyle = line;
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.ellipse(px, py, 7.8, 5.5, side * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    for (let i = -1; i <= 1; i++) {
       ctx.beginPath();
-      ctx.ellipse(x - 6.5, faceY, 5.2, 5.8, 0, 0, Math.PI * 2);
-      ctx.ellipse(x + 6.5, faceY, 5.2, 5.8, 0, 0, Math.PI * 2);
+      ctx.ellipse(px + i * 3.5 + side * 0.4, py - 4.6, 2.5, 2.7, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.lineWidth = 2.2;
       ctx.stroke();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.arc(x - 6.5, faceY + 0.6, 2.4, 0, Math.PI * 2);
-      ctx.arc(x + 6.5, faceY + 0.6, 2.4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.arc(x - 5.4, faceY - 0.8, 1.1, 0, Math.PI * 2);
-      ctx.arc(x + 7.6, faceY - 0.8, 1.1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#ff8aa8";
-      ctx.beginPath();
-      ctx.ellipse(x, faceY + 8, 3.4, 2.6, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = INK;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(x - 3, faceY + 8);
-      ctx.lineTo(x - 14, faceY + 6);
-      ctx.moveTo(x - 3, faceY + 10);
-      ctx.lineTo(x - 13, faceY + 12);
-      ctx.moveTo(x + 3, faceY + 8);
-      ctx.lineTo(x + 14, faceY + 6);
-      ctx.moveTo(x + 3, faceY + 10);
-      ctx.lineTo(x + 13, faceY + 12);
-      ctx.stroke();
-      return;
     }
+  }
 
-    if (kind === "skunk") {
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.ellipse(x - 6.2, faceY, 4.6, 5.2, 0, 0, Math.PI * 2);
-      ctx.ellipse(x + 6.2, faceY, 4.6, 5.2, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.arc(x - 6.2, faceY + 0.8, 2.2, 0, Math.PI * 2);
-      ctx.arc(x + 6.2, faceY + 0.8, 2.2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#4a1020";
-      ctx.lineWidth = 2.3;
-      ctx.beginPath();
-      ctx.moveTo(x - 12, faceY - 7);
-      ctx.lineTo(x - 4, faceY - 3);
-      ctx.moveTo(x + 12, faceY - 7);
-      ctx.lineTo(x + 4, faceY - 3);
-      ctx.stroke();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.arc(x, faceY + 7.5, 2.4, 0, Math.PI * 2);
-      ctx.fill();
-      return;
-    }
-
-    if (kind === "raccoon") {
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.ellipse(x - 6.4, faceY, 4.8, 5.4, 0, 0, Math.PI * 2);
-      ctx.ellipse(x + 6.4, faceY, 4.8, 5.4, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.arc(x - 6.4, faceY + 0.5, 2.5, 0, Math.PI * 2);
-      ctx.arc(x + 6.4, faceY + 0.5, 2.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.arc(x - 5.2, faceY - 0.7, 1, 0, Math.PI * 2);
-      ctx.arc(x + 7.6, faceY - 0.7, 1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.ellipse(x, faceY + 8, 3.2, 2.4, 0, 0, Math.PI * 2);
-      ctx.fill();
-      return;
-    }
-
-    if (kind === "gold") {
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.ellipse(x - 5.8, faceY, 3.4, 4.2, 0, 0, Math.PI * 2);
-      ctx.ellipse(x + 5.8, faceY, 3.4, 4.2, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.arc(x - 4.8, faceY - 1, 1.1, 0, Math.PI * 2);
-      ctx.arc(x + 6.8, faceY - 1, 1.1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#ff8aa8";
-      ctx.beginPath();
-      ctx.arc(x, faceY + 6.5, 2.6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = INK;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(x - 3, faceY + 7);
-      ctx.lineTo(x - 12, faceY + 5);
-      ctx.moveTo(x + 3, faceY + 7);
-      ctx.lineTo(x + 12, faceY + 5);
-      ctx.stroke();
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(x, faceY + 10, 4.2, 0.2, Math.PI - 0.2);
-      ctx.stroke();
-      return;
-    }
-
+  function drawShinyEyes(x, y, spread, r) {
     ctx.fillStyle = INK;
     ctx.beginPath();
-    ctx.arc(x - 6, faceY, 2.1, 0, Math.PI * 2);
-    ctx.arc(x + 6, faceY, 2.1, 0, Math.PI * 2);
+    ctx.arc(x - spread, y, r, 0, Math.PI * 2);
+    ctx.arc(x + spread, y, r, 0, Math.PI * 2);
     ctx.fill();
-    ctx.lineWidth = 2.4;
+    ctx.fillStyle = "#fff";
     ctx.beginPath();
-    ctx.moveTo(x - 3.2, faceY + 7);
-    ctx.lineTo(x + 3.2, faceY + 7);
-    ctx.stroke();
+    ctx.arc(x - spread - r * 0.25, y - r * 0.35, r * 0.32, 0, Math.PI * 2);
+    ctx.arc(x + spread - r * 0.15, y - r * 0.35, r * 0.32, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   function drawAnimal(kind, x, y, pop, parts) {
-    const h = 18 + pop * 26;
-    const rx = 15 + pop * 3;
-    let body = "#5c4033";
-    if (kind === "gold") body = "#e8b423";
-    else if (kind === "skunk") body = "#2a2a32";
-    else if (kind === "rabbit") body = "#e8d0b0";
-    else if (kind === "raccoon") body = "#7a6a5a";
-
+    const pal = animalPalette(kind);
+    const rise = pop;
+    const headY = y - 4 - rise * 16;
+    const hr = 10 + rise * 7.5;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    ctx.lineWidth = 2.8;
-    ctx.strokeStyle = INK;
+    ctx.strokeStyle = pal.line;
+    ctx.lineWidth = 2.6;
 
-    if (parts !== "arms") {
+    if (parts !== "paws") {
       if (kind === "rabbit") {
         [-1, 1].forEach((side) => {
           ctx.save();
-          ctx.translate(x + side * 9, y - h + 2);
-          ctx.rotate(side * 0.18);
-          ctx.fillStyle = body;
+          ctx.translate(x + side * hr * 0.42, headY - hr * 0.55);
+          ctx.rotate(side * 0.12);
+          ctx.fillStyle = pal.fur;
           ctx.beginPath();
-          ctx.ellipse(0, -18, 6.5, 20, 0, 0, Math.PI * 2);
+          ctx.ellipse(0, -hr * 0.95, hr * 0.34, hr * 1.15, 0, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
           ctx.fillStyle = "#ffb7c8";
           ctx.beginPath();
-          ctx.ellipse(0, -16, 2.8, 13, 0, 0, Math.PI * 2);
+          ctx.ellipse(0, -hr * 0.85, hr * 0.16, hr * 0.78, 0, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         });
       } else if (kind === "skunk" || kind === "raccoon") {
         [-1, 1].forEach((side) => {
-          ctx.fillStyle = body;
+          ctx.fillStyle = pal.fur;
           ctx.beginPath();
-          ctx.ellipse(x + side * 12, y - h + 8, 6, 7.5, side * 0.28, 0, Math.PI * 2);
+          ctx.ellipse(x + side * hr * 0.78, headY - hr * 0.62, hr * 0.32, hr * 0.38, side * 0.15, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
-          ctx.fillStyle = kind === "raccoon" ? "#f0cbb8" : "#f4f1ea";
+          ctx.fillStyle = kind === "raccoon" ? "#f0cbb8" : "#4a3020";
           ctx.beginPath();
-          ctx.ellipse(x + side * 12, y - h + 9, 2.6, 3.2, side * 0.28, 0, Math.PI * 2);
+          ctx.ellipse(x + side * hr * 0.78, headY - hr * 0.58, hr * 0.16, hr * 0.2, side * 0.15, 0, Math.PI * 2);
           ctx.fill();
         });
       }
 
-      ctx.fillStyle = body;
+      ctx.fillStyle = pal.fur;
       ctx.beginPath();
-      ctx.moveTo(x - rx, y);
-      ctx.bezierCurveTo(x - rx - 1, y - h * 1.15, x + rx + 1, y - h * 1.15, x + rx, y);
-      ctx.closePath();
+      ctx.ellipse(x, headY, hr * 1.05, hr, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
+
+      if (kind === "normal") {
+        ctx.fillStyle = pal.fur;
+        ctx.beginPath();
+        ctx.ellipse(x, headY - hr * 0.92, 3.2, 3.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
 
       if (kind === "skunk") {
         ctx.fillStyle = "#f4f1ea";
         ctx.beginPath();
-        ctx.moveTo(x - 3.8, y - 2);
-        ctx.quadraticCurveTo(x, y - h * 0.98, x + 3.8, y - 2);
+        ctx.moveTo(x - 3.4, headY + hr * 0.2);
+        ctx.quadraticCurveTo(x, headY - hr * 1.05, x + 3.4, headY + hr * 0.2);
         ctx.closePath();
         ctx.fill();
       }
-      if (kind === "gold") {
-        ctx.fillStyle = "#ffe56b";
-        ctx.beginPath();
-        ctx.moveTo(x - 9, y - h + 10);
-        ctx.lineTo(x - 5, y - h - 8);
-        ctx.lineTo(x, y - h + 8);
-        ctx.lineTo(x + 5, y - h - 8);
-        ctx.lineTo(x + 9, y - h + 10);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-      }
+
       if (kind === "raccoon") {
         ctx.fillStyle = INK;
         ctx.beginPath();
-        ctx.ellipse(x, y - h * 0.58, rx * 0.82, 6.2, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, headY - hr * 0.05, hr * 0.92, hr * 0.42, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#f4f1ea";
+        ctx.beginPath();
+        ctx.ellipse(x - hr * 0.42, headY - hr * 0.06, hr * 0.34, hr * 0.3, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + hr * 0.42, headY - hr * 0.06, hr * 0.34, hr * 0.3, 0, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      drawAnimalFace(kind, x, y - h * 0.62);
+      if (kind === "gold") {
+        ctx.fillStyle = "#ffe56b";
+        ctx.strokeStyle = "#6a4a12";
+        ctx.beginPath();
+        ctx.moveTo(x - hr * 0.62, headY - hr * 0.55);
+        ctx.lineTo(x - hr * 0.38, headY - hr * 1.22);
+        ctx.lineTo(x, headY - hr * 0.62);
+        ctx.lineTo(x + hr * 0.38, headY - hr * 1.22);
+        ctx.lineTo(x + hr * 0.62, headY - hr * 0.55);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        [
+          [hr * 0.7, -hr * 0.2],
+          [-hr * 0.55, hr * 0.15],
+          [hr * 0.15, -hr * 0.7],
+        ].forEach(([dx, dy]) => {
+          ctx.beginPath();
+          ctx.arc(x + dx, headY + dy, 1.4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      drawShinyEyes(x, headY - hr * 0.08, hr * 0.38, kind === "rabbit" ? 3.3 : 2.8);
+
+      if (kind === "skunk") {
+        ctx.strokeStyle = "#4a1020";
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(x - hr * 0.55, headY - hr * 0.42);
+        ctx.lineTo(x - hr * 0.18, headY - hr * 0.22);
+        ctx.moveTo(x + hr * 0.55, headY - hr * 0.42);
+        ctx.lineTo(x + hr * 0.18, headY - hr * 0.22);
+        ctx.stroke();
+      }
+
+      if (kind === "rabbit") {
+        ctx.fillStyle = "#ffb3c4";
+        ctx.beginPath();
+        ctx.ellipse(x - hr * 0.55, headY + hr * 0.18, 3.2, 2.2, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + hr * 0.55, headY + hr * 0.18, 3.2, 2.2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#ff8aa8";
+        ctx.beginPath();
+        ctx.moveTo(x, headY + hr * 0.28);
+        ctx.lineTo(x - 2.4, headY + hr * 0.42);
+        ctx.lineTo(x + 2.4, headY + hr * 0.42);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = pal.line;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.arc(x, headY + hr * 0.52, 2.4, 0.15, Math.PI - 0.15);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = "#ff8aa8";
+        ctx.beginPath();
+        ctx.ellipse(x, headY + hr * 0.28, kind === "skunk" ? 2.1 : 2.6, kind === "skunk" ? 1.7 : 2.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = pal.line;
+        ctx.lineWidth = 1.5;
+        if (kind === "normal" || kind === "gold" || !kind) {
+          [
+            [-1, -0.2],
+            [-1, 0.15],
+            [-1, 0.45],
+            [1, -0.2],
+            [1, 0.15],
+            [1, 0.45],
+          ].forEach(([side, oy]) => {
+            ctx.beginPath();
+            ctx.moveTo(x + side * 3.2, headY + hr * 0.3 + oy * 6);
+            ctx.lineTo(x + side * (hr * 0.85), headY + hr * 0.22 + oy * 8);
+            ctx.stroke();
+          });
+        }
+        ctx.beginPath();
+        ctx.arc(x, headY + hr * 0.42, 3.4, 0.2, Math.PI - 0.2);
+        ctx.stroke();
+      }
     }
 
     if (parts !== "body") {
-      ctx.lineWidth = 2.4;
-      ctx.strokeStyle = INK;
-      [-1, 1].forEach((side) => {
-        const sx = x + side * (rx * 0.7);
-        const sy = y - h * 0.36;
-        ctx.fillStyle = body;
-        ctx.beginPath();
-        ctx.ellipse(sx + side * 5.4, sy + 8, 6.6, 13.2, side * 0.4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = "#f2d4c2";
-        ctx.beginPath();
-        ctx.ellipse(sx + side * 8.2, sy + 18.5, 5.6, 4.8, side * 0.22, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      });
+      drawPaw(x - 16, y + 6.5, -1, pal.paw, pal.line);
+      drawPaw(x + 16, y + 6.5, 1, pal.paw, pal.line);
     }
   }
 
@@ -1755,7 +1998,7 @@
     drawShadow(x, hole.y + 8, 14 + pop * 8, 6);
     drawAnimal(m.kind, x, y, pop, "body");
     drawHole(hole);
-    drawAnimal(m.kind, x, y, pop, "arms");
+    drawAnimal(m.kind, x, y, pop, "paws");
   }
 
   function drawCarrot(c) {
@@ -1961,6 +2204,51 @@
     g.save();
     g.translate(15, -30);
     g.rotate(-0.85 + swing * 2.35);
+    if (d.tool === "paddle") {
+      fillRound(g, -2, -2, 4, 30, 2, d.handle || "#8a5a32");
+      g.strokeStyle = LINE;
+      g.lineWidth = 1.3;
+      g.stroke();
+      g.fillStyle = color;
+      g.beginPath();
+      g.ellipse(0, -16, 8, 13, 0, 0, Math.PI * 2);
+      g.fill();
+      g.stroke();
+      g.restore();
+      return;
+    }
+    if (d.tool === "racket") {
+      fillRound(g, -1.5, 0, 3, 22, 1.4, d.handle || "#2b3a24");
+      g.strokeStyle = LINE;
+      g.lineWidth = 1.2;
+      g.stroke();
+      g.fillStyle = color;
+      g.beginPath();
+      g.ellipse(0, -18, 9, 11, 0, 0, Math.PI * 2);
+      g.fill();
+      g.stroke();
+      g.save();
+      g.beginPath();
+      g.ellipse(0, -18, 7, 9, 0, 0, Math.PI * 2);
+      g.clip();
+      g.strokeStyle = "rgba(255,255,255,0.75)";
+      g.lineWidth = 0.7;
+      for (let i = -6; i <= 6; i += 3) {
+        g.beginPath();
+        g.moveTo(i, -28);
+        g.lineTo(i, -8);
+        g.stroke();
+      }
+      for (let i = -8; i <= 8; i += 3) {
+        g.beginPath();
+        g.moveTo(-8, -18 + i);
+        g.lineTo(8, -18 + i);
+        g.stroke();
+      }
+      g.restore();
+      g.restore();
+      return;
+    }
     fillRound(g, -2.4, -4, 4.8, 24, 1.8, d.handle || "#d4a06a");
     g.strokeStyle = LINE;
     g.lineWidth = 1.2;
@@ -1996,42 +2284,11 @@
     g.ellipse(w * 0.78, h * 0.2, 22, 10, 0, 0, Math.PI * 2);
     g.fill();
     const d = design || hammerOf(avatar.hammerId);
-    const color = d.color;
-    const cap = hammerAccent(color);
-    const hx = w * 0.5;
-    const hy = h * 0.18;
-    const hw = w * 0.72;
-    const hh = h * 0.28;
-    const handleW = w * 0.12;
-    const handleH = h * 0.48;
     g.save();
-    g.translate(hx, hy + hh * 0.55);
-    g.rotate(-0.18);
-    fillRound(g, -handleW / 2, hh * 0.2, handleW, handleH, handleW * 0.4, d.handle || "#d4a06a");
-    g.strokeStyle = LINE;
-    g.lineWidth = 3;
-    g.stroke();
-    fillRound(
-      g,
-      -handleW * 0.7,
-      hh * 0.28,
-      handleW * 1.4,
-      handleH * 0.18,
-      6,
-      d.grip || "#4aa3e8"
-    );
-    fillRound(g, -hw / 2, -hh / 2, hw, hh, 16, color);
-    paintHammerPattern(g, -hw / 2, -hh / 2, hw, hh, d.pattern, color);
-    g.strokeStyle = LINE;
-    g.lineWidth = 4;
-    g.beginPath();
-    if (g.roundRect) g.roundRect(-hw / 2, -hh / 2, hw, hh, 16);
-    else g.rect(-hw / 2, -hh / 2, hw, hh);
-    g.stroke();
-    fillRound(g, -hw / 2, -hh / 2, hw * 0.16, hh, 10, cap);
-    fillRound(g, hw / 2 - hw * 0.16, -hh / 2, hw * 0.16, hh, 10, cap);
-    g.fillStyle = "rgba(255,255,255,0.35)";
-    fillRound(g, -hw / 2 + 14, -hh / 2 + 10, hw * 0.28, hh * 0.22, 8, "rgba(255,255,255,0.35)");
+    g.translate(w * 0.5, h * 0.78);
+    g.rotate(-0.2);
+    g.scale(w / 70, w / 70);
+    drawMallet(g, 0.08, d);
     g.restore();
   }
 
@@ -2377,12 +2634,20 @@
       const name = document.createElement("b");
       name.textContent = o.name;
       const vibe = document.createElement("small");
-      vibe.textContent = o.vibe;
+      vibe.textContent = o.cost
+        ? ownsOutfit(o.id)
+          ? `${o.vibe} · 보유`
+          : `${o.vibe} · ${o.cost}코인`
+        : o.vibe;
       txt.append(name, vibe);
       btn.append(cv, txt);
+      if (!ownsOutfit(o.id)) btn.classList.add("locked");
       btn.addEventListener("click", () => {
+        if (!ownsOutfit(o.id) && !buyOutfit(o.id)) return;
         avatar.outfitId = o.id;
         persistAvatar();
+        mountOutfitCards();
+        syncAvatarPickerUI();
       });
       outfits.append(btn);
     });
@@ -2405,12 +2670,20 @@
       const name = document.createElement("b");
       name.textContent = d.name;
       const hint = document.createElement("small");
-      hint.textContent = d.hint;
+      hint.textContent = d.cost
+        ? ownsHammer(d.id)
+          ? `${d.hint} · 보유`
+          : `${d.hint} · ${d.cost}코인`
+        : d.hint;
       txt.append(name, hint);
       btn.append(cv, txt);
+      if (!ownsHammer(d.id)) btn.classList.add("locked");
       btn.addEventListener("click", () => {
+        if (!ownsHammer(d.id) && !buyHammer(d.id)) return;
         avatar.hammerId = d.id;
         persistAvatar();
+        mountHammerCards();
+        syncAvatarPickerUI();
       });
       root.append(btn);
     });
@@ -2561,6 +2834,11 @@
       ctx.stroke();
     }
     ctx.restore();
+    const tint = currentStage().tint;
+    if (tint) {
+      ctx.fillStyle = tint;
+      ctx.fillRect(0, 0, viewW, viewH);
+    }
     if (stunKind === "skunk") {
       ctx.fillStyle = "rgba(150, 190, 40, 0.28)";
       ctx.fillRect(0, 0, viewW, viewH);
@@ -2739,6 +3017,7 @@
   function init() {
     resize();
     loadAccount();
+    loadProgress();
     loadAvatar();
     mountGenderCards();
     syncHammerButton();

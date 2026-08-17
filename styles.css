@@ -704,6 +704,57 @@ canvas#game {
   box-shadow: 0 1px 0 #000;
 }
 
+.wallet-line {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: #9a6b00;
+}
+
+.stage-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.stage-chip {
+  font-family: inherit;
+  cursor: pointer;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 14px;
+  padding: 8px 6px;
+  box-shadow: 0 3px 0 #2b3a24;
+  color: inherit;
+}
+
+.stage-chip b,
+.stage-chip small {
+  display: block;
+}
+
+.stage-chip small {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #6b7a62;
+}
+
+.stage-chip.selected {
+  background: #fff4c2;
+  border-color: #c48a00;
+  box-shadow: 0 3px 0 #c48a00;
+}
+
+.stage-chip.locked,
+.outfit-chip.locked,
+.hammer-card.locked {
+  opacity: 0.55;
+}
+
+.stage-chip:disabled {
+  cursor: default;
+}
+
 .login-note {
   margin: 14px 0 0;
   font-size: 13px;
