@@ -2823,7 +2823,7 @@
     g.strokeStyle = LINE;
     g.lineWidth = 7;
     g.beginPath();
-    g.moveTo(-8, -42);
+    g.moveTo(-11, -33);
     g.lineTo(holdX, holdY);
     g.stroke();
     g.strokeStyle = SKIN;
