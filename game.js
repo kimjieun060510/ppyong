@@ -1,14 +1,14 @@
 (() => {
   "use strict";
 
-  const WORLD_W = 1760;
-  const WORLD_H = 1320;
+  const WORLD_W = 5280;
+  const WORLD_H = 3960;
   const ZOOM = 2.25;
   const ROUND_TIME = 40;
   const TOTAL_ROUNDS = 6;
   const WATER_TIME = 5;
   const RABBIT_TIME = 3;
-  const POND = { x: 430, y: 980, rx: 170, ry: 92 };
+  const POND = { x: 1290, y: 2940, rx: 210, ry: 114 };
   const SAFE_SPAWN = { x: WORLD_W * 0.55, y: WORLD_H * 0.42 };
 
   const canvas = document.getElementById("game");
@@ -425,7 +425,7 @@
     const rand = rng(20260817);
     trees = [];
     flowers = [];
-    for (let i = 0; i < 26; i++) {
+    for (let i = 0; i < 78; i++) {
       const x = 80 + rand() * (WORLD_W - 160);
       const y = 80 + rand() * (WORLD_H - 160);
       if (inPond(x, y, 70)) continue;
@@ -438,7 +438,7 @@
         hue: 110 + rand() * 30,
       });
     }
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < 270; i++) {
       flowers.push({
         x: rand() * WORLD_W,
         y: rand() * WORLD_H,
@@ -450,7 +450,7 @@
   function placeHoles() {
     const list = [];
     let tries = 0;
-    while (list.length < 11 && tries < 700) {
+    while (list.length < 32 && tries < 2800) {
       tries += 1;
       const x = 130 + Math.random() * (WORLD_W - 260);
       const y = 150 + Math.random() * (WORLD_H - 280);
@@ -476,25 +476,46 @@
     g.fillStyle = grass;
     g.fillRect(0, 0, WORLD_W, WORLD_H);
 
-    for (let i = 0; i < 5200; i++) {
+    for (let i = 0; i < 16000; i++) {
       const x = rand() * WORLD_W;
       const y = rand() * WORLD_H;
       g.fillStyle = rand() > 0.5 ? "rgba(90, 160, 60, 0.35)" : "rgba(180, 220, 90, 0.28)";
       g.fillRect(x, y, 2 + rand() * 2, 3 + rand() * 5);
     }
 
-    g.strokeStyle = "#c9a36b";
-    g.lineWidth = 78;
-    g.lineCap = "round";
-    g.beginPath();
-    g.moveTo(80, 220);
-    g.quadraticCurveTo(520, 280, 700, 520);
-    g.quadraticCurveTo(940, 820, 1280, 760);
-    g.quadraticCurveTo(1560, 700, 1700, 980);
-    g.stroke();
-    g.strokeStyle = "#e6c58a";
-    g.lineWidth = 48;
-    g.stroke();
+    const paths = [
+      [
+        [240, 660],
+        [1560, 840, 2100, 1560],
+        [2820, 2460, 3840, 2280],
+        [4680, 2100, 5100, 2940],
+      ],
+      [
+        [360, 3180],
+        [1680, 2100, 2760, 1260],
+        [3900, 720, 5040, 480],
+      ],
+      [
+        [720, 1860],
+        [1980, 2400, 3180, 1980],
+        [4200, 1500, 4860, 1860],
+      ],
+    ];
+    paths.forEach((pts) => {
+      g.strokeStyle = "#c9a36b";
+      g.lineWidth = 78;
+      g.lineCap = "round";
+      g.lineJoin = "round";
+      g.beginPath();
+      g.moveTo(pts[0][0], pts[0][1]);
+      for (let i = 1; i < pts.length; i++) {
+        g.quadraticCurveTo(pts[i][0], pts[i][1], pts[i][2], pts[i][3]);
+      }
+      g.stroke();
+      g.strokeStyle = "#e6c58a";
+      g.lineWidth = 48;
+      g.stroke();
+    });
 
     g.fillStyle = "#5ec3d8";
     g.beginPath();
@@ -511,12 +532,18 @@
     g.lineWidth = 18;
     g.stroke();
 
-    g.fillStyle = "#e8d27a";
-    g.save();
-    g.translate(1180, 360);
-    g.rotate(-0.2);
-    g.fillRect(-70, -48, 140, 96);
-    g.restore();
+    [
+      [3540, 1080, -0.2],
+      [1860, 1680, 0.35],
+      [4320, 3120, -0.5],
+    ].forEach(([x, y, rot]) => {
+      g.fillStyle = "#e8d27a";
+      g.save();
+      g.translate(x, y);
+      g.rotate(rot);
+      g.fillRect(-70, -48, 140, 96);
+      g.restore();
+    });
 
     for (const f of flowers) {
       if (inPond(f.x, f.y, 10)) continue;
@@ -785,7 +812,7 @@
     const t = playTime + (round - 1) * 18;
     return {
       interval: Math.max(0.38, 1.35 - t * 0.012),
-      maxUp: Math.min(6, 2 + Math.floor(t / 28)),
+      maxUp: Math.min(10, 3 + Math.floor(t / 24)),
     };
   }
 
