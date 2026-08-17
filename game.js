@@ -564,6 +564,27 @@
   let lastTs = 0;
   let parkCanvas = null;
   let audioCtx = null;
+  let bedNodes = null;
+  let songNext = 0;
+  let songIndex = 0;
+  const PARK_MELODY = [
+    [392.0, 0.28],
+    [440.0, 0.28],
+    [523.25, 0.42],
+    [0, 0.14],
+    [392.0, 0.28],
+    [329.63, 0.28],
+    [392.0, 0.5],
+    [0, 0.22],
+    [440.0, 0.28],
+    [493.88, 0.28],
+    [587.33, 0.42],
+    [0, 0.14],
+    [523.25, 0.28],
+    [493.88, 0.28],
+    [392.0, 0.55],
+    [0, 0.45],
+  ];
   let scene = "title";
   let holes = [];
   let trees = [];
@@ -1087,8 +1108,66 @@
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       audioCtx = new AC();
+      const silent = audioCtx.createBuffer(1, 1, 22050);
+      const src = audioCtx.createBufferSource();
+      src.buffer = silent;
+      src.connect(audioCtx.destination);
+      src.start(0);
     }
     if (audioCtx.state === "suspended") audioCtx.resume();
+    startParkSong();
+  }
+
+  function startParkSong() {
+    if (!audioCtx || bedNodes) return;
+    const master = audioCtx.createGain();
+    master.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    master.gain.exponentialRampToValueAtTime(1, audioCtx.currentTime + 0.45);
+    master.connect(audioCtx.destination);
+
+    const pad = audioCtx.createGain();
+    pad.gain.value = 0.028;
+    pad.connect(master);
+    const oscs = [196, 246.94].map((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      g.gain.value = i === 0 ? 0.5 : 0.3;
+      osc.connect(g).connect(pad);
+      osc.start();
+      return osc;
+    });
+
+    bedNodes = { master, oscs, pad };
+    songNext = audioCtx.currentTime + 0.25;
+    songIndex = 0;
+  }
+
+  function playMelodyNote(freq, dur, t0) {
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.055, t0 + 0.035);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur * 0.92);
+    osc.connect(g).connect(bedNodes.master);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.04);
+  }
+
+  function tickParkSong() {
+    if (!audioCtx || !bedNodes || audioCtx.state === "suspended") return;
+    const now = audioCtx.currentTime;
+    if (songNext < now - 0.05) songNext = now;
+    const horizon = now + 1.2;
+    while (songNext < horizon) {
+      const [freq, dur] = PARK_MELODY[songIndex % PARK_MELODY.length];
+      if (freq) playMelodyNote(freq, dur, songNext);
+      songNext += dur;
+      songIndex += 1;
+    }
   }
 
   function tone(freq, dur, type, gain, slide) {
@@ -1112,31 +1191,31 @@
     if (name === "pop") {
       if (now - lastSfxAt.pop < 0.22) return;
       lastSfxAt.pop = now;
-      tone(180, 0.12, "square", 0.04, 320);
+      tone(180, 0.12, "square", 0.07, 320);
       return;
     }
     if (name === "hit") {
-      tone(140, 0.1, "sawtooth", 0.06, 60);
-      tone(420, 0.08, "square", 0.03, 180);
+      tone(140, 0.1, "sawtooth", 0.09, 60);
+      tone(420, 0.08, "square", 0.05, 180);
     }
     if (name === "coin") {
-      tone(660, 0.08, "sine", 0.05, 990);
+      tone(660, 0.08, "sine", 0.08, 990);
     }
-    if (name === "buy") tone(520, 0.16, "triangle", 0.05, 780);
+    if (name === "buy") tone(520, 0.16, "triangle", 0.08, 780);
     if (name === "miss") {
       if (now - lastSfxAt.miss < 0.28) return;
       lastSfxAt.miss = now;
-      tone(180, 0.14, "sine", 0.04, 90);
+      tone(180, 0.14, "sine", 0.07, 90);
       return;
     }
-    if (name === "swing") tone(240, 0.06, "triangle", 0.03, 120);
+    if (name === "swing") tone(240, 0.06, "triangle", 0.05, 120);
     if (name === "splash") {
-      tone(90, 0.22, "sine", 0.06, 40);
-      tone(220, 0.16, "triangle", 0.04, 80);
+      tone(90, 0.22, "sine", 0.09, 40);
+      tone(220, 0.16, "triangle", 0.06, 80);
     }
     if (name === "trap") {
-      tone(110, 0.2, "sawtooth", 0.07, 50);
-      tone(300, 0.12, "square", 0.04, 90);
+      tone(110, 0.2, "sawtooth", 0.1, 50);
+      tone(300, 0.12, "square", 0.06, 90);
     }
   }
 
@@ -1331,7 +1410,7 @@
       stay: currentStage().stayMin + Math.random() * currentStage().stayVar,
       bob: Math.random() * Math.PI * 2,
     };
-    if (scene === "play") sfx("pop");
+    sfx("pop");
     burst(hole.x, hole.y - 8, isTrap(kind) ? "#c45c5c" : "#c9a36b", 7);
   }
 
@@ -2955,6 +3034,7 @@
   function loop(ts) {
     const dt = Math.min(0.033, (ts - lastTs) / 1000 || 0.016);
     lastTs = ts;
+    tickParkSong();
     update(dt);
     ctx.clearRect(0, 0, viewW, viewH);
     drawWorld();
@@ -3122,7 +3202,11 @@
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", resize);
     }
-    window.addEventListener("pointerdown", ensureAudio, { once: true });
+    window.addEventListener("pointerdown", ensureAudio);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") ensureAudio();
+    });
+    window.addEventListener("pageshow", ensureAudio);
     requestAnimationFrame(loop);
   }
 
