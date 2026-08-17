@@ -6,7 +6,8 @@
   const ZOOM = 2.25;
   const ROUND_TIME = 40;
   const TOTAL_ROUNDS = 6;
-  const SOAK_TIME = 5;
+  const WATER_TIME = 5;
+  const RABBIT_TIME = 3;
   const POND = { x: 430, y: 980, rx: 170, ry: 92 };
   const SAFE_SPAWN = { x: WORLD_W * 0.55, y: WORLD_H * 0.42 };
 
@@ -107,6 +108,10 @@
   let hammerPulse = 0;
   let soaked = 0;
   let stunKind = null;
+  let carrots = [];
+  let gasClouds = [];
+  let slashes = [];
+  let slashT = 0;
 
   function rng(seed) {
     let s = seed >>> 0;
@@ -380,22 +385,38 @@
 
   function applyTrap(kind, hole) {
     if (kind === "skunk") {
-      burst(hole.x, hole.y - 18, "#6b4a9a", 16);
-      gameOver("스컹크를 잡아서 게임이 끝났어요.");
+      burst(hole.x, hole.y - 18, "#b6e85a", 20);
+      startGas(player.x, player.y);
+      startStun(
+        "skunk",
+        2.4,
+        "GAME OVER",
+        "스컹크 방귀가 너무 지독해요!"
+      );
+      el.soaked.classList.add("gas");
+      el.soakCount.classList.add("hidden");
       return;
     }
     if (kind === "rabbit") {
-      burst(hole.x, hole.y - 18, "#f4c4d8", 12);
-      startStun("rabbit", SOAK_TIME, "시간 정지!", "토끼를 잡아서 5초 동안 멈춥니다.");
+      burst(hole.x, hole.y - 18, "#ff9f43", 12);
+      throwCarrots(player.x, player.y);
+      startStun("rabbit", RABBIT_TIME, "미끄럼!", "토끼가 당근을 잔뜩 뿌렸어요. 3초 동안 못 움직여요.");
       return;
     }
     const loss = Math.max(12, Math.round(coins * 0.35));
     coins = Math.max(0, coins - loss);
-    burst(hole.x, hole.y - 18, "#c9c0b4", 12);
+    slashT = 0.7;
+    slashes = [0, 1, 2].map((i) => ({
+      ang: -0.7 + i * 0.55,
+      t: 0,
+      delay: i * 0.07,
+    }));
+    burst(player.x, player.y - 18, "#ffd15c", 10);
+    burst(player.x, player.y - 10, "#c45c5c", 8);
     floatTexts.push({
-      x: hole.x,
-      y: hole.y - 36,
-      text: `-${loss}`,
+      x: player.x,
+      y: player.y - 36,
+      text: `할퀴힘 -${loss}`,
       t: 0,
       color: "#a33",
     });
@@ -474,6 +495,10 @@
     });
     particles = [];
     floatTexts = [];
+    carrots = [];
+    gasClouds = [];
+    slashes = [];
+    slashT = 0;
     show("title", false);
     show("shop", false);
     show("roundOver", false);
@@ -483,6 +508,8 @@
     show("controls", true);
     soaked = 0;
     stunKind = null;
+    el.soaked.classList.remove("gas");
+    el.soakCount.classList.remove("hidden");
     resetStick();
     el.round.textContent = String(round);
   }
@@ -597,8 +624,41 @@
     }
   }
 
+  function throwCarrots(px, py) {
+    carrots = [];
+    for (let i = 0; i < 11; i++) {
+      const a = (-Math.PI * 0.15) + Math.random() * Math.PI * 1.3;
+      const d = 24 + Math.random() * 78;
+      carrots.push({
+        x: px,
+        y: py - 8,
+        tx: px + Math.cos(a) * d,
+        ty: py + Math.sin(a) * d * 0.7,
+        t: 0,
+        rot: Math.random() * Math.PI,
+        delay: Math.random() * 0.2,
+      });
+    }
+  }
+
+  function startGas(px, py) {
+    gasClouds = [];
+    for (let i = 0; i < 22; i++) {
+      const a = Math.random() * Math.PI * 2;
+      gasClouds.push({
+        x: px + Math.cos(a) * 8,
+        y: py + Math.sin(a) * 6,
+        r: 10 + Math.random() * 14,
+        vr: 55 + Math.random() * 90,
+        a: 0.28 + Math.random() * 0.22,
+        hue: 72 + Math.random() * 36,
+      });
+    }
+  }
+
   function startStun(kind, seconds, title, lead) {
-    if (soaked > 0 || scene !== "play") return;
+    if (scene !== "play") return;
+    if (soaked > 0 && kind !== "skunk") return;
     soaked = seconds;
     stunKind = kind;
     combo = 0;
@@ -608,6 +668,8 @@
     el.stunTitle.textContent = title;
     el.stunLead.textContent = lead;
     el.soakCount.textContent = String(Math.ceil(seconds));
+    el.soakCount.classList.toggle("hidden", kind === "skunk");
+    el.soaked.classList.toggle("gas", kind === "skunk");
     show("soaked", true);
   }
 
@@ -616,19 +678,25 @@
     sfx("splash");
     burst(player.x, player.y - 8, "#9fe7ff", 18);
     burst(player.x, player.y - 4, "#5ec3d8", 10);
-    startStun("water", SOAK_TIME, "풍덩!", "물에 빠졌어요. 잠시 허우적거리는 중...");
+    startStun("water", WATER_TIME, "풍덩!", "허우적거려서 5초 동안 못 움직여요.");
   }
 
   function recoverFromStun() {
     const kind = stunKind;
     soaked = 0;
     stunKind = null;
+    carrots = [];
     show("soaked", false);
+    el.soaked.classList.remove("gas");
+    el.soakCount.classList.remove("hidden");
     if (kind === "water") {
       player.x = SAFE_SPAWN.x;
       player.y = SAFE_SPAWN.y;
       player.runT = 0;
       burst(player.x, player.y - 10, "#fff", 8);
+    }
+    if (kind === "skunk") {
+      gameOver("스컹크 방귀가 공원에 퍼져서 게임이 끝났어요.");
     }
   }
 
@@ -685,11 +753,33 @@
       f.y -= 28 * dt;
       return f.t < 0.8;
     });
+    carrots.forEach((c) => {
+      c.t += dt;
+      const u = clamp((c.t - c.delay) / 0.32, 0, 1);
+      c.drawX = c.x + (c.tx - c.x) * u;
+      c.drawY = c.y + (c.ty - c.y) * u - Math.sin(u * Math.PI) * 38;
+      c.rot += dt * 7;
+    });
+    gasClouds.forEach((g) => {
+      g.r += g.vr * dt;
+      g.a = Math.max(0.08, g.a - dt * 0.04);
+      g.y -= dt * 12;
+    });
+    if (slashT > 0) slashT -= dt;
+    slashes.forEach((s) => {
+      s.t += dt;
+    });
   }
 
   function endRound() {
+    if (stunKind === "skunk") {
+      recoverFromStun();
+      return;
+    }
     soaked = 0;
     stunKind = null;
+    carrots = [];
+    gasClouds = [];
     show("soaked", false);
     if (round >= TOTAL_ROUNDS) {
       scene = "result";
@@ -720,17 +810,23 @@
       return;
     }
     if (scene === "play") {
+      playTime += dt;
+      timeLeft -= dt;
       if (soaked > 0) {
         soaked -= dt;
-        el.soakCount.textContent = String(Math.max(1, Math.ceil(soaked)));
+        if (stunKind !== "skunk") {
+          el.soakCount.textContent = String(Math.max(1, Math.ceil(soaked)));
+        }
+        if (stunKind === "water" && Math.random() < 0.45) {
+          burst(player.x, player.y - 6, "#9fe7ff", 3);
+        }
         updateMoles(dt);
         updateFx(dt);
         if (soaked <= 0) recoverFromStun();
+        if (timeLeft <= 0 && scene === "play") endRound();
         syncHud();
         return;
       }
-      playTime += dt;
-      timeLeft -= dt;
       updatePlayer(dt);
       updateMoles(dt);
       updateFx(dt);
@@ -750,237 +846,250 @@
   }
 
   function drawHole(hole) {
-    ctx.fillStyle = "#5c3a22";
+    const lumps = [
+      [-18, 8, 14], [18, 9, 13], [0, 12, 16], [-28, 4, 10], [27, 5, 11],
+    ];
+    ctx.fillStyle = "#6b4324";
+    lumps.forEach(([dx, dy, r]) => {
+      ctx.beginPath();
+      ctx.arc(hole.x + dx, hole.y + dy, r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.fillStyle = "#8d572c";
     ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y + 4, 48, 23, 0, 0, Math.PI * 2);
+    ctx.ellipse(hole.x, hole.y + 2, 40, 18, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#8a572f";
+    ctx.fillStyle = "#1a0f0a";
     ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y + 1, 42, 19, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#140c08";
-    ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y, 33, 15, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(90, 55, 30, 0.35)";
-    ctx.beginPath();
-    ctx.ellipse(hole.x - 2, hole.y - 4, 18, 6, 0, 0, Math.PI * 2);
+    ctx.ellipse(hole.x, hole.y, 30, 13, 0, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  function drawPaws(x, y, color, stroke) {
+  function drawPaws(x, y, color) {
     [-1, 1].forEach((side) => {
       ctx.fillStyle = color;
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = 1.6;
       ctx.beginPath();
-      ctx.ellipse(x + side * 18, y, 9, 6, side * 0.35, 0, Math.PI * 2);
+      ctx.ellipse(x + side * 16, y, 8, 6, side * 0.4, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = "#f4c4d0";
+      ctx.fillStyle = "#f3b89a";
       ctx.beginPath();
-      ctx.ellipse(x + side * 18, y + 1, 4.2, 2.6, side * 0.35, 0, Math.PI * 2);
+      ctx.ellipse(x + side * 16, y + 1.2, 4.5, 3, side * 0.4, 0, Math.PI * 2);
       ctx.fill();
     });
   }
 
-  function drawFace(x, y, opts) {
-    const eye = opts.eye;
-    const spark = opts.spark;
-    const angry = opts.angry;
-    const sleepy = opts.sleepy;
-    ctx.fillStyle = eye;
-    ctx.beginPath();
-    ctx.ellipse(x - 8, y, 4.2, sleepy ? 2.4 : 4.6, 0, 0, Math.PI * 2);
-    ctx.ellipse(x + 8, y, 4.2, sleepy ? 2.4 : 4.6, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = spark;
-    ctx.beginPath();
-    ctx.arc(x - 7, y - 1.2, 1.3, 0, Math.PI * 2);
-    ctx.arc(x + 9, y - 1.2, 1.3, 0, Math.PI * 2);
-    ctx.fill();
-    if (angry) {
-      ctx.strokeStyle = "#4a1020";
-      ctx.lineWidth = 2.2;
-      ctx.lineCap = "round";
+  function drawGlossyEyes(x, y, white) {
+    if (white) {
+      ctx.fillStyle = "#fff";
       ctx.beginPath();
-      ctx.moveTo(x - 14, y - 8);
-      ctx.lineTo(x - 4, y - 3);
-      ctx.moveTo(x + 14, y - 8);
-      ctx.lineTo(x + 4, y - 3);
-      ctx.stroke();
+      ctx.ellipse(x - 8, y, 6.2, 6.8, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + 8, y, 6.2, 6.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#1a120c";
+      ctx.beginPath();
+      ctx.arc(x - 8, y + 0.5, 3.4, 0, Math.PI * 2);
+      ctx.arc(x + 8, y + 0.5, 3.4, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = "#1a120c";
+      ctx.beginPath();
+      ctx.ellipse(x - 8, y, 5.6, 6.4, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + 8, y, 5.6, 6.4, 0, 0, Math.PI * 2);
+      ctx.fill();
     }
-    ctx.fillStyle = "#ff8aa8";
+    ctx.fillStyle = "#fff";
     ctx.beginPath();
-    ctx.ellipse(x, y + 8, 4.8, 3.4, 0, 0, Math.PI * 2);
+    ctx.arc(x - 6.5, y - 1.6, 1.6, 0, Math.PI * 2);
+    ctx.arc(x + 9.5, y - 1.6, 1.6, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = "rgba(40, 20, 10, 0.45)";
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.moveTo(x - 5, y + 9);
-    ctx.lineTo(x - 16, y + 7);
-    ctx.moveTo(x - 5, y + 11);
-    ctx.lineTo(x - 15, y + 13);
-    ctx.moveTo(x + 5, y + 9);
-    ctx.lineTo(x + 16, y + 7);
-    ctx.moveTo(x + 5, y + 11);
-    ctx.lineTo(x + 15, y + 13);
-    ctx.stroke();
   }
 
   function drawAnimal(kind, x, y) {
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
+    ctx.lineWidth = 3;
+
     if (kind === "rabbit") {
       [-1, 1].forEach((side) => {
         ctx.save();
-        ctx.translate(x + side * 10, y - 16);
-        ctx.rotate(side * 0.18);
-        ctx.fillStyle = "#f3d2b3";
-        ctx.strokeStyle = "#b88868";
-        ctx.lineWidth = 2;
+        ctx.translate(x + side * 11, y - 10);
+        ctx.rotate(side * 0.12);
+        ctx.fillStyle = "#f6e0c8";
         ctx.beginPath();
-        ctx.ellipse(0, -16, 7, 20, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, -18, 7.5, 22, 0, 0, Math.PI * 2);
         ctx.fill();
+        ctx.strokeStyle = "#d7b08c";
         ctx.stroke();
         ctx.fillStyle = "#ffb7c8";
         ctx.beginPath();
-        ctx.ellipse(0, -14, 3.2, 14, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, -16, 3.4, 15, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       });
-      ctx.fillStyle = "#f3d2b3";
-      ctx.strokeStyle = "#b88868";
-      ctx.lineWidth = 2.4;
+      ctx.fillStyle = "#f6e0c8";
       ctx.beginPath();
-      ctx.ellipse(x, y + 10, 22, 20, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y + 6, 23, 18, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
       ctx.beginPath();
-      ctx.ellipse(x, y - 2, 18, 16, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y - 4, 20, 18, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = "#fff6ee";
+      ctx.fillStyle = "#fff8f0";
       ctx.beginPath();
-      ctx.ellipse(x, y + 6, 10, 8, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y + 4, 9, 7, 0, 0, Math.PI * 2);
       ctx.fill();
-      drawFace(x, y - 2, { eye: "#2b1a12", spark: "#fff" });
-      return { paw: "#f3d2b3", stroke: "#b88868" };
+      drawGlossyEyes(x, y - 6, false);
+      ctx.fillStyle = "#ff8aa8";
+      ctx.beginPath();
+      ctx.arc(x, y + 2, 3.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#3b2418";
+      ctx.beginPath();
+      ctx.arc(x, y + 8, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+      return "#f6e0c8";
     }
 
     if (kind === "skunk") {
-      ctx.fillStyle = "#2c2c34";
-      ctx.strokeStyle = "#111118";
-      ctx.lineWidth = 2.4;
+      ctx.fillStyle = "#2a2a32";
       ctx.beginPath();
-      ctx.ellipse(x, y + 10, 21, 19, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y + 6, 22, 17, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
       ctx.beginPath();
-      ctx.ellipse(x, y - 2, 17, 15, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y - 4, 19, 17, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
       ctx.fillStyle = "#f4f1ea";
       ctx.beginPath();
-      ctx.moveTo(x, y + 22);
-      ctx.quadraticCurveTo(x - 7, y + 2, x, y - 18);
-      ctx.quadraticCurveTo(x + 7, y + 2, x, y + 22);
+      ctx.moveTo(x, y + 18);
+      ctx.quadraticCurveTo(x - 6, y, x, y - 20);
+      ctx.quadraticCurveTo(x + 6, y, x, y + 18);
       ctx.fill();
       [-1, 1].forEach((side) => {
-        ctx.fillStyle = "#2c2c34";
+        ctx.fillStyle = "#2a2a32";
         ctx.beginPath();
-        ctx.ellipse(x + side * 12, y - 14, 6, 8, side * 0.3, 0, Math.PI * 2);
+        ctx.ellipse(x + side * 13, y - 16, 6, 7, side * 0.25, 0, Math.PI * 2);
         ctx.fill();
-        ctx.stroke();
+        ctx.fillStyle = "#f4f1ea";
+        ctx.beginPath();
+        ctx.ellipse(x + side * 13, y - 17, 2.4, 3, side * 0.25, 0, Math.PI * 2);
+        ctx.fill();
       });
-      drawFace(x, y - 1, { eye: "#fff", spark: "#1c120c", angry: true });
-      return { paw: "#2c2c34", stroke: "#111118" };
+      drawGlossyEyes(x, y - 5, true);
+      ctx.strokeStyle = "#4a1020";
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.moveTo(x - 13, y - 13);
+      ctx.lineTo(x - 4, y - 8);
+      ctx.moveTo(x + 13, y - 13);
+      ctx.lineTo(x + 4, y - 8);
+      ctx.stroke();
+      ctx.fillStyle = "#1a120c";
+      ctx.beginPath();
+      ctx.arc(x, y + 3, 3.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#1a120c";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y + 8, 4, 0.15, Math.PI - 0.15);
+      ctx.stroke();
+      return "#2a2a32";
     }
 
     if (kind === "raccoon") {
-      ctx.fillStyle = "#8d8278";
-      ctx.strokeStyle = "#4a4038";
-      ctx.lineWidth = 2.4;
+      ctx.fillStyle = "#8b8176";
       ctx.beginPath();
-      ctx.ellipse(x, y + 11, 22, 19, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y + 7, 22, 17, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
       ctx.beginPath();
-      ctx.ellipse(x, y - 2, 17, 15, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y - 4, 19, 17, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
       [-1, 1].forEach((side) => {
-        ctx.fillStyle = "#8d8278";
+        ctx.fillStyle = "#8b8176";
         ctx.beginPath();
-        ctx.ellipse(x + side * 13, y - 15, 6.5, 8, side * 0.35, 0, Math.PI * 2);
+        ctx.ellipse(x + side * 14, y - 17, 6.5, 7.5, side * 0.3, 0, Math.PI * 2);
         ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = "#f0d5c4";
+        ctx.fillStyle = "#f0cbb8";
         ctx.beginPath();
-        ctx.ellipse(x + side * 13, y - 14, 2.8, 3.5, side * 0.35, 0, Math.PI * 2);
+        ctx.ellipse(x + side * 14, y - 16, 2.8, 3.4, side * 0.3, 0, Math.PI * 2);
         ctx.fill();
       });
-      ctx.fillStyle = "#1c120c";
-      ctx.beginPath();
-      ctx.ellipse(x, y - 2, 20, 8.5, 0, 0, Math.PI * 2);
-      ctx.fill();
       ctx.fillStyle = "#efe6dc";
       ctx.beginPath();
-      ctx.ellipse(x, y + 7, 9, 6, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y + 4, 10, 7, 0, 0, Math.PI * 2);
       ctx.fill();
-      drawFace(x, y - 2, { eye: "#fff", spark: "#1c120c" });
-      return { paw: "#8d8278", stroke: "#4a4038" };
+      ctx.fillStyle = "#1c120c";
+      ctx.beginPath();
+      ctx.ellipse(x, y - 5, 20, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      drawGlossyEyes(x, y - 5, true);
+      ctx.fillStyle = "#1c120c";
+      ctx.beginPath();
+      ctx.arc(x, y + 3, 3.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#1c120c";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y + 8, 4.5, 0.2, Math.PI - 0.2);
+      ctx.stroke();
+      return "#8b8176";
     }
 
     const gold = kind === "gold";
-    ctx.fillStyle = gold ? "#e6b423" : "#8a542c";
-    ctx.strokeStyle = gold ? "#a87a10" : "#4a2c16";
-    ctx.lineWidth = 2.4;
+    ctx.fillStyle = gold ? "#e8b423" : "#8a542c";
     ctx.beginPath();
-    ctx.ellipse(x, y + 12, 21, 18, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.ellipse(x, y, 17, 15, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = gold ? "#ffe9a0" : "#c98458";
-    ctx.beginPath();
-    ctx.ellipse(x + 5, y - 4, 6, 5, -0.4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = gold ? "#fff1c2" : "#e8b892";
-    ctx.beginPath();
-    ctx.ellipse(x, y + 7, 9, 7, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 7, 22, 17, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.ellipse(x, y + 10, 11, 6, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y - 4, 20, 18, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = gold ? "#a87a10" : "#4a2c16";
-    ctx.lineWidth = 1.8;
-    ctx.stroke();
-    [-1, 1].forEach((side) => {
-      ctx.fillStyle = gold ? "#e6b423" : "#8a542c";
-      ctx.beginPath();
-      ctx.ellipse(x + side * 12, y - 12, 5, 6, side * 0.4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-    });
+    ctx.fillStyle = gold ? "#ffe9a8" : "#d4a06a";
+    ctx.beginPath();
+    ctx.ellipse(x, y + 3, 10, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = gold ? "#e8b423" : "#8a542c";
+    ctx.beginPath();
+    ctx.ellipse(x, y - 20, 4, 3.5, 0, 0, Math.PI * 2);
+    ctx.fill();
     if (gold) {
       ctx.fillStyle = "#ffe56b";
-      ctx.strokeStyle = "#c48a00";
-      ctx.lineWidth = 1.8;
       ctx.beginPath();
-      ctx.moveTo(x - 10, y - 16);
-      ctx.lineTo(x - 5, y - 28);
-      ctx.lineTo(x, y - 17);
-      ctx.lineTo(x + 5, y - 28);
-      ctx.lineTo(x + 10, y - 16);
+      ctx.moveTo(x - 11, y - 18);
+      ctx.lineTo(x - 6, y - 30);
+      ctx.lineTo(x, y - 19);
+      ctx.lineTo(x + 6, y - 30);
+      ctx.lineTo(x + 11, y - 18);
       ctx.closePath();
       ctx.fill();
-      ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.8)";
+      [[-16, -10], [18, -14], [0, -34]].forEach(([dx, dy]) => {
+        ctx.beginPath();
+        ctx.moveTo(x + dx, y + dy - 4);
+        ctx.lineTo(x + dx + 1.5, y + dy);
+        ctx.lineTo(x + dx, y + dy + 4);
+        ctx.lineTo(x + dx - 1.5, y + dy);
+        ctx.fill();
+      });
     }
-    drawFace(x, y - 2, { eye: "#1c120c", spark: "#fff" });
-    return { paw: gold ? "#e6b423" : "#8a542c", stroke: gold ? "#a87a10" : "#4a2c16" };
+    drawGlossyEyes(x, y - 6, false);
+    ctx.fillStyle = "#ff8aa8";
+    ctx.beginPath();
+    ctx.arc(x, y + 2, 4.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#3b2418";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x - 4, y + 4);
+    ctx.lineTo(x - 14, y + 2);
+    ctx.moveTo(x - 4, y + 6);
+    ctx.lineTo(x - 13, y + 8);
+    ctx.moveTo(x + 4, y + 4);
+    ctx.lineTo(x + 14, y + 2);
+    ctx.moveTo(x + 4, y + 6);
+    ctx.lineTo(x + 13, y + 8);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x, y + 8, 5, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+    return gold ? "#e8b423" : "#f3b89a";
   }
 
   function drawMole(hole) {
@@ -988,27 +1097,83 @@
     if (!m || m.height <= 0.02) return;
     const pop = m.height;
     const x = hole.x;
-    const headY = hole.y - 6 - pop * 30 + Math.sin(m.bob) * 1.4;
-    drawShadow(x, hole.y + 6, 12 + pop * 10, 6);
+    const headY = hole.y - 8 - pop * 28 + Math.sin(m.bob) * 1.2;
+    drawShadow(x, hole.y + 6, 14 + pop * 8, 6);
 
     ctx.save();
     ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y, 33, 15, 0, 0, Math.PI * 2);
-    ctx.rect(x - 58, hole.y - 100, 116, 100);
+    ctx.ellipse(hole.x, hole.y, 30, 13, 0, 0, Math.PI * 2);
+    ctx.rect(x - 56, hole.y - 92, 112, 92);
     ctx.clip();
-    const paws = drawAnimal(m.kind, x, headY);
+    const paw = drawAnimal(m.kind, x, headY);
     ctx.restore();
 
-    ctx.fillStyle = "#7a4e2c";
+    ctx.fillStyle = "#7a4a28";
     ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y + 6, 44, 16, 0, 0.12, Math.PI - 0.12);
+    ctx.ellipse(hole.x, hole.y + 7, 38, 12, 0, 0.15, Math.PI - 0.15);
     ctx.fill();
-    ctx.fillStyle = "#9a6840";
-    ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y + 4, 34, 10, 0, 0.2, Math.PI - 0.2);
-    ctx.fill();
+    drawPaws(x, hole.y, paw);
+  }
 
-    drawPaws(x, hole.y - 1, paws.paw, paws.stroke);
+  function drawCarrot(c) {
+    const x = c.drawX;
+    const y = c.drawY;
+    if (x == null) return;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(c.rot);
+    ctx.fillStyle = "#ff8a2a";
+    ctx.beginPath();
+    ctx.moveTo(0, 14);
+    ctx.lineTo(5, -8);
+    ctx.lineTo(-5, -8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "#5cb85c";
+    ctx.beginPath();
+    ctx.moveTo(0, -8);
+    ctx.lineTo(-4, -16);
+    ctx.lineTo(0, -11);
+    ctx.lineTo(4, -16);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawGasClouds() {
+    gasClouds.forEach((g) => {
+      ctx.fillStyle = `hsla(${g.hue}, 70%, 48%, ${g.a})`;
+      ctx.beginPath();
+      ctx.ellipse(g.x, g.y, g.r, g.r * 0.72, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = `hsla(${g.hue + 20}, 80%, 62%, ${g.a * 0.5})`;
+      ctx.beginPath();
+      ctx.ellipse(g.x - g.r * 0.2, g.y - g.r * 0.15, g.r * 0.45, g.r * 0.3, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  function drawSlashes() {
+    if (!player || slashT <= 0) return;
+    slashes.forEach((s) => {
+      const local = s.t - s.delay;
+      if (local < 0 || local > 0.35) return;
+      const a = 1 - local / 0.35;
+      ctx.save();
+      ctx.translate(player.x, player.y - 8);
+      ctx.rotate(s.ang);
+      ctx.strokeStyle = `rgba(220, 40, 40, ${a})`;
+      ctx.lineWidth = 4;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(-6, -18);
+      ctx.lineTo(18, 10);
+      ctx.stroke();
+      ctx.strokeStyle = `rgba(255, 220, 220, ${a * 0.8})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.restore();
+    });
   }
 
   function drawTree(t) {
@@ -1030,24 +1195,32 @@
     const swing = p.swingT > 0 ? 1 - p.swingT / 0.2 : 0;
     const run = Math.sin(p.runT) * 5;
     const wet = soaked > 0 && stunKind === "water";
+    const trip = soaked > 0 && stunKind === "rabbit";
+    const t = performance.now() / 1000;
     drawShadow(p.x, p.y, 16, 8);
     ctx.save();
-    ctx.translate(p.x, p.y + (wet ? 10 : 0));
-    if (wet) ctx.globalAlpha = 0.72;
+    ctx.translate(p.x, p.y + (wet ? 12 + Math.sin(t * 14) * 3 : 0));
+    if (wet) ctx.globalAlpha = 0.78;
+    if (trip) ctx.rotate(Math.sin(t * 10) * 0.28);
     const flip = Math.cos(p.facing) < 0 ? -1 : 1;
     ctx.scale(flip, 1);
 
     ctx.strokeStyle = "#2b3a24";
     ctx.lineWidth = 4;
     ctx.lineCap = "round";
+    const flap = wet ? Math.sin(t * 16) * 10 : run;
     ctx.beginPath();
+    ctx.moveTo(-8, 2);
+    ctx.lineTo(-16, wet ? -8 + flap : 8);
+    ctx.moveTo(8, 2);
+    ctx.lineTo(16, wet ? -8 - flap : 8);
     ctx.moveTo(-6, 6);
-    ctx.lineTo(-6 + run * 0.3, 16);
+    ctx.lineTo(-6 + (wet ? flap * 0.4 : run * 0.3), 16);
     ctx.moveTo(6, 6);
-    ctx.lineTo(6 - run * 0.3, 16);
+    ctx.lineTo(6 - (wet ? flap * 0.4 : run * 0.3), 16);
     ctx.stroke();
 
-    ctx.fillStyle = wet ? "#7ec8e8" : "#ffd15c";
+    ctx.fillStyle = wet ? "#7ec8e8" : slashT > 0 ? "#ffb3b3" : "#ffd15c";
     ctx.beginPath();
     ctx.ellipse(0, -8, 14, 16, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1057,12 +1230,22 @@
     ctx.arc(-5, -10, 2, 0, Math.PI * 2);
     ctx.arc(5, -10, 2, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#ff8a5b";
+    if (wet) {
+      ctx.strokeStyle = "#2b3a24";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-6, -4);
+      ctx.lineTo(-2, -1);
+      ctx.moveTo(6, -4);
+      ctx.lineTo(2, -1);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#ff8aa5";
     ctx.beginPath();
     ctx.arc(0, -4, 2.4, 0, Math.PI * 2);
     ctx.fill();
 
-    const ang = -1.1 + swing * 2.4;
+    const ang = -1.1 + swing * 2.4 + (wet ? Math.sin(t * 14) * 0.8 : 0);
     ctx.save();
     ctx.translate(12, -6);
     ctx.rotate(ang);
@@ -1101,6 +1284,10 @@
     sprites.sort((a, b) => a.y - b.y);
     sprites.forEach((s) => s.draw());
 
+    carrots.forEach(drawCarrot);
+    drawGasClouds();
+    drawSlashes();
+
     for (const p of particles) {
       ctx.globalAlpha = 1 - p.t / p.life;
       ctx.fillStyle = p.color;
@@ -1126,6 +1313,10 @@
       ctx.stroke();
     }
     ctx.restore();
+    if (stunKind === "skunk") {
+      ctx.fillStyle = "rgba(150, 190, 40, 0.28)";
+      ctx.fillRect(0, 0, viewW, viewH);
+    }
   }
 
   function resize() {

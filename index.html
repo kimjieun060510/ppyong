@@ -49,8 +49,9 @@
         <ul class="howto">
           <li>이동: 키보드 WASD / 왼쪽 동그라미를 끌어서</li>
           <li>공격: 스페이스 · 근처로 달려가기 · 오른쪽 뿅망치</li>
-          <li>갈색·황금 두더지만 잡으세요. 다른 동물은 피하세요</li>
-          <li>연못에 빠지면 5초 동안 허우적거려요</li>
+          <li>갈색·황금 두더지만 잡으세요</li>
+          <li>스컹크 방귀는 게임 오버, 토끼 당근은 3초 멈춤, 너구리는 할퀴어 코인을 빼앗아요</li>
+          <li>연못에 빠지면 허우적거리며 5초 동안 못 움직여요. 제한 시간은 계속 줄어요</li>
         </ul>
         <button id="btn-start" type="button" class="primary">게임 시작</button>
       </div>
@@ -89,12 +90,10 @@
       </div>
     </div>
 
-    <div id="soaked" class="overlay hidden">
-      <div class="panel soak-panel">
-        <h2 id="stun-title">풍덩!</h2>
-        <p id="stun-lead" class="lead">물에 빠졌어요. 잠시 허우적거리는 중...</p>
-        <p id="soak-count" class="countdown">5</p>
-      </div>
+    <div id="soaked" class="stun-banner hidden">
+      <h2 id="stun-title">풍덩!</h2>
+      <p id="stun-lead">물에 빠졌어요. 허우적거리는 중...</p>
+      <p id="soak-count" class="countdown">5</p>
     </div>
 
     <div id="controls" class="hidden">
