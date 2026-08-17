@@ -3,7 +3,7 @@
 
   const WORLD_W = 5280;
   const WORLD_H = 3960;
-  const ZOOM = 2.25;
+  const ZOOM = 1.15;
   const ROUND_TIME = 40;
   const TOTAL_ROUNDS = 6;
   const WATER_TIME = 5;
@@ -43,9 +43,6 @@
     profileOutfits: document.getElementById("profile-outfits"),
     profileHammers: document.getElementById("profile-hammers"),
     briefing: document.getElementById("briefing"),
-    shop: document.getElementById("shop"),
-    shopList: document.getElementById("shop-list"),
-    shopCoins: document.getElementById("shop-coins"),
     roundOver: document.getElementById("round-over"),
     roundSummary: document.getElementById("round-summary"),
     result: document.getElementById("result"),
@@ -65,43 +62,13 @@
     stunLead: document.getElementById("stun-lead"),
   };
 
-  const UPGRADE_DEFS = [
-    {
-      id: "range",
-      name: "뿅망치 범위",
-      desc: "더 멀리 있는 두더지도 때려요",
-      costs: [40, 90, 160, 260],
-      values: [62, 78, 96, 118, 145],
-    },
-    {
-      id: "swing",
-      name: "뿅망치 속도",
-      desc: "망치를 더 빨리 휘둘러요",
-      costs: [40, 90, 160, 260],
-      values: [0.46, 0.36, 0.27, 0.2, 0.14],
-    },
-    {
-      id: "move",
-      name: "달리기",
-      desc: "더 빠르게 달려요",
-      costs: [35, 80, 140, 230],
-      values: [185, 225, 270, 320, 380],
-    },
-    {
-      id: "luck",
-      name: "코인 보너스",
-      desc: "두더지마다 코인을 더 받아요",
-      costs: [50, 110, 190, 300],
-      values: [1, 1.25, 1.55, 1.9, 2.4],
-    },
-    {
-      id: "aoe",
-      name: "광역 뿅",
-      desc: "한 번에 주변 두더지까지 잡아요",
-      costs: [220],
-      values: [false, true],
-    },
-  ];
+  const STATS = {
+    range: 62,
+    swing: 0.46,
+    move: 185,
+    luck: 1,
+    aoe: false,
+  };
 
   const OUTFITS = [
     {
@@ -600,7 +567,6 @@
   let particles = [];
   let floatTexts = [];
   let player = null;
-  let upgrades = null;
   let coins = 0;
   let combo = 0;
   let comboTimer = 0;
@@ -1074,7 +1040,6 @@
     show("login", false);
     show("result", false);
     show("roundOver", false);
-    show("shop", false);
     show("hud", false);
     show("controls", false);
     show("briefing", true);
@@ -1170,12 +1135,10 @@
   }
 
   function upgradeValue(id) {
-    const def = UPGRADE_DEFS.find((d) => d.id === id);
-    return def.values[upgrades[id]];
+    return STATS[id];
   }
 
   function resetProgress() {
-    upgrades = { range: 0, swing: 0, move: 0, luck: 0, aoe: 0 };
     coins = 0;
     combo = 0;
     comboTimer = 0;
@@ -1521,7 +1484,6 @@
     show("login", false);
     show("profile", false);
     show("briefing", false);
-    show("shop", false);
     show("roundOver", false);
     show("result", false);
     show("soaked", false);
@@ -1535,48 +1497,11 @@
     el.round.textContent = String(round);
   }
 
-  function openShop(fromRound) {
-    scene = "shop";
-    resetStick();
-    show("roundOver", false);
-    show("shop", true);
-    renderShop(fromRound);
-  }
-
-  function renderShop(fromRound) {
-    el.shopCoins.textContent = String(coins);
-    el.shopList.innerHTML = "";
-    UPGRADE_DEFS.forEach((def) => {
-      const lv = upgrades[def.id];
-      const maxed = lv >= def.costs.length;
-      const cost = maxed ? 0 : def.costs[lv];
-      const item = document.createElement("div");
-      item.className = "shop-item";
-      const title = document.createElement("h3");
-      title.textContent = `${def.name}  Lv.${lv}/${def.costs.length}`;
-      const desc = document.createElement("p");
-      desc.textContent = def.desc;
-      const btn = document.createElement("button");
-      btn.type = "button";
-      if (maxed) {
-        btn.textContent = "MAX";
-        btn.disabled = true;
-      } else {
-        btn.textContent = `${cost} 코인`;
-        btn.disabled = coins < cost;
-        btn.addEventListener("click", () => {
-          if (coins < cost) return;
-          coins -= cost;
-          upgrades[def.id] += 1;
-          sfx("buy");
-          renderShop(fromRound);
-          syncHud();
-        });
-      }
-      item.append(title, desc, btn);
-      el.shopList.append(item);
-    });
-    el.btnCloseShopLabel(fromRound);
+  function nextRound() {
+    round += 1;
+    player.x = SAFE_SPAWN.x;
+    player.y = SAFE_SPAWN.y;
+    startRound();
   }
 
   // helper attached below after buttons exist
@@ -1817,7 +1742,7 @@
     }
     scene = "roundOver";
     show("roundOver", true);
-    el.roundSummary.textContent = `${round}라운드에서 두더지 ${roundCaught}마리를 잡았어요. 코인 ${coins}개로 뿅망치를 키워 보세요.`;
+    el.roundSummary.textContent = `${round}라운드에서 두더지 ${roundCaught}마리를 잡았어요.`;
   }
 
   function update(dt) {
@@ -3103,7 +3028,6 @@
         ensureAudio();
         trySwing();
       }
-      if (e.key.toLowerCase() === "e" && scene === "play") openShop(false);
     });
     window.addEventListener("keyup", (e) => {
       keys[e.key.toLowerCase()] = false;
@@ -3162,25 +3086,9 @@
       ensureAudio();
       beginPlay();
     });
-    document.getElementById("btn-shop").addEventListener("click", () => {
+    document.getElementById("btn-next-round").addEventListener("click", () => {
       ensureAudio();
-      openShop(false);
-    });
-    document.getElementById("btn-close-shop").addEventListener("click", () => {
-      ensureAudio();
-      if (timeLeft <= 0 && round < TOTAL_ROUNDS) {
-        round += 1;
-        player.x = SAFE_SPAWN.x;
-        player.y = SAFE_SPAWN.y;
-        startRound();
-      } else {
-        scene = "play";
-        show("shop", false);
-      }
-    });
-    document.getElementById("btn-to-shop").addEventListener("click", () => {
-      ensureAudio();
-      openShop(true);
+      nextRound();
     });
     document.getElementById("btn-retry").addEventListener("click", () => {
       ensureAudio();
@@ -3190,13 +3098,6 @@
       openBriefing();
     });
   }
-
-  // patch renderShop close button label
-  el.btnCloseShopLabel = function btnCloseShopLabel(fromRound) {
-    const btn = document.getElementById("btn-close-shop");
-    btn.textContent =
-      fromRound || timeLeft <= 0 ? "다음 라운드" : "다시 잡으러 가기";
-  };
 
   function init() {
     resize();

@@ -97,32 +97,15 @@ canvas#game {
   text-align: center;
 }
 
-#btn-shop,
 #btn-hammer,
-.primary,
-.shop-item button {
+.primary {
   font-family: inherit;
   cursor: pointer;
   border: 3px solid #2b3a24;
   box-shadow: 0 4px 0 #2b3a24;
 }
 
-#btn-shop {
-  pointer-events: auto;
-  background: #fff1c2;
-  border-radius: 999px;
-  padding: 5px 12px;
-  font-size: clamp(13px, 2.6vw, 18px);
-  min-height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-}
-
-#btn-shop:active,
 .primary:active,
-.shop-item button:active,
 #btn-hammer:active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 #2b3a24;
@@ -484,57 +467,6 @@ canvas#game {
 .shop-head h2 {
   margin: 0;
   font-size: 28px;
-}
-
-.shop-list {
-  display: grid;
-  gap: 10px;
-}
-
-.shop-item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px 12px;
-  align-items: center;
-  background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 18px;
-  padding: 12px 14px;
-}
-
-.shop-item h3 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.shop-item p {
-  margin: 2px 0 0;
-  font-size: 14px;
-  color: #5a6b52;
-  grid-column: 1 / 2;
-}
-
-.shop-item button {
-  grid-row: 1 / 3;
-  grid-column: 2;
-  background: #b6eb86;
-  border-radius: 12px;
-  padding: 8px 12px;
-  font-size: 16px;
-  white-space: nowrap;
-}
-
-.shop-item button:disabled {
-  background: #ddd;
-  color: #777;
-  box-shadow: 0 2px 0 #999;
-  cursor: default;
-  transform: none;
-}
-
-.shop-actions {
-  margin-top: 16px;
-  text-align: center;
 }
 
 .stun-banner {
@@ -980,16 +912,21 @@ canvas#game {
     grid-template-columns: 1fr;
   }
 
-  .hud-left,
-  .hud-right {
+  .hud-left {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
     gap: 6px;
   }
 
-  .chip,
-  #btn-shop {
+  .hud-right {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 6px;
+  }
+
+  .chip {
     width: 100%;
     min-width: 0;
     font-size: 13px;
@@ -1039,8 +976,7 @@ canvas#game {
     flex-wrap: nowrap;
   }
 
-  .chip,
-  #btn-shop {
+  .chip {
     font-size: 13px;
     padding: 4px 9px;
     min-height: 28px;
