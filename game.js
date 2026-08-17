@@ -1188,7 +1188,7 @@
   function placeHoles() {
     const list = [];
     let tries = 0;
-    while (list.length < 220 && tries < 28000) {
+    while (list.length < 150 && tries < 28000) {
       tries += 1;
       const x = 130 + Math.random() * (WORLD_W - 260);
       const y = 150 + Math.random() * (WORLD_H - 280);
