@@ -1150,6 +1150,7 @@
       x: SAFE_SPAWN.x,
       y: SAFE_SPAWN.y,
       facing: 0,
+      faceLeft: false,
       runT: 0,
       swingT: 0,
       swingCd: 0,
@@ -1671,6 +1672,8 @@
     if (waterIFrames > 0) waterIFrames -= dt;
     if (len > 0.12 && soaked <= 0) {
       player.facing = Math.atan2(iy, ix);
+      if (ix < -0.2) player.faceLeft = true;
+      else if (ix > 0.2) player.faceLeft = false;
       player.runT += dt * 10;
       const sp = upgradeValue("move");
       const nx = clamp(player.x + ix * sp * dt, 36, WORLD_W - 36);
@@ -1748,6 +1751,7 @@
       if (player) {
         player.runT += dt * 8;
         player.facing = Math.sin(demoTime * 0.8) >= 0 ? 0 : Math.PI;
+        player.faceLeft = Math.cos(player.facing) < 0;
       }
       if (demoTime > 0.9) {
         demoTime = 0;
@@ -2262,14 +2266,13 @@
     g.restore();
   }
 
-  function drawMallet(g, swing, design) {
+  const MALLET_HOLD = { x: -26, y: -30 };
+
+  function paintMalletShape(g, design) {
     const d = design || hammerOf(avatar.hammerId);
     const color = d.color || "#e23b3b";
     const pattern = d.pattern || "solid";
     const cap = hammerAccent(color);
-    g.save();
-    g.translate(-16, -26);
-    g.rotate(1.2 - swing * 1.85);
     if (d.tool === "paddle") {
       fillRound(g, -2, -2, 4, 30, 2, d.handle || "#8a5a32");
       g.strokeStyle = LINE;
@@ -2280,7 +2283,6 @@
       g.ellipse(0, -16, 8, 13, 0, 0, Math.PI * 2);
       g.fill();
       g.stroke();
-      g.restore();
       return;
     }
     if (d.tool === "racket") {
@@ -2312,7 +2314,6 @@
         g.stroke();
       }
       g.restore();
-      g.restore();
       return;
     }
     fillRound(g, -2.4, -4, 4.8, 24, 1.8, d.handle || "#d4a06a");
@@ -2334,6 +2335,13 @@
     g.beginPath();
     g.arc(0, -21, 2.4, 0, Math.PI * 2);
     g.fill();
+  }
+
+  function drawMallet(g, swing, design) {
+    g.save();
+    g.translate(MALLET_HOLD.x, MALLET_HOLD.y + swing * -4);
+    g.rotate(-0.52 + swing * 1.65);
+    paintMalletShape(g, design);
     g.restore();
   }
 
@@ -2351,10 +2359,10 @@
     g.fill();
     const d = design || hammerOf(avatar.hammerId);
     g.save();
-    g.translate(w * 0.5, h * 0.78);
-    g.rotate(-0.2);
-    g.scale(w / 70, w / 70);
-    drawMallet(g, 0.08, d);
+    g.translate(w * 0.5, h * 0.56);
+    g.rotate(-0.4);
+    g.scale(w / 48, w / 48);
+    paintMalletShape(g, d);
     g.restore();
   }
 
@@ -2425,9 +2433,6 @@
     g.fillStyle = SKIN;
     g.beginPath();
     g.ellipse(13, -28, 4.2, 3.4, 0.4, 0, Math.PI * 2);
-    g.fill();
-    g.beginPath();
-    g.ellipse(-14, -27 + swing * -2, 4.4, 3.6, -0.2, 0, Math.PI * 2);
     g.fill();
 
     if (o.cut === "hoodie" || o.cut === "track") {
@@ -2505,15 +2510,6 @@
     if (o.cut === "hoodie" || o.cut === "tee") {
       fillRound(g, -6, -28, 12, 6, 2, o.topShade);
     }
-
-    drawMallet(g, swing + (wet ? Math.sin(t * 14) * 0.25 : 0));
-    g.fillStyle = SKIN;
-    g.beginPath();
-    g.ellipse(-14, -27 + swing * -2, 4.8, 3.8, -0.2, 0, Math.PI * 2);
-    g.fill();
-    g.strokeStyle = LINE;
-    g.lineWidth = 1.2;
-    g.stroke();
 
     g.fillStyle = SKIN;
     g.beginPath();
@@ -2611,6 +2607,27 @@
       g.stroke();
     }
 
+    const holdX = MALLET_HOLD.x;
+    const holdY = MALLET_HOLD.y + swing * -4;
+    g.lineCap = "round";
+    g.strokeStyle = LINE;
+    g.lineWidth = 7;
+    g.beginPath();
+    g.moveTo(-11, -36);
+    g.lineTo(holdX, holdY);
+    g.stroke();
+    g.strokeStyle = SKIN;
+    g.lineWidth = 5;
+    g.stroke();
+    drawMallet(g, swing + (wet ? Math.sin(t * 14) * 0.25 : 0));
+    g.fillStyle = SKIN;
+    g.beginPath();
+    g.ellipse(holdX, holdY, 4.8, 3.8, -0.4, 0, Math.PI * 2);
+    g.fill();
+    g.strokeStyle = LINE;
+    g.lineWidth = 1.2;
+    g.stroke();
+
     g.restore();
   }
 
@@ -2630,7 +2647,7 @@
       wet,
       trip,
       slash: slashT > 0,
-      flip: Math.cos(p.facing) < 0,
+      flip: p.faceLeft,
     });
     ctx.restore();
   }
