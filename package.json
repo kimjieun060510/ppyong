@@ -6,7 +6,7 @@
   "scripts": {
     "build:native": "esbuild src/apple-native.js --bundle --format=iife --outfile=apple-native.js --legal-comments=none",
     "build:www": "npm run build:native && rm -rf www && mkdir -p www/assets && cp index.html game.js styles.css privacy.html apple-native.js www/ && cp -R assets/. www/assets/",
-    "sync": "npm run build:www && npx cap sync ios && bash scripts/apply-app-icon.sh",
+    "sync": "npm run build:www && npx cap sync ios && bash scripts/apply-app-icon.sh && bash scripts/register-apple-plugin.sh",
     "ios": "npm run sync && npx cap open ios"
   },
   "dependencies": {
