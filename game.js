@@ -3252,15 +3252,13 @@
     const back = document.getElementById("btn-profile-back");
     const next = document.getElementById("btn-profile-next");
     if (back) {
-      back.disabled = !avatar.complete;
-      back.classList.toggle("hidden", !avatar.complete);
+      back.classList.toggle("hidden", profileStep === 0);
+      back.disabled = false;
       back.textContent = "돌아가기";
     }
-    if (next) {
-      const needFinish = !avatar.complete && profileStep === 0;
-      next.classList.toggle("hidden", !needFinish);
-      next.textContent = "완료";
-    }
+    if (next) next.classList.add("hidden");
+    const nav = document.querySelector(".profile-nav");
+    if (nav) nav.classList.toggle("hidden", profileStep === 0);
     if (profileStep === 1) mountOutfitCards();
     if (profileStep === 2) mountHammerCards();
     syncAvatarPickerUI();
@@ -3558,14 +3556,6 @@
       ensureAudio();
       openProfile();
     });
-    document.getElementById("btn-page-outfit").addEventListener("click", () => {
-      ensureAudio();
-      openShop(1);
-    });
-    document.getElementById("btn-page-hammer").addEventListener("click", () => {
-      ensureAudio();
-      openShop(2);
-    });
     document.getElementById("btn-gender-outfit").addEventListener("click", () => {
       ensureAudio();
       openShop(1);
@@ -3573,6 +3563,10 @@
     document.getElementById("btn-gender-hammer").addEventListener("click", () => {
       ensureAudio();
       openShop(2);
+    });
+    document.getElementById("btn-gender-back").addEventListener("click", () => {
+      if (avatar.complete) showProfilePage("home");
+      else finishProfile();
     });
     document.getElementById("btn-page-gender").addEventListener("click", () => {
       ensureAudio();
@@ -3582,7 +3576,7 @@
       showTitle();
     });
     document.getElementById("btn-profile-back").addEventListener("click", () => {
-      if (avatar.complete) showProfilePage("home");
+      openShop(0);
     });
     document.getElementById("btn-profile-next").addEventListener("click", () => {
       finishProfile();

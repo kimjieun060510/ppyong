@@ -1005,17 +1005,12 @@ canvas#game {
 
 .profile-menu {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
 .gender-shop {
   margin-top: 12px;
-}
-
-.profile-menu #btn-page-gender,
-.profile-menu #btn-profile-to-title {
-  grid-column: 1 / -1;
 }
 
 .profile-menu button:not(.primary):not(.text-btn) {
