@@ -1734,11 +1734,7 @@
         const sy = y - h * 0.36;
         ctx.fillStyle = body;
         ctx.beginPath();
-        ctx.ellipse(sx + side * 3.6, sy + 2, 7.4, 6.6, side * 0.48, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.ellipse(sx + side * 7.2, sy + 11, 6.8, 8.4, side * 0.32, 0, Math.PI * 2);
+        ctx.ellipse(sx + side * 5.4, sy + 8, 6.6, 13.2, side * 0.4, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
         ctx.fillStyle = "#f2d4c2";
