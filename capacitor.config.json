@@ -1,0 +1,10 @@
+{
+  "appId": "com.kimjieun.ppyong",
+  "appName": "뿅",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "automatic",
+    "scheme": "Ppyong",
+    "preferredContentMode": "mobile"
+  }
+}
