@@ -28,10 +28,12 @@ npm run ios
 
 Xcode에서:
 
-1. Signing & Capabilities → Team을 본인 계정으로 고릅니다.
-2. **Sign in with Apple** capability가 보이는지 확인합니다. 없으면 + Capability로 추가합니다. (저장소의 `App.entitlements`에도 이미 넣어 두었습니다.)
-3. 실제 iPhone을 연결하거나 시뮬레이터에서 Run 합니다.
-4. 시작 화면의 **Apple로 로그인**을 누르면 시스템 Apple 시트가 열려야 합니다.
+1. 왼쪽에서 **App**을 고른 뒤 위 탭 **Signing & Capabilities**를 엽니다.
+2. Team을 본인 계정으로 고릅니다.
+3. 목록에 **Sign in with Apple**이 있는지 봅니다. 없으면 왼쪽 **+ Capability** → Sign in with Apple을 고릅니다.
+   Apple 문서 전체를 따라 버튼을 새로 만들 필요는 없습니다. 게임 화면에 이미 로그인 버튼이 있습니다.
+4. 가능하면 **실제 아이폰**을 연결하고 ▶ Run 합니다. 시뮬레이터에서는 Apple 시트가 바로 닫히는 경우가 많습니다.
+5. 시작 화면의 **Apple로 로그인**을 누르면 시스템 Apple 시트가 열려야 합니다.
 
 브라우저(`python3 -m http.server`) 미리보기에서는 네이티브 시트가 없으므로, 예전처럼 이 기기 로컬 계정으로 진행됩니다.
 

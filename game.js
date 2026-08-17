@@ -892,7 +892,15 @@
         finishLogin(accountFromNative(result));
       } catch (err) {
         if (!isAppleCancel(err)) {
-          alert("Apple 로그인에 실패했어요. Xcode에서 Sign in with Apple이 켜져 있는지 확인해 주세요.");
+          const code = String((err && (err.code || err.error)) || "");
+          if (code === "1000") {
+            alert("Apple 로그인 창을 열지 못했어요. 시뮬레이터보다 실제 아이폰에서 다시 눌러 보세요.");
+          } else {
+            alert(
+              "Apple 로그인에 실패했어요. " +
+                ((err && (err.message || err.error)) || "다시 시도해 주세요.")
+            );
+          }
         }
       }
       return;
