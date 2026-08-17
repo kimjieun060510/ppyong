@@ -682,6 +682,259 @@ canvas#game {
   transform: rotate(18deg);
 }
 
+.apple-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: #111;
+  color: #fff;
+  border: 3px solid #111;
+  border-radius: 16px;
+  padding: 14px 18px;
+  font-family: inherit;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #000;
+}
+
+.apple-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #000;
+}
+
+.wallet-line {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: #9a6b00;
+}
+
+#profile-me {
+  display: block;
+  width: min(180px, 48vw);
+  height: auto;
+  margin: 4px auto 16px;
+  background: linear-gradient(#9fd8ff, #b8e986);
+  border: 3px solid #2b3a24;
+  border-radius: 22px;
+}
+
+.profile-menu {
+  display: grid;
+  gap: 10px;
+}
+
+.profile-menu button:not(.primary):not(.text-btn) {
+  font-family: inherit;
+  cursor: pointer;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 16px;
+  padding: 10px 18px;
+  font-size: 18px;
+  box-shadow: 0 4px 0 #2b3a24;
+}
+
+.stage-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.stage-row .stage-chip {
+  padding: 8px 4px;
+  text-align: center;
+}
+
+.stage-list {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.stage-list .stage-chip {
+  text-align: left;
+  padding: 12px 14px;
+}
+
+.stage-chip {
+  font-family: inherit;
+  cursor: pointer;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 14px;
+  padding: 8px 6px;
+  box-shadow: 0 3px 0 #2b3a24;
+  color: inherit;
+}
+
+.stage-chip b,
+.stage-chip small {
+  display: block;
+}
+
+.stage-chip small {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #6b7a62;
+}
+
+.stage-chip.selected {
+  background: #fff4c2;
+  border-color: #c48a00;
+  box-shadow: 0 3px 0 #c48a00;
+}
+
+.stage-chip.locked,
+.outfit-chip.locked,
+.hammer-card.locked {
+  opacity: 0.55;
+}
+
+.stage-chip:disabled {
+  cursor: default;
+}
+
+.login-note {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #6b7a62;
+  line-height: 1.4;
+}
+
+#title-me {
+  display: block;
+  width: min(180px, 48vw);
+  height: auto;
+  margin: 4px auto 16px;
+  background: linear-gradient(#9fd8ff, #b8e986);
+  border: 3px solid #2b3a24;
+  border-radius: 22px;
+}
+
+.title-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.title-actions button:not(.primary) {
+  font-family: inherit;
+  cursor: pointer;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 16px;
+  padding: 10px 18px;
+  font-size: 18px;
+  box-shadow: 0 4px 0 #2b3a24;
+}
+
+.profile-nav {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.profile-nav button {
+  font-family: inherit;
+  cursor: pointer;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 18px;
+  box-shadow: 0 4px 0 #2b3a24;
+}
+
+.profile-nav button.primary {
+  background: #ffd15c;
+}
+
+.profile-nav button:disabled {
+  opacity: 0.4;
+  cursor: default;
+  transform: none;
+}
+
+.text-btn {
+  font-family: inherit;
+  background: none;
+  border: 0;
+  color: #6b7a62;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.hammer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.hammer-card {
+  font-family: inherit;
+  cursor: pointer;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 20px;
+  padding: 12px 10px 14px;
+  box-shadow: 0 4px 0 #2b3a24;
+  color: inherit;
+}
+
+.hammer-card.selected {
+  background: #fff4c2;
+  border-color: #c48a00;
+  box-shadow: 0 4px 0 #c48a00;
+}
+
+.hammer-card canvas {
+  width: 220px;
+  height: 220px;
+  max-width: 100%;
+  background: #efe8d4;
+  border-radius: 16px;
+  border: 3px solid #2b3a24;
+  pointer-events: none;
+}
+
+.hammer-card b {
+  display: block;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.hammer-card small {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  color: #6b7a62;
+}
+
+.outfit-chip canvas {
+  width: 72px;
+  height: 88px;
+  flex: 0 0 auto;
+  background: linear-gradient(#9fd8ff, #b8e986);
+  border-radius: 12px;
+  border: 2px solid #2b3a24;
+  pointer-events: none;
+}
+
+@media (min-width: 560px) {
+  .hammer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 520px) {
   .chip {
     font-size: 15px;
@@ -711,5 +964,10 @@ canvas#game {
   #btn-hammer .mallet-icon {
     width: 56px;
     height: 56px;
+  }
+
+  .hammer-card canvas {
+    width: 200px;
+    height: 200px;
   }
 }

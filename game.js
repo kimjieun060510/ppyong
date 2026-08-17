@@ -16,7 +16,33 @@
 
   const el = {
     hud: document.getElementById("hud"),
+    login: document.getElementById("login"),
     title: document.getElementById("title"),
+    titleMe: document.getElementById("title-me"),
+    titleHello: document.getElementById("title-hello"),
+    titleWallet: document.getElementById("title-wallet"),
+    guestBlock: document.getElementById("guest-block"),
+    playBlock: document.getElementById("play-block"),
+    titleStages: document.getElementById("title-stages"),
+    profileWallet: document.getElementById("profile-wallet"),
+    profileHeading: document.getElementById("profile-heading"),
+    profileHome: document.getElementById("profile-home"),
+    profileCustom: document.getElementById("profile-custom"),
+    profileStages: document.getElementById("profile-stages"),
+    profileMe: document.getElementById("profile-me"),
+    profileStageNow: document.getElementById("profile-stage-now"),
+    stageRow: document.getElementById("stage-row"),
+    score: document.getElementById("score-count"),
+    profile: document.getElementById("profile"),
+    profileAccount: document.getElementById("profile-account"),
+    profileStepLabel: document.getElementById("profile-step-label"),
+    profileStepGender: document.getElementById("profile-step-gender"),
+    profileStepOutfit: document.getElementById("profile-step-outfit"),
+    profileStepHammer: document.getElementById("profile-step-hammer"),
+    profileChars: document.getElementById("profile-chars"),
+    profileOutfits: document.getElementById("profile-outfits"),
+    profileHammers: document.getElementById("profile-hammers"),
+    briefing: document.getElementById("briefing"),
     shop: document.getElementById("shop"),
     shopList: document.getElementById("shop-list"),
     shopCoins: document.getElementById("shop-coins"),
@@ -82,6 +108,7 @@
       id: "lemon",
       name: "레몬 후디",
       vibe: "데일리",
+      for: "any",
       cut: "hoodie",
       bottom: "shorts",
       top: "#ffe34a",
@@ -100,6 +127,7 @@
       id: "track",
       name: "삼선 셋업",
       vibe: "스트릿",
+      for: "boy",
       cut: "track",
       bottom: "track",
       top: "#1c1c1c",
@@ -118,6 +146,7 @@
       id: "anorak",
       name: "네온 아노락",
       vibe: "캠퍼스",
+      for: "any",
       cut: "anorak",
       bottom: "cargo",
       top: "#8cff4d",
@@ -136,6 +165,7 @@
       id: "rugby",
       name: "럭비 셔츠",
       vibe: "프레피",
+      for: "boy",
       cut: "rugby",
       bottom: "bermuda",
       top: "#d62828",
@@ -154,6 +184,7 @@
       id: "cargo",
       name: "카고 스트릿",
       vibe: "Y2K",
+      for: "any",
       cut: "tee",
       bottom: "cargo",
       top: "#9fd8ff",
@@ -171,6 +202,7 @@
       id: "tennis",
       name: "테니스 클럽",
       vibe: "스포츠",
+      for: "girl",
       cut: "polo",
       bottom: "tennis",
       top: "#ffffff",
@@ -190,6 +222,7 @@
       id: "ribbon",
       name: "리본 가디건",
       vibe: "리본룩",
+      for: "girl",
       cut: "cardigan",
       bottom: "skirt",
       top: "#ffd6e7",
@@ -209,6 +242,7 @@
       id: "midnight",
       name: "올블랙",
       vibe: "미니멀",
+      for: "boy",
       cut: "hoodie",
       bottom: "wide",
       top: "#222226",
@@ -227,6 +261,7 @@
       id: "cherry",
       name: "체리 니트",
       vibe: "페어코어",
+      for: "girl",
       cut: "knit",
       bottom: "skirt",
       top: "#ff5a6a",
@@ -244,6 +279,7 @@
       id: "jersey",
       name: "10번 져지",
       vibe: "유니폼",
+      for: "boy",
       cut: "jersey",
       bottom: "shorts",
       top: "#3b6cff",
@@ -258,6 +294,125 @@
       number: "#ffffff",
       clip: "#ffd15c",
     },
+    {
+      id: "ballet",
+      name: "발레코어",
+      vibe: "발레코어",
+      for: "girl",
+      cut: "cardigan",
+      bottom: "skirt",
+      top: "#ffe4f0",
+      topShade: "#ffc4dc",
+      inner: "#fff8fb",
+      bottomGirl: "#ff8ab8",
+      bottomBoy: "#ff8ab8",
+      shoesGirl: "#ffc4dc",
+      shoesBoy: "#ffc4dc",
+      shoeStripe: "#ffffff",
+      socks: "#ffffff",
+      sockStripe: "#ff8ab8",
+      ribbon: "#ff5e8a",
+      clip: "#ff5e8a",
+    },
+    {
+      id: "hachi",
+      name: "비니 레이어드",
+      vibe: "하치웨어",
+      for: "girl",
+      cut: "tee",
+      bottom: "wide",
+      top: "#5a7cff",
+      topShade: "#3d5ad0",
+      bottomGirl: "#2a2a32",
+      bottomBoy: "#2a2a32",
+      shoesGirl: "#f5f5f5",
+      shoesBoy: "#f5f5f5",
+      shoeStripe: "#5a7cff",
+      socks: "#ffffff",
+      sockStripe: "#5a7cff",
+      beanie: "#e23b3b",
+      pom: "#fff6e4",
+      clip: "#e23b3b",
+    },
+    {
+      id: "varsity",
+      name: "바시티 자켓",
+      vibe: "캠퍼스",
+      for: "boy",
+      cut: "varsity",
+      bottom: "bermuda",
+      top: "#1c2a6b",
+      topShade: "#121c4a",
+      sleeve: "#f4f1ea",
+      letter: "#ffd15c",
+      bottomGirl: "#3d4f3a",
+      bottomBoy: "#3d4f3a",
+      shoesGirl: "#f4efe4",
+      shoesBoy: "#f4efe4",
+      shoeStripe: "#1c2a6b",
+      socks: "#ffffff",
+      sockStripe: "#1c2a6b",
+      clip: "#ffd15c",
+    },
+    {
+      id: "picnic",
+      name: "피크닉 체크",
+      vibe: "공원 낮",
+      for: "any",
+      cost: 80,
+      cut: "tee",
+      bottom: "skirt",
+      top: "#fff6e4",
+      topShade: "#e8d9b0",
+      bottomGirl: "#e23b3b",
+      bottomBoy: "#2f4f9a",
+      shoesGirl: "#fff6e4",
+      shoesBoy: "#fff6e4",
+      shoeStripe: "#e23b3b",
+      socks: "#ffffff",
+      sockStripe: "#e23b3b",
+      clip: "#e23b3b",
+    },
+    {
+      id: "sailor",
+      name: "세일러 룩",
+      vibe: "공원 연못",
+      for: "any",
+      cost: 140,
+      cut: "polo",
+      bottom: "bermuda",
+      top: "#ffffff",
+      topShade: "#e6e6e6",
+      accent: "#1c2a6b",
+      bottomGirl: "#1c2a6b",
+      bottomBoy: "#1c2a6b",
+      shoesGirl: "#ffffff",
+      shoesBoy: "#ffffff",
+      shoeStripe: "#1c2a6b",
+      socks: "#ffffff",
+      sockStripe: "#1c2a6b",
+      clip: "#e23b3b",
+    },
+    {
+      id: "nightglow",
+      name: "네온 나이트",
+      vibe: "공원 밤",
+      for: "any",
+      cost: 180,
+      cut: "hoodie",
+      bottom: "wide",
+      top: "#2a1248",
+      topShade: "#160a2a",
+      bottomGirl: "#111114",
+      bottomBoy: "#111114",
+      shoesGirl: "#7dff4a",
+      shoesBoy: "#7dff4a",
+      shoeStripe: "#9b6dff",
+      socks: "#2a2a2e",
+      sockStripe: "#9b6dff",
+      strings: "#7dff4a",
+      clip: "#7dff4a",
+    },
   ];
 
   const SKIN = "#f3c4a0";
@@ -265,27 +420,167 @@
   const HAIR = "#4a2c1c";
   const INK = "#111111";
 
-  const HAMMER_COLORS = [
-    { id: "cherry", name: "체리", hex: "#e23b3b" },
-    { id: "pink", name: "핑크", hex: "#ff6b9a" },
-    { id: "lemon", name: "레몬", hex: "#ffe34a" },
-    { id: "lime", name: "라임", hex: "#7dff4a" },
-    { id: "sky", name: "스카이", hex: "#4aa3e8" },
-    { id: "purple", name: "퍼플", hex: "#9b6dff" },
-    { id: "mint", name: "민트", hex: "#5ee0c0" },
-    { id: "orange", name: "오렌지", hex: "#ff7a28" },
-    { id: "black", name: "블랙", hex: "#222226" },
-    { id: "white", name: "화이트", hex: "#f4f1ea" },
+  const HAMMER_DESIGNS = [
+    {
+      id: "cherry-stripe",
+      name: "체리 사선",
+      hint: "빨간 머리에 흰 줄무늬",
+      color: "#e23b3b",
+      pattern: "stripe",
+      handle: "#d4a06a",
+      grip: "#4aa3e8",
+    },
+    {
+      id: "heart-pink",
+      name: "하트 뿅",
+      hint: "분홍 머리에 하트",
+      color: "#ff6b9a",
+      pattern: "hearts",
+      handle: "#c47a3a",
+      grip: "#ffd1e0",
+    },
+    {
+      id: "star-lemon",
+      name: "별레몬",
+      hint: "노란 머리에 별",
+      color: "#ffe34a",
+      pattern: "stars",
+      handle: "#8a5a32",
+      grip: "#2b3a24",
+    },
+    {
+      id: "dot-sky",
+      name: "하늘점",
+      hint: "파란 머리에 도트",
+      color: "#4aa3e8",
+      pattern: "dots",
+      handle: "#d4a06a",
+      grip: "#ffffff",
+    },
+    {
+      id: "check-lime",
+      name: "라임 체커",
+      hint: "연두 머리에 체크",
+      color: "#7dff4a",
+      pattern: "checker",
+      handle: "#3a2418",
+      grip: "#222226",
+    },
+    {
+      id: "zig-purple",
+      name: "퍼플 지그",
+      hint: "보라 머리에 지그재그",
+      color: "#9b6dff",
+      pattern: "zigzag",
+      handle: "#d4a06a",
+      grip: "#ffffff",
+    },
+    {
+      id: "mint-solid",
+      name: "민트 민무늬",
+      hint: "민트색 통짜 머리",
+      color: "#5ee0c0",
+      pattern: "solid",
+      handle: "#c47a3a",
+      grip: "#2b3a24",
+    },
+    {
+      id: "orange-stripe",
+      name: "오렌지 사선",
+      hint: "주황 머리에 사선",
+      color: "#ff7a28",
+      pattern: "stripe",
+      handle: "#5a3518",
+      grip: "#ffffff",
+    },
+    {
+      id: "night-stars",
+      name: "밤하늘",
+      hint: "검정 머리에 노란 별",
+      color: "#222226",
+      pattern: "stars",
+      handle: "#111114",
+      grip: "#ffe34a",
+    },
+    {
+      id: "cream-dots",
+      name: "크림 도트",
+      hint: "아이보리 머리에 빨간 점",
+      color: "#f4f1ea",
+      pattern: "dots",
+      handle: "#c47a3a",
+      grip: "#e23b3b",
+    },
+    {
+      id: "pond-paddle",
+      name: "연못 노",
+      hint: "배 패들로 뿅",
+      tool: "paddle",
+      cost: 120,
+      color: "#c47a3a",
+      pattern: "solid",
+      handle: "#8a5a32",
+      grip: "#5a3518",
+    },
+    {
+      id: "park-racket",
+      name: "배드민턴 채",
+      hint: "공원 밤 랠리용",
+      tool: "racket",
+      cost: 180,
+      color: "#4aa3e8",
+      pattern: "solid",
+      handle: "#2b3a24",
+      grip: "#ffe34a",
+    },
   ];
 
-  const HAMMER_PATTERNS = [
-    { id: "solid", name: "민무늬" },
-    { id: "stripe", name: "사선" },
-    { id: "dots", name: "도트" },
-    { id: "hearts", name: "하트" },
-    { id: "stars", name: "별" },
-    { id: "checker", name: "체커" },
-    { id: "zigzag", name: "지그재그" },
+  const STAGES = [
+    {
+      id: "park-1",
+      name: "공원 낮",
+      hint: "구멍이 천천히 열리고, 동물도 조금 오래 나와 있어요",
+      unlockScore: 0,
+      tint: null,
+      trap: 0.16,
+      intervalBoost: 0,
+      maxUpAdd: 0,
+      burstAdd: 0,
+      stayMin: 2.1,
+      stayVar: 1.2,
+      riseTime: 0.32,
+      hideTime: 0.18,
+    },
+    {
+      id: "park-2",
+      name: "공원 노을",
+      hint: "구멍이 더 자주 열리고, 동물이 빨리 들어가요",
+      unlockScore: 90,
+      tint: "rgba(255,120,50,0.18)",
+      trap: 0.24,
+      intervalBoost: 0.045,
+      maxUpAdd: 12,
+      burstAdd: 2,
+      stayMin: 1.25,
+      stayVar: 0.7,
+      riseTime: 0.22,
+      hideTime: 0.11,
+    },
+    {
+      id: "park-3",
+      name: "공원 밤",
+      hint: "구멍이 아주 자주 열리고, 눈 깜짝할 새 들어가요",
+      unlockScore: 160,
+      tint: "rgba(18,28,70,0.36)",
+      trap: 0.3,
+      intervalBoost: 0.075,
+      maxUpAdd: 24,
+      burstAdd: 4,
+      stayMin: 0.75,
+      stayVar: 0.45,
+      riseTime: 0.16,
+      hideTime: 0.07,
+    },
   ];
 
   const keys = Object.create(null);
@@ -325,37 +620,402 @@
   let slashT = 0;
   let waterIFrames = 0;
   let lastSfxAt = { pop: -9, miss: -9 };
-  let avatar = {
-    gender: "girl",
-    outfitId: "lemon",
-    hammerColor: "#e23b3b",
-    hammerPattern: "stripe",
+  const ACCOUNT_KEY = "ppyong-account";
+  const APPLE_CLIENT_ID = "";
+  let account = null;
+  let profileStep = 0;
+  let profilePage = "home";
+  let runScore = 0;
+  let progress = {
+    wallet: 0,
+    stageId: "park-1",
+    unlocked: ["park-1"],
+    ownedOutfits: [],
+    ownedHammers: [],
+    best: {},
   };
 
-  function loadAvatar() {
+  function progressKey() {
+    return account ? `ppyong-progress-${account.id}` : "ppyong-progress-guest";
+  }
+
+  function freeOutfitIds() {
+    return OUTFITS.filter((o) => !o.cost).map((o) => o.id);
+  }
+
+  function freeHammerIds() {
+    return HAMMER_DESIGNS.filter((h) => !h.cost).map((h) => h.id);
+  }
+
+  function loadProgress() {
+    progress = {
+      wallet: 0,
+      stageId: "park-1",
+      unlocked: ["park-1"],
+      ownedOutfits: freeOutfitIds(),
+      ownedHammers: freeHammerIds(),
+      best: {},
+    };
     try {
-      const raw = JSON.parse(localStorage.getItem("mole-avatar") || "{}");
-      if (raw.gender === "girl" || raw.gender === "boy") avatar.gender = raw.gender;
-      if (OUTFITS.some((o) => o.id === raw.outfitId)) avatar.outfitId = raw.outfitId;
-      if (typeof raw.hammerColor === "string" && /^#[0-9a-fA-F]{6}$/.test(raw.hammerColor)) {
-        avatar.hammerColor = raw.hammerColor;
+      const raw = JSON.parse(localStorage.getItem(progressKey()) || "{}");
+      if (typeof raw.wallet === "number") progress.wallet = Math.max(0, raw.wallet);
+      if (STAGES.some((s) => s.id === raw.stageId)) progress.stageId = raw.stageId;
+      if (Array.isArray(raw.unlocked)) {
+        progress.unlocked = STAGES.map((s) => s.id).filter(
+          (id) => raw.unlocked.includes(id) || id === "park-1"
+        );
       }
-      if (HAMMER_PATTERNS.some((p) => p.id === raw.hammerPattern)) {
-        avatar.hammerPattern = raw.hammerPattern;
+      if (Array.isArray(raw.ownedOutfits)) {
+        progress.ownedOutfits = [...new Set([...freeOutfitIds(), ...raw.ownedOutfits])];
       }
+      if (Array.isArray(raw.ownedHammers)) {
+        progress.ownedHammers = [...new Set([...freeHammerIds(), ...raw.ownedHammers])];
+      }
+      if (raw.best && typeof raw.best === "object") progress.best = raw.best;
+    } catch (err) {
+      /* keep defaults */
+    }
+    if (!progress.unlocked.includes(progress.stageId)) progress.stageId = "park-1";
+  }
+
+  function persistProgress() {
+    localStorage.setItem(progressKey(), JSON.stringify(progress));
+    syncWalletUI();
+  }
+
+  function currentStage() {
+    return STAGES.find((s) => s.id === progress.stageId) || STAGES[0];
+  }
+
+  function ownsOutfit(id) {
+    const o = outfitOf(id);
+    return !o.cost || progress.ownedOutfits.includes(id);
+  }
+
+  function ownsHammer(id) {
+    const h = hammerOf(id);
+    return !h.cost || progress.ownedHammers.includes(id);
+  }
+
+  function buyOutfit(id) {
+    const o = outfitOf(id);
+    if (!o.cost || ownsOutfit(id) || progress.wallet < o.cost) return false;
+    progress.wallet -= o.cost;
+    progress.ownedOutfits.push(id);
+    persistProgress();
+    return true;
+  }
+
+  function buyHammer(id) {
+    const h = hammerOf(id);
+    if (!h.cost || ownsHammer(id) || progress.wallet < h.cost) return false;
+    progress.wallet -= h.cost;
+    progress.ownedHammers.push(id);
+    persistProgress();
+    return true;
+  }
+
+  function scoreToCoins(score) {
+    return Math.max(1, Math.floor(score / 4));
+  }
+
+  function settleRun(title) {
+    const payout = scoreToCoins(runScore);
+    progress.wallet += payout;
+    const st = currentStage();
+    progress.best[st.id] = Math.max(progress.best[st.id] || 0, runScore);
+    const idx = STAGES.findIndex((s) => s.id === st.id);
+    const next = STAGES[idx + 1];
+    let extra = "";
+    if (next && runScore >= next.unlockScore && !progress.unlocked.includes(next.id)) {
+      progress.unlocked.push(next.id);
+      extra = ` ${next.name} 해금!`;
+    } else if (next && !progress.unlocked.includes(next.id)) {
+      extra = ` 다음 단계까지 점수 ${next.unlockScore}점이 필요해요.`;
+    }
+    persistProgress();
+    if (el.resultTitle) el.resultTitle.textContent = title;
+    if (el.resultSummary) {
+      el.resultSummary.textContent = `점수 ${runScore}점 → 코인 +${payout} (보유 ${progress.wallet}). 두더지 ${totalCaught}마리.${extra}`;
+    }
+  }
+
+  function outfitsFor(gender) {
+    return OUTFITS.filter((o) => o.for === gender || o.for === "any");
+  }
+
+  function hammerOf(id) {
+    return HAMMER_DESIGNS.find((h) => h.id === id) || HAMMER_DESIGNS[0];
+  }
+
+  function ensureOutfitForGender() {
+    const list = outfitsFor(avatar.gender).filter((o) => ownsOutfit(o.id));
+    const pick = list.length ? list : outfitsFor(avatar.gender);
+    if (!pick.some((o) => o.id === avatar.outfitId)) {
+      avatar.outfitId = pick[0].id;
+    }
+    if (!ownsHammer(avatar.hammerId)) {
+      avatar.hammerId = freeHammerIds()[0];
+    }
+  }
+
+  function avatarStorageKey() {
+    return account ? `ppyong-avatar-${account.id}` : "ppyong-avatar-guest";
+  }
+
+  function loadAccount() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(ACCOUNT_KEY) || "null");
+      if (raw && typeof raw.id === "string") account = raw;
+    } catch (err) {
+      account = null;
+    }
+  }
+
+  function persistAccount() {
+    if (account) localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
+    else localStorage.removeItem(ACCOUNT_KEY);
+  }
+
+  function loadAvatar() {
+    const empty = {
+      gender: "girl",
+      outfitId: "lemon",
+      hammerId: "cherry-stripe",
+      complete: false,
+    };
+    avatar = { ...empty };
+    try {
+      const raw = JSON.parse(localStorage.getItem(avatarStorageKey()) || "{}");
+      const legacy = JSON.parse(localStorage.getItem("mole-avatar") || "{}");
+      const src = raw.gender ? raw : legacy;
+      if (src.gender === "girl" || src.gender === "boy") avatar.gender = src.gender;
+      if (OUTFITS.some((o) => o.id === src.outfitId)) avatar.outfitId = src.outfitId;
+      if (HAMMER_DESIGNS.some((h) => h.id === src.hammerId)) avatar.hammerId = src.hammerId;
+      else if (src.hammerColor) {
+        const match = HAMMER_DESIGNS.find((h) => h.color === src.hammerColor);
+        if (match) avatar.hammerId = match.id;
+      }
+      avatar.complete = Boolean(src.complete);
+      ensureOutfitForGender();
     } catch (err) {
       /* keep defaults */
     }
   }
 
   function persistAvatar() {
-    localStorage.setItem("mole-avatar", JSON.stringify(avatar));
+    ensureOutfitForGender();
+    localStorage.setItem(avatarStorageKey(), JSON.stringify(avatar));
     if (player) {
       player.gender = avatar.gender;
       player.outfitId = avatar.outfitId;
     }
     syncAvatarPickerUI();
     syncHammerButton();
+  }
+
+  function appleUserId(res) {
+    const token = res && res.authorization && res.authorization.id_token;
+    if (!token) return `apple-${Date.now()}`;
+    try {
+      const payload = JSON.parse(
+        atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
+      );
+      return String(payload.sub || token.slice(-24));
+    } catch (err) {
+      return token.slice(-24);
+    }
+  }
+
+  function localAppleAccount() {
+    let id = localStorage.getItem("ppyong-local-id");
+    if (!id) {
+      id =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? `local-${crypto.randomUUID()}`
+          : `local-${Date.now()}`;
+      localStorage.setItem("ppyong-local-id", id);
+    }
+    return {
+      id,
+      name: "플레이어",
+      email: "",
+      apple: false,
+    };
+  }
+
+  function finishLogin(next) {
+    account = next;
+    persistAccount();
+    loadProgress();
+    loadAvatar();
+    if (avatar.complete) showTitle();
+    else openProfile();
+  }
+
+  async function signInWithApple() {
+    if (APPLE_CLIENT_ID && window.AppleID && window.AppleID.auth) {
+      try {
+        window.AppleID.auth.init({
+          clientId: APPLE_CLIENT_ID,
+          scope: "name email",
+          redirectURI: window.location.origin,
+          usePopup: true,
+        });
+        const res = await window.AppleID.auth.signIn();
+        const user = res.user || {};
+        const nameParts = [user.name && user.name.firstName, user.name && user.name.lastName].filter(
+          Boolean
+        );
+        finishLogin({
+          id: appleUserId(res),
+          name: nameParts.join(" ") || "플레이어",
+          email: user.email || "",
+          apple: true,
+        });
+        return;
+      } catch (err) {
+        if (err && (err.error === "popup_closed_by_user" || err.error === "user_cancelled_authorize")) {
+          return;
+        }
+      }
+    }
+    finishLogin(localAppleAccount());
+  }
+
+  function logout() {
+    account = null;
+    persistAccount();
+    avatar.complete = false;
+    show("profile", false);
+    show("briefing", false);
+    showTitle();
+  }
+
+  function loggedIn() {
+    return Boolean(account && avatar.complete);
+  }
+
+  function showTitle() {
+    scene = "title";
+    show("profile", false);
+    show("briefing", false);
+    show("title", true);
+    const ready = loggedIn();
+    if (el.guestBlock) el.guestBlock.classList.toggle("hidden", ready);
+    if (el.playBlock) el.playBlock.classList.toggle("hidden", !ready);
+    const st = currentStage();
+    if (el.titleHello) {
+      const who = account && account.name ? `${account.name}님, ` : "";
+      el.titleHello.textContent = ready
+        ? `${who}열린 단계를 고르고 시작하세요.`
+        : "공원 구멍마다 누군가 고개를 내민다.";
+    }
+    const start = document.getElementById("btn-start");
+    if (start) start.textContent = `${st.name}으로 시작`;
+    syncWalletUI();
+    if (ready) {
+      mountStageCards(el.titleStages, true);
+      mountStageCards(el.stageRow, false);
+    }
+  }
+
+  function updateProfileHome() {
+    const st = currentStage();
+    if (el.profileStageNow) {
+      const best = progress.best[st.id] || 0;
+      el.profileStageNow.textContent = `현재 단계: ${st.name}${best ? ` · 최고 ${best}점` : ""}`;
+    }
+  }
+
+  function showProfilePage(page) {
+    profilePage = page;
+    if (el.profileHome) el.profileHome.classList.toggle("hidden", page !== "home");
+    if (el.profileCustom) el.profileCustom.classList.toggle("hidden", page !== "custom");
+    if (el.profileStages) el.profileStages.classList.toggle("hidden", page !== "stages");
+    const titles = { home: "프로필", custom: "캐릭터 꾸미기", stages: "스테이지" };
+    if (el.profileHeading) el.profileHeading.textContent = titles[page] || "프로필";
+    if (page === "custom") renderProfileStep();
+    if (page === "stages") mountStageCards(el.stageRow, false);
+    if (page === "home") updateProfileHome();
+  }
+
+  function syncWalletUI() {
+    const text = `보유 코인 ${progress.wallet}`;
+    if (el.titleWallet) el.titleWallet.textContent = text;
+    if (el.profileWallet) el.profileWallet.textContent = text;
+  }
+
+  function mountStageCards(root, compact) {
+    if (!root) return;
+    root.innerHTML = "";
+    STAGES.forEach((st) => {
+      const locked = !progress.unlocked.includes(st.id);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "stage-chip";
+      if (progress.stageId === st.id) btn.classList.add("selected");
+      if (locked) btn.classList.add("locked");
+      const name = document.createElement("b");
+      name.textContent = st.name;
+      const hint = document.createElement("small");
+      const best = progress.best[st.id] || 0;
+      if (locked) hint.textContent = `${st.unlockScore}점 해금`;
+      else if (compact) hint.textContent = best ? `최고 ${best}점` : "열림";
+      else hint.textContent = best ? `${st.hint} · 최고 ${best}점` : st.hint;
+      btn.append(name, hint);
+      btn.disabled = locked;
+      btn.addEventListener("click", () => {
+        if (locked) return;
+        progress.stageId = st.id;
+        persistProgress();
+        mountStageCards(el.titleStages, true);
+        mountStageCards(el.stageRow, false);
+        updateProfileHome();
+        const start = document.getElementById("btn-start");
+        if (start) start.textContent = `${st.name}으로 시작`;
+      });
+      root.append(btn);
+    });
+  }
+
+  function openProfile() {
+    scene = "profile";
+    profileStep = 0;
+    show("login", false);
+    show("title", false);
+    show("briefing", false);
+    show("profile", true);
+    syncWalletUI();
+    if (el.profileAccount) {
+      el.profileAccount.textContent = account
+        ? account.apple
+          ? account.email || "Apple ID"
+          : "로컬 계정"
+        : "Apple ID";
+    }
+    renderProfileStep();
+    showProfilePage(avatar.complete ? "home" : "custom");
+  }
+
+  function openBriefing() {
+    scene = "briefing";
+    show("title", false);
+    show("profile", false);
+    show("login", false);
+    show("result", false);
+    show("roundOver", false);
+    show("shop", false);
+    show("hud", false);
+    show("controls", false);
+    show("briefing", true);
+    const briefTitle = document.querySelector("#briefing h2");
+    if (briefTitle) briefTitle.textContent = `${currentStage().name}에 나오는 녀석들`;
+  }
+
+  function beginPlay() {
+    show("briefing", false);
+    startRound();
   }
 
   function rng(seed) {
@@ -452,6 +1112,7 @@
     comboTimer = 0;
     round = 1;
     totalCaught = 0;
+    runScore = 0;
     playTime = 0;
   }
 
@@ -618,7 +1279,7 @@
     if (!empty.length) return;
     const hole = empty[(Math.random() * empty.length) | 0];
     let kind = "normal";
-    if (scene === "play" && !forceGold && Math.random() < 0.22) {
+    if (scene === "play" && !forceGold && Math.random() < currentStage().trap) {
       kind = ["skunk", "rabbit", "raccoon"][(Math.random() * 3) | 0];
     } else if (forceGold || Math.random() < 0.12) {
       kind = "gold";
@@ -628,7 +1289,7 @@
       state: "rise",
       t: 0,
       height: 0,
-      stay: 2.1 + Math.random() * 1.2,
+      stay: currentStage().stayMin + Math.random() * currentStage().stayVar,
       bob: Math.random() * Math.PI * 2,
     };
     if (scene === "play") sfx("pop");
@@ -653,6 +1314,7 @@
     const base = mole.kind === "gold" ? 12 : 5;
     const gain = Math.round(base * upgradeValue("luck") * (1 + Math.min(combo, 12) * 0.08));
     coins += gain;
+    runScore += gain;
     roundCaught += 1;
     totalCaught += 1;
     shake = mole.kind === "gold" ? 8 : 5;
@@ -717,10 +1379,10 @@
     show("controls", false);
     show("hud", true);
     show("result", true);
-    el.resultTitle.textContent = "이런!";
-    const best = Number(localStorage.getItem("mole-best") || 0);
-    if (totalCaught > best) localStorage.setItem("mole-best", String(totalCaught));
-    el.resultSummary.textContent = `${reason} 두더지 ${totalCaught}마리, 코인 ${coins}개였어요.`;
+    settleRun("이런!");
+    if (reason && el.resultSummary) {
+      el.resultSummary.textContent = `${reason} ${el.resultSummary.textContent}`;
+    }
   }
 
   function burst(x, y, color, n) {
@@ -741,6 +1403,7 @@
   }
 
   function trySwing() {
+    if (scene !== "play") return;
     if (!player || player.swingCd > 0 || soaked > 0) return;
     const range = upgradeValue("range");
     const targets = [];
@@ -786,6 +1449,9 @@
     slashT = 0;
     waterIFrames = 0;
     show("title", false);
+    show("login", false);
+    show("profile", false);
+    show("briefing", false);
     show("shop", false);
     show("roundOver", false);
     show("result", false);
@@ -847,22 +1513,25 @@
   // helper attached below after buttons exist
   function show(name, on) {
     const node = name === "roundOver" ? el.roundOver : el[name];
+    if (!node) return;
     node.classList.toggle("hidden", !on);
   }
 
   function syncHud() {
     el.coins.textContent = String(coins);
+    if (el.score) el.score.textContent = String(runScore);
     el.combo.textContent = String(combo);
     el.time.textContent = String(Math.ceil(timeLeft));
     el.round.textContent = String(round);
   }
 
   function difficulty() {
+    const st = currentStage();
     const t = playTime + (round - 1) * 18;
     return {
-      interval: Math.max(0.035, 0.1 - t * 0.0025),
-      maxUp: Math.min(70, 32 + Math.floor(t / 5)),
-      burst: t > 24 ? 8 : t > 8 ? 6 : 4,
+      interval: Math.max(0.02, 0.1 - t * 0.0025 - st.intervalBoost),
+      maxUp: Math.min(80, 32 + Math.floor(t / 5) + st.maxUpAdd),
+      burst: (t > 24 ? 8 : t > 8 ? 6 : 4) + st.burstAdd,
     };
   }
 
@@ -881,7 +1550,7 @@
       if (!m) continue;
       m.bob += dt * 8;
       if (m.state === "rise") {
-        m.t += dt / 0.32;
+        m.t += dt / (currentStage().riseTime || 0.32);
         m.height = clamp(m.t, 0, 1);
         if (m.t >= 1) {
           m.state = "up";
@@ -895,7 +1564,7 @@
           m.t = 0;
         }
       } else if (m.state === "hide") {
-        m.t += dt / 0.18;
+        m.t += dt / (currentStage().hideTime || 0.18);
         m.height = 1 - clamp(m.t, 0, 1);
         if (m.t >= 1) {
           hole.mole = null;
@@ -1074,11 +1743,7 @@
       show("controls", false);
       show("hud", true);
       show("result", true);
-      el.resultTitle.textContent = "오늘은 여기까지!";
-      const best = Number(localStorage.getItem("mole-best") || 0);
-      const score = totalCaught;
-      if (score > best) localStorage.setItem("mole-best", String(score));
-      el.resultSummary.textContent = `두더지 ${totalCaught}마리, 코인 ${coins}개 모았어요. 최고 기록 ${Math.max(best, score)}마리!`;
+      settleRun("오늘은 여기까지!");
       return;
     }
     scene = "roundOver";
@@ -1087,7 +1752,7 @@
   }
 
   function update(dt) {
-    if (scene === "title") {
+    if (scene === "title" || scene === "login" || scene === "profile" || scene === "briefing") {
       demoTime += dt;
       if (player) {
         player.runT += dt * 8;
@@ -1171,239 +1836,205 @@
     });
   }
 
-  function drawAnimalFace(kind, x, faceY) {
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.strokeStyle = INK;
+  function animalPalette(kind) {
+    if (kind === "gold") return { fur: "#e8c423", paw: "#d4a318", line: "#6a4a12" };
+    if (kind === "skunk") return { fur: "#1c1c22", paw: "#141418", line: INK };
+    if (kind === "rabbit") return { fur: "#ead4b4", paw: "#e2c8a6", line: "#5a4030" };
+    if (kind === "raccoon") return { fur: "#8b8176", paw: "#3a3530", line: INK };
+    return { fur: "#8a542c", paw: "#7a4a26", line: INK };
+  }
 
-    if (kind === "rabbit") {
-      ctx.fillStyle = "#fff";
+  function drawPaw(px, py, side, color, line) {
+    ctx.fillStyle = color;
+    ctx.strokeStyle = line;
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.ellipse(px, py, 7.8, 5.5, side * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    for (let i = -1; i <= 1; i++) {
       ctx.beginPath();
-      ctx.ellipse(x - 6.5, faceY, 5.2, 5.8, 0, 0, Math.PI * 2);
-      ctx.ellipse(x + 6.5, faceY, 5.2, 5.8, 0, 0, Math.PI * 2);
+      ctx.ellipse(px + i * 3.5 + side * 0.4, py - 4.6, 2.5, 2.7, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.lineWidth = 2.2;
       ctx.stroke();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.arc(x - 6.5, faceY + 0.6, 2.4, 0, Math.PI * 2);
-      ctx.arc(x + 6.5, faceY + 0.6, 2.4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.arc(x - 5.4, faceY - 0.8, 1.1, 0, Math.PI * 2);
-      ctx.arc(x + 7.6, faceY - 0.8, 1.1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#ff8aa8";
-      ctx.beginPath();
-      ctx.ellipse(x, faceY + 8, 3.4, 2.6, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = INK;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(x - 3, faceY + 8);
-      ctx.lineTo(x - 14, faceY + 6);
-      ctx.moveTo(x - 3, faceY + 10);
-      ctx.lineTo(x - 13, faceY + 12);
-      ctx.moveTo(x + 3, faceY + 8);
-      ctx.lineTo(x + 14, faceY + 6);
-      ctx.moveTo(x + 3, faceY + 10);
-      ctx.lineTo(x + 13, faceY + 12);
-      ctx.stroke();
-      return;
     }
+  }
 
-    if (kind === "skunk") {
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.ellipse(x - 6.2, faceY, 4.6, 5.2, 0, 0, Math.PI * 2);
-      ctx.ellipse(x + 6.2, faceY, 4.6, 5.2, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.arc(x - 6.2, faceY + 0.8, 2.2, 0, Math.PI * 2);
-      ctx.arc(x + 6.2, faceY + 0.8, 2.2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#4a1020";
-      ctx.lineWidth = 2.3;
-      ctx.beginPath();
-      ctx.moveTo(x - 12, faceY - 7);
-      ctx.lineTo(x - 4, faceY - 3);
-      ctx.moveTo(x + 12, faceY - 7);
-      ctx.lineTo(x + 4, faceY - 3);
-      ctx.stroke();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.arc(x, faceY + 7.5, 2.4, 0, Math.PI * 2);
-      ctx.fill();
-      return;
-    }
-
-    if (kind === "raccoon") {
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.ellipse(x - 6.4, faceY, 4.8, 5.4, 0, 0, Math.PI * 2);
-      ctx.ellipse(x + 6.4, faceY, 4.8, 5.4, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.arc(x - 6.4, faceY + 0.5, 2.5, 0, Math.PI * 2);
-      ctx.arc(x + 6.4, faceY + 0.5, 2.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.arc(x - 5.2, faceY - 0.7, 1, 0, Math.PI * 2);
-      ctx.arc(x + 7.6, faceY - 0.7, 1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.ellipse(x, faceY + 8, 3.2, 2.4, 0, 0, Math.PI * 2);
-      ctx.fill();
-      return;
-    }
-
-    if (kind === "gold") {
-      ctx.fillStyle = INK;
-      ctx.beginPath();
-      ctx.ellipse(x - 5.8, faceY, 3.4, 4.2, 0, 0, Math.PI * 2);
-      ctx.ellipse(x + 5.8, faceY, 3.4, 4.2, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.arc(x - 4.8, faceY - 1, 1.1, 0, Math.PI * 2);
-      ctx.arc(x + 6.8, faceY - 1, 1.1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#ff8aa8";
-      ctx.beginPath();
-      ctx.arc(x, faceY + 6.5, 2.6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = INK;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(x - 3, faceY + 7);
-      ctx.lineTo(x - 12, faceY + 5);
-      ctx.moveTo(x + 3, faceY + 7);
-      ctx.lineTo(x + 12, faceY + 5);
-      ctx.stroke();
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(x, faceY + 10, 4.2, 0.2, Math.PI - 0.2);
-      ctx.stroke();
-      return;
-    }
-
+  function drawShinyEyes(x, y, spread, r) {
     ctx.fillStyle = INK;
     ctx.beginPath();
-    ctx.arc(x - 6, faceY, 2.1, 0, Math.PI * 2);
-    ctx.arc(x + 6, faceY, 2.1, 0, Math.PI * 2);
+    ctx.arc(x - spread, y, r, 0, Math.PI * 2);
+    ctx.arc(x + spread, y, r, 0, Math.PI * 2);
     ctx.fill();
-    ctx.lineWidth = 2.4;
+    ctx.fillStyle = "#fff";
     ctx.beginPath();
-    ctx.moveTo(x - 3.2, faceY + 7);
-    ctx.lineTo(x + 3.2, faceY + 7);
-    ctx.stroke();
+    ctx.arc(x - spread - r * 0.25, y - r * 0.35, r * 0.32, 0, Math.PI * 2);
+    ctx.arc(x + spread - r * 0.15, y - r * 0.35, r * 0.32, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   function drawAnimal(kind, x, y, pop, parts) {
-    const h = 18 + pop * 26;
-    const rx = 15 + pop * 3;
-    let body = "#5c4033";
-    if (kind === "gold") body = "#e8b423";
-    else if (kind === "skunk") body = "#2a2a32";
-    else if (kind === "rabbit") body = "#e8d0b0";
-    else if (kind === "raccoon") body = "#7a6a5a";
-
+    const pal = animalPalette(kind);
+    const rise = pop;
+    const headY = y - 4 - rise * 16;
+    const hr = 10 + rise * 7.5;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    ctx.lineWidth = 2.8;
-    ctx.strokeStyle = INK;
+    ctx.strokeStyle = pal.line;
+    ctx.lineWidth = 2.6;
 
-    if (parts !== "arms") {
+    if (parts !== "paws") {
       if (kind === "rabbit") {
         [-1, 1].forEach((side) => {
           ctx.save();
-          ctx.translate(x + side * 9, y - h + 2);
-          ctx.rotate(side * 0.18);
-          ctx.fillStyle = body;
+          ctx.translate(x + side * hr * 0.42, headY - hr * 0.55);
+          ctx.rotate(side * 0.12);
+          ctx.fillStyle = pal.fur;
           ctx.beginPath();
-          ctx.ellipse(0, -18, 6.5, 20, 0, 0, Math.PI * 2);
+          ctx.ellipse(0, -hr * 0.95, hr * 0.34, hr * 1.15, 0, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
           ctx.fillStyle = "#ffb7c8";
           ctx.beginPath();
-          ctx.ellipse(0, -16, 2.8, 13, 0, 0, Math.PI * 2);
+          ctx.ellipse(0, -hr * 0.85, hr * 0.16, hr * 0.78, 0, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         });
       } else if (kind === "skunk" || kind === "raccoon") {
         [-1, 1].forEach((side) => {
-          ctx.fillStyle = body;
+          ctx.fillStyle = pal.fur;
           ctx.beginPath();
-          ctx.ellipse(x + side * 12, y - h + 8, 6, 7.5, side * 0.28, 0, Math.PI * 2);
+          ctx.ellipse(x + side * hr * 0.78, headY - hr * 0.62, hr * 0.32, hr * 0.38, side * 0.15, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
-          ctx.fillStyle = kind === "raccoon" ? "#f0cbb8" : "#f4f1ea";
+          ctx.fillStyle = kind === "raccoon" ? "#f0cbb8" : "#4a3020";
           ctx.beginPath();
-          ctx.ellipse(x + side * 12, y - h + 9, 2.6, 3.2, side * 0.28, 0, Math.PI * 2);
+          ctx.ellipse(x + side * hr * 0.78, headY - hr * 0.58, hr * 0.16, hr * 0.2, side * 0.15, 0, Math.PI * 2);
           ctx.fill();
         });
       }
 
-      ctx.fillStyle = body;
+      ctx.fillStyle = pal.fur;
       ctx.beginPath();
-      ctx.moveTo(x - rx, y);
-      ctx.bezierCurveTo(x - rx - 1, y - h * 1.15, x + rx + 1, y - h * 1.15, x + rx, y);
-      ctx.closePath();
+      ctx.ellipse(x, headY, hr * 1.05, hr, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
+
+      if (kind === "normal") {
+        ctx.fillStyle = pal.fur;
+        ctx.beginPath();
+        ctx.ellipse(x, headY - hr * 0.92, 3.2, 3.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
 
       if (kind === "skunk") {
         ctx.fillStyle = "#f4f1ea";
         ctx.beginPath();
-        ctx.moveTo(x - 3.8, y - 2);
-        ctx.quadraticCurveTo(x, y - h * 0.98, x + 3.8, y - 2);
+        ctx.moveTo(x - 3.4, headY + hr * 0.2);
+        ctx.quadraticCurveTo(x, headY - hr * 1.05, x + 3.4, headY + hr * 0.2);
         ctx.closePath();
         ctx.fill();
       }
-      if (kind === "gold") {
-        ctx.fillStyle = "#ffe56b";
-        ctx.beginPath();
-        ctx.moveTo(x - 9, y - h + 10);
-        ctx.lineTo(x - 5, y - h - 8);
-        ctx.lineTo(x, y - h + 8);
-        ctx.lineTo(x + 5, y - h - 8);
-        ctx.lineTo(x + 9, y - h + 10);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-      }
+
       if (kind === "raccoon") {
         ctx.fillStyle = INK;
         ctx.beginPath();
-        ctx.ellipse(x, y - h * 0.58, rx * 0.82, 6.2, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, headY - hr * 0.05, hr * 0.92, hr * 0.42, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#f4f1ea";
+        ctx.beginPath();
+        ctx.ellipse(x - hr * 0.42, headY - hr * 0.06, hr * 0.34, hr * 0.3, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + hr * 0.42, headY - hr * 0.06, hr * 0.34, hr * 0.3, 0, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      drawAnimalFace(kind, x, y - h * 0.62);
+      if (kind === "gold") {
+        ctx.fillStyle = "#ffe56b";
+        ctx.strokeStyle = "#6a4a12";
+        ctx.beginPath();
+        ctx.moveTo(x - hr * 0.62, headY - hr * 0.55);
+        ctx.lineTo(x - hr * 0.38, headY - hr * 1.22);
+        ctx.lineTo(x, headY - hr * 0.62);
+        ctx.lineTo(x + hr * 0.38, headY - hr * 1.22);
+        ctx.lineTo(x + hr * 0.62, headY - hr * 0.55);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        [
+          [hr * 0.7, -hr * 0.2],
+          [-hr * 0.55, hr * 0.15],
+          [hr * 0.15, -hr * 0.7],
+        ].forEach(([dx, dy]) => {
+          ctx.beginPath();
+          ctx.arc(x + dx, headY + dy, 1.4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      drawShinyEyes(x, headY - hr * 0.08, hr * 0.38, kind === "rabbit" ? 3.3 : 2.8);
+
+      if (kind === "skunk") {
+        ctx.strokeStyle = "#4a1020";
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(x - hr * 0.55, headY - hr * 0.42);
+        ctx.lineTo(x - hr * 0.18, headY - hr * 0.22);
+        ctx.moveTo(x + hr * 0.55, headY - hr * 0.42);
+        ctx.lineTo(x + hr * 0.18, headY - hr * 0.22);
+        ctx.stroke();
+      }
+
+      if (kind === "rabbit") {
+        ctx.fillStyle = "#ffb3c4";
+        ctx.beginPath();
+        ctx.ellipse(x - hr * 0.55, headY + hr * 0.18, 3.2, 2.2, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + hr * 0.55, headY + hr * 0.18, 3.2, 2.2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#ff8aa8";
+        ctx.beginPath();
+        ctx.moveTo(x, headY + hr * 0.28);
+        ctx.lineTo(x - 2.4, headY + hr * 0.42);
+        ctx.lineTo(x + 2.4, headY + hr * 0.42);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = pal.line;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.arc(x, headY + hr * 0.52, 2.4, 0.15, Math.PI - 0.15);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = "#ff8aa8";
+        ctx.beginPath();
+        ctx.ellipse(x, headY + hr * 0.28, kind === "skunk" ? 2.1 : 2.6, kind === "skunk" ? 1.7 : 2.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = pal.line;
+        ctx.lineWidth = 1.5;
+        if (kind === "normal" || kind === "gold" || !kind) {
+          [
+            [-1, -0.2],
+            [-1, 0.15],
+            [-1, 0.45],
+            [1, -0.2],
+            [1, 0.15],
+            [1, 0.45],
+          ].forEach(([side, oy]) => {
+            ctx.beginPath();
+            ctx.moveTo(x + side * 3.2, headY + hr * 0.3 + oy * 6);
+            ctx.lineTo(x + side * (hr * 0.85), headY + hr * 0.22 + oy * 8);
+            ctx.stroke();
+          });
+        }
+        ctx.beginPath();
+        ctx.arc(x, headY + hr * 0.42, 3.4, 0.2, Math.PI - 0.2);
+        ctx.stroke();
+      }
     }
 
     if (parts !== "body") {
-      ctx.lineWidth = 2.6;
-      ctx.strokeStyle = INK;
-      [-1, 1].forEach((side) => {
-        ctx.beginPath();
-        ctx.moveTo(x + side * (rx - 3), y - h * 0.28);
-        ctx.quadraticCurveTo(x + side * 8, y - 2, x + side * 7, y + 3);
-        ctx.stroke();
-        ctx.fillStyle = "#f2d4c2";
-        ctx.beginPath();
-        ctx.ellipse(x + side * 8, y + 4, 4.2, 3.2, side * 0.3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = INK;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.lineWidth = 2.6;
-      });
+      drawPaw(x - 16, y + 6.5, -1, pal.paw, pal.line);
+      drawPaw(x + 16, y + 6.5, 1, pal.paw, pal.line);
     }
   }
 
@@ -1416,7 +2047,7 @@
     drawShadow(x, hole.y + 8, 14 + pop * 8, 6);
     drawAnimal(m.kind, x, y, pop, "body");
     drawHole(hole);
-    drawAnimal(m.kind, x, y, pop, "arms");
+    drawAnimal(m.kind, x, y, pop, "paws");
   }
 
   function drawCarrot(c) {
@@ -1539,69 +2170,74 @@
   function paintHammerPattern(g, x, y, w, h, pattern, color) {
     if (!pattern || pattern === "solid") return;
     const acc = hammerAccent(color);
+    const s = Math.max(1, Math.min(w, h) / 14);
     g.save();
     g.beginPath();
-    if (g.roundRect) g.roundRect(x, y, w, h, 4);
+    if (g.roundRect) g.roundRect(x, y, w, h, Math.min(4 * s, 16));
     else g.rect(x, y, w, h);
     g.clip();
     g.fillStyle = acc;
     g.strokeStyle = acc;
-    g.globalAlpha = 0.5;
+    g.globalAlpha = 0.55;
     if (pattern === "stripe") {
-      for (let i = -h; i < w + h; i += 7) {
+      const gap = 7 * s;
+      for (let i = -h; i < w + h; i += gap) {
         g.save();
         g.translate(x + i, y);
         g.rotate(0.5);
-        g.fillRect(0, -6, 3.2, h + 16);
+        g.fillRect(0, -6 * s, 3.2 * s, h + 16 * s);
         g.restore();
       }
     } else if (pattern === "dots") {
-      for (let yy = 4; yy < h; yy += 7) {
-        for (let xx = 4; xx < w; xx += 7) {
+      const gap = 7 * s;
+      for (let yy = 4 * s; yy < h; yy += gap) {
+        for (let xx = 4 * s; xx < w; xx += gap) {
           g.beginPath();
-          g.arc(x + xx, y + yy, 1.6, 0, Math.PI * 2);
+          g.arc(x + xx, y + yy, 1.6 * s, 0, Math.PI * 2);
           g.fill();
         }
       }
     } else if (pattern === "hearts") {
-      for (let yy = 4; yy < h - 2; yy += 10) {
-        for (let xx = 6; xx < w - 2; xx += 10) {
+      const gap = 10 * s;
+      for (let yy = 4 * s; yy < h - 2; yy += gap) {
+        for (let xx = 6 * s; xx < w - 2; xx += gap) {
           g.beginPath();
-          g.arc(x + xx - 1.5, y + yy, 1.5, 0, Math.PI * 2);
-          g.arc(x + xx + 1.5, y + yy, 1.5, 0, Math.PI * 2);
+          g.arc(x + xx - 1.5 * s, y + yy, 1.5 * s, 0, Math.PI * 2);
+          g.arc(x + xx + 1.5 * s, y + yy, 1.5 * s, 0, Math.PI * 2);
           g.fill();
           g.beginPath();
-          g.moveTo(x + xx - 3, y + yy + 0.4);
-          g.lineTo(x + xx, y + yy + 3.6);
-          g.lineTo(x + xx + 3, y + yy + 0.4);
+          g.moveTo(x + xx - 3 * s, y + yy + 0.4 * s);
+          g.lineTo(x + xx, y + yy + 3.6 * s);
+          g.lineTo(x + xx + 3 * s, y + yy + 0.4 * s);
           g.fill();
         }
       }
     } else if (pattern === "stars") {
-      g.font = "8px sans-serif";
+      g.font = `${Math.max(8, 8 * s)}px sans-serif`;
       g.textAlign = "center";
       g.textBaseline = "middle";
-      for (let yy = 6; yy < h; yy += 10) {
-        for (let xx = 6; xx < w; xx += 10) {
+      const gap = 10 * s;
+      for (let yy = 6 * s; yy < h; yy += gap) {
+        for (let xx = 6 * s; xx < w; xx += gap) {
           g.fillText("★", x + xx, y + yy);
         }
       }
     } else if (pattern === "checker") {
       g.globalAlpha = 0.32;
-      const s = 5;
-      for (let yy = 0; yy < h; yy += s) {
-        for (let xx = 0; xx < w; xx += s) {
-          if (((xx + yy) / s) % 2) g.fillRect(x + xx, y + yy, s, s);
+      const cell = 5 * s;
+      for (let yy = 0; yy < h; yy += cell) {
+        for (let xx = 0; xx < w; xx += cell) {
+          if (((xx + yy) / cell) % 2) g.fillRect(x + xx, y + yy, cell, cell);
         }
       }
     } else if (pattern === "zigzag") {
-      g.lineWidth = 2;
+      g.lineWidth = 2 * s;
       g.globalAlpha = 0.55;
-      for (let yy = 3; yy < h; yy += 6) {
+      for (let yy = 3 * s; yy < h; yy += 6 * s) {
         g.beginPath();
         g.moveTo(x, y + yy);
-        for (let xx = 0; xx <= w; xx += 6) {
-          g.lineTo(x + xx, y + yy + ((xx / 6) % 2 ? 3 : 0));
+        for (let xx = 0; xx <= w; xx += 6 * s) {
+          g.lineTo(x + xx, y + yy + ((xx / (6 * s)) % 2 ? 3 * s : 0));
         }
         g.stroke();
       }
@@ -1609,32 +2245,99 @@
     g.restore();
   }
 
-  function drawMallet(g, swing) {
-    const color = avatar.hammerColor || "#e23b3b";
-    const pattern = avatar.hammerPattern || "solid";
+  function drawMallet(g, swing, design) {
+    const d = design || hammerOf(avatar.hammerId);
+    const color = d.color || "#e23b3b";
+    const pattern = d.pattern || "solid";
     const cap = hammerAccent(color);
     g.save();
-    g.translate(15, -30);
-    g.rotate(-0.85 + swing * 2.35);
-    fillRound(g, -2.2, -4, 4.4, 22, 1.8, "#d4a06a");
+    g.translate(-15, -30);
+    g.rotate(0.85 - swing * 2.35);
+    if (d.tool === "paddle") {
+      fillRound(g, -2, -2, 4, 30, 2, d.handle || "#8a5a32");
+      g.strokeStyle = LINE;
+      g.lineWidth = 1.3;
+      g.stroke();
+      g.fillStyle = color;
+      g.beginPath();
+      g.ellipse(0, -16, 8, 13, 0, 0, Math.PI * 2);
+      g.fill();
+      g.stroke();
+      g.restore();
+      return;
+    }
+    if (d.tool === "racket") {
+      fillRound(g, -1.5, 0, 3, 22, 1.4, d.handle || "#2b3a24");
+      g.strokeStyle = LINE;
+      g.lineWidth = 1.2;
+      g.stroke();
+      g.fillStyle = color;
+      g.beginPath();
+      g.ellipse(0, -18, 9, 11, 0, 0, Math.PI * 2);
+      g.fill();
+      g.stroke();
+      g.save();
+      g.beginPath();
+      g.ellipse(0, -18, 7, 9, 0, 0, Math.PI * 2);
+      g.clip();
+      g.strokeStyle = "rgba(255,255,255,0.75)";
+      g.lineWidth = 0.7;
+      for (let i = -6; i <= 6; i += 3) {
+        g.beginPath();
+        g.moveTo(i, -28);
+        g.lineTo(i, -8);
+        g.stroke();
+      }
+      for (let i = -8; i <= 8; i += 3) {
+        g.beginPath();
+        g.moveTo(-8, -18 + i);
+        g.lineTo(8, -18 + i);
+        g.stroke();
+      }
+      g.restore();
+      g.restore();
+      return;
+    }
+    fillRound(g, -2.4, -4, 4.8, 24, 1.8, d.handle || "#d4a06a");
     g.strokeStyle = LINE;
     g.lineWidth = 1.2;
     g.stroke();
-    fillRound(g, -3.2, -8, 6.4, 6, 1.6, "#4aa3e8");
-    fillRound(g, -13, -18, 26, 12, 4, color);
-    paintHammerPattern(g, -13, -18, 26, 12, pattern, color);
+    fillRound(g, -3.4, -8, 6.8, 6.4, 1.6, d.grip || "#4aa3e8");
+    fillRound(g, -15, -20, 30, 14, 4, color);
+    paintHammerPattern(g, -15, -20, 30, 14, pattern, color);
     g.strokeStyle = LINE;
-    g.lineWidth = 1.4;
+    g.lineWidth = 1.5;
     g.beginPath();
-    if (g.roundRect) g.roundRect(-13, -18, 26, 12, 4);
-    else g.rect(-13, -18, 26, 12);
+    if (g.roundRect) g.roundRect(-15, -20, 30, 14, 4);
+    else g.rect(-15, -20, 30, 14);
     g.stroke();
-    fillRound(g, -13, -18, 5, 12, 3, cap);
-    fillRound(g, 8, -18, 5, 12, 3, cap);
+    fillRound(g, -15, -20, 5.5, 14, 3, cap);
+    fillRound(g, 9.5, -20, 5.5, 14, 3, cap);
     g.fillStyle = cap;
     g.beginPath();
-    g.arc(0, -19, 2.2, 0, Math.PI * 2);
+    g.arc(0, -21, 2.4, 0, Math.PI * 2);
     g.fill();
+    g.restore();
+  }
+
+  function drawHammerPortrait(g, design, w, h) {
+    g.clearRect(0, 0, w, h);
+    const sky = g.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, "#fff8ea");
+    sky.addColorStop(1, "#e8d9b0");
+    g.fillStyle = sky;
+    g.fillRect(0, 0, w, h);
+    g.fillStyle = "rgba(255,255,255,0.55)";
+    g.beginPath();
+    g.ellipse(w * 0.22, h * 0.16, 28, 12, 0, 0, Math.PI * 2);
+    g.ellipse(w * 0.78, h * 0.2, 22, 10, 0, 0, Math.PI * 2);
+    g.fill();
+    const d = design || hammerOf(avatar.hammerId);
+    g.save();
+    g.translate(w * 0.5, h * 0.78);
+    g.rotate(-0.2);
+    g.scale(w / 70, w / 70);
+    drawMallet(g, 0.08, d);
     g.restore();
   }
 
@@ -1704,10 +2407,10 @@
 
     g.fillStyle = SKIN;
     g.beginPath();
-    g.ellipse(-13, -28, 4.2, 3.4, -0.4, 0, Math.PI * 2);
+    g.ellipse(13, -28, 4.2, 3.4, 0.4, 0, Math.PI * 2);
     g.fill();
     g.beginPath();
-    g.ellipse(14, -27 + swing * -2, 4.4, 3.6, 0.2, 0, Math.PI * 2);
+    g.ellipse(-14, -27 + swing * -2, 4.4, 3.6, -0.2, 0, Math.PI * 2);
     g.fill();
 
     if (o.cut === "hoodie" || o.cut === "track") {
@@ -1763,6 +2466,15 @@
       g.textAlign = "center";
       g.fillText("10", 0, -26);
     }
+    if (o.cut === "varsity") {
+      fillRound(g, -11, -40, 7, 20, 6, o.sleeve || "#f4f1ea");
+      fillRound(g, 4, -40, 7, 20, 6, o.sleeve || "#f4f1ea");
+      g.fillStyle = o.letter || "#ffd15c";
+      g.font = "bold 11px Jua, sans-serif";
+      g.textAlign = "center";
+      g.textBaseline = "middle";
+      g.fillText("P", 0, -28);
+    }
     if (o.strings) {
       g.strokeStyle = o.strings;
       g.lineWidth = 1.3;
@@ -1814,7 +2526,13 @@
       g.fill();
     }
 
-    if (o.ribbon) {
+    if (o.beanie) {
+      fillRound(g, -14, -64, 28, 12, 6, o.beanie);
+      g.fillStyle = o.pom || "#fff6e4";
+      g.beginPath();
+      g.arc(0, -66, 3.2, 0, Math.PI * 2);
+      g.fill();
+    } else if (o.ribbon) {
       g.fillStyle = o.ribbon;
       g.beginPath();
       g.moveTo(-1, -64);
@@ -1899,132 +2617,148 @@
     document.querySelectorAll(".outfit-chip").forEach((b) => {
       b.classList.toggle("selected", b.dataset.outfit === avatar.outfitId);
     });
-    document.querySelectorAll(".color-dot").forEach((b) => {
-      b.classList.toggle("selected", b.dataset.hammerColor === avatar.hammerColor);
-    });
-    document.querySelectorAll(".pattern-chip").forEach((b) => {
-      b.classList.toggle("selected", b.dataset.hammerPattern === avatar.hammerPattern);
-    });
-    document.querySelectorAll(".hammer-hex").forEach((inp) => {
-      inp.value = avatar.hammerColor;
+    document.querySelectorAll(".hammer-card").forEach((b) => {
+      b.classList.toggle("selected", b.dataset.hammer === avatar.hammerId);
     });
   }
 
   function syncHammerButton() {
     const head = document.querySelector("#btn-hammer .mallet-icon rect[width='46']");
-    if (head) head.setAttribute("fill", avatar.hammerColor);
+    if (head) head.setAttribute("fill", hammerOf(avatar.hammerId).color);
   }
 
-  function mountHammerStudios() {
-    ["title-hammer", "shop-hammer"].forEach((id) => {
-      const root = document.getElementById(id);
-      if (!root) return;
-      root.innerHTML = "";
+  function paintPreviewBg(g, w, h) {
+    const sky = g.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, "#8ecfff");
+    sky.addColorStop(0.52, "#c8ec8a");
+    sky.addColorStop(1, "#6bb34d");
+    g.fillStyle = sky;
+    g.fillRect(0, 0, w, h);
+    g.fillStyle = "rgba(255,255,255,0.82)";
+    g.beginPath();
+    g.ellipse(w * 0.24, h * 0.16, 22, 11, 0, 0, Math.PI * 2);
+    g.ellipse(w * 0.74, h * 0.12, 26, 13, 0, 0, Math.PI * 2);
+    g.fill();
+  }
+
+  function mountGenderCards() {
+    const chars = el.profileChars;
+    if (!chars) return;
+    chars.innerHTML = "";
+    ["girl", "boy"].forEach((gender) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "char-card";
+      btn.dataset.gender = gender;
       const cv = document.createElement("canvas");
-      cv.width = 160;
-      cv.height = 160;
-      cv.dataset.hammerPreview = "1";
-      const side = document.createElement("div");
-      const colors = document.createElement("div");
-      colors.className = "color-row";
-      HAMMER_COLORS.forEach((c) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "color-dot";
-        btn.dataset.hammerColor = c.hex;
-        btn.title = c.name;
-        btn.style.background = c.hex;
-        btn.addEventListener("click", () => {
-          avatar.hammerColor = c.hex;
-          persistAvatar();
-        });
-        colors.append(btn);
-      });
-      const custom = document.createElement("label");
-      custom.className = "custom-color";
-      custom.append("내 색 ");
-      const inp = document.createElement("input");
-      inp.type = "color";
-      inp.className = "hammer-hex";
-      inp.value = avatar.hammerColor;
-      inp.addEventListener("input", () => {
-        avatar.hammerColor = inp.value;
+      cv.width = 240;
+      cv.height = 270;
+      cv.dataset.previewGender = gender;
+      const label = document.createElement("span");
+      label.textContent = gender === "girl" ? "여자" : "남자";
+      btn.append(cv, label);
+      btn.addEventListener("click", () => {
+        avatar.gender = gender;
+        ensureOutfitForGender();
         persistAvatar();
       });
-      custom.append(inp);
-      const patterns = document.createElement("div");
-      patterns.className = "pattern-row";
-      HAMMER_PATTERNS.forEach((p) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "pattern-chip";
-        btn.dataset.hammerPattern = p.id;
-        btn.textContent = p.name;
-        btn.addEventListener("click", () => {
-          avatar.hammerPattern = p.id;
-          persistAvatar();
-        });
-        patterns.append(btn);
-      });
-      side.append(colors, custom, patterns);
-      root.append(cv, side);
+      chars.append(btn);
     });
   }
 
-  function mountAvatarPickers() {
-    [
-      ["title-chars", "title-outfits", false],
-      ["shop-chars", "shop-outfits", true],
-    ].forEach(([charId, outfitId, compact]) => {
-      const chars = document.getElementById(charId);
-      const outfits = document.getElementById(outfitId);
-      if (!chars || !outfits) return;
-      chars.innerHTML = "";
-      outfits.innerHTML = "";
-      ["girl", "boy"].forEach((gender) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "char-card";
-        btn.dataset.gender = gender;
-        const cv = document.createElement("canvas");
-        cv.width = compact ? 200 : 240;
-        cv.height = compact ? 210 : 270;
-        cv.dataset.previewGender = gender;
-        const label = document.createElement("span");
-        label.textContent = gender === "girl" ? "여자" : "남자";
-        btn.append(cv, label);
-        btn.addEventListener("click", () => {
-          avatar.gender = gender;
-          persistAvatar();
-        });
-        chars.append(btn);
+  function mountOutfitCards() {
+    const outfits = el.profileOutfits;
+    if (!outfits) return;
+    outfits.innerHTML = "";
+    outfitsFor(avatar.gender).forEach((o) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "outfit-chip";
+      btn.dataset.outfit = o.id;
+      const cv = document.createElement("canvas");
+      cv.width = 144;
+      cv.height = 176;
+      cv.dataset.previewOutfit = o.id;
+      const txt = document.createElement("span");
+      const name = document.createElement("b");
+      name.textContent = o.name;
+      const vibe = document.createElement("small");
+      vibe.textContent = o.cost
+        ? ownsOutfit(o.id)
+          ? `${o.vibe} · 보유`
+          : `${o.vibe} · ${o.cost}코인`
+        : o.vibe;
+      txt.append(name, vibe);
+      btn.append(cv, txt);
+      if (!ownsOutfit(o.id)) btn.classList.add("locked");
+      btn.addEventListener("click", () => {
+        if (!ownsOutfit(o.id) && !buyOutfit(o.id)) return;
+        avatar.outfitId = o.id;
+        persistAvatar();
+        mountOutfitCards();
+        syncAvatarPickerUI();
       });
-      OUTFITS.forEach((o) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "outfit-chip";
-        btn.dataset.outfit = o.id;
-        const sw = document.createElement("span");
-        sw.className = "outfit-swatch";
-        sw.style.setProperty("--sw-a", o.top);
-        sw.style.setProperty("--sw-b", o.bottomGirl);
-        const txt = document.createElement("span");
-        const name = document.createElement("b");
-        name.textContent = o.name;
-        const vibe = document.createElement("small");
-        vibe.textContent = o.vibe;
-        txt.append(name, vibe);
-        btn.append(sw, txt);
-        btn.addEventListener("click", () => {
-          avatar.outfitId = o.id;
-          persistAvatar();
-        });
-        outfits.append(btn);
-      });
+      outfits.append(btn);
     });
-    mountHammerStudios();
+  }
+
+  function mountHammerCards() {
+    const root = el.profileHammers;
+    if (!root) return;
+    root.innerHTML = "";
+    HAMMER_DESIGNS.forEach((d) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "hammer-card";
+      btn.dataset.hammer = d.id;
+      const cv = document.createElement("canvas");
+      cv.width = 280;
+      cv.height = 280;
+      cv.dataset.hammerPreview = d.id;
+      const txt = document.createElement("span");
+      const name = document.createElement("b");
+      name.textContent = d.name;
+      const hint = document.createElement("small");
+      hint.textContent = d.cost
+        ? ownsHammer(d.id)
+          ? `${d.hint} · 보유`
+          : `${d.hint} · ${d.cost}코인`
+        : d.hint;
+      txt.append(name, hint);
+      btn.append(cv, txt);
+      if (!ownsHammer(d.id)) btn.classList.add("locked");
+      btn.addEventListener("click", () => {
+        if (!ownsHammer(d.id) && !buyHammer(d.id)) return;
+        avatar.hammerId = d.id;
+        persistAvatar();
+        mountHammerCards();
+        syncAvatarPickerUI();
+      });
+      root.append(btn);
+    });
+  }
+
+  function renderProfileStep() {
+    const labels = ["1. 성별을 정하세요", "2. 코디를 고르세요", "3. 뿅망치를 고르세요"];
+    if (el.profileStepLabel) el.profileStepLabel.textContent = labels[profileStep];
+    el.profileStepGender.classList.toggle("hidden", profileStep !== 0);
+    el.profileStepOutfit.classList.toggle("hidden", profileStep !== 1);
+    el.profileStepHammer.classList.toggle("hidden", profileStep !== 2);
+    const back = document.getElementById("btn-profile-back");
+    const next = document.getElementById("btn-profile-next");
+    back.disabled = profileStep === 0 && !avatar.complete;
+    back.textContent = profileStep === 0 ? "프로필로" : "이전";
+    next.textContent = profileStep === 2 ? "완료" : "다음";
+    if (profileStep === 1) mountOutfitCards();
+    if (profileStep === 2) mountHammerCards();
     syncAvatarPickerUI();
     syncHammerButton();
+  }
+
+  function finishProfile() {
+    avatar.complete = true;
+    persistAvatar();
+    showTitle();
   }
 
   function drawAvatarPreviews() {
@@ -2034,25 +2768,36 @@
       const w = cv.width;
       const h = cv.height;
       g.clearRect(0, 0, w, h);
-      const sky = g.createLinearGradient(0, 0, 0, h);
-      sky.addColorStop(0, "#8ecfff");
-      sky.addColorStop(0.52, "#c8ec8a");
-      sky.addColorStop(1, "#6bb34d");
-      g.fillStyle = sky;
-      g.fillRect(0, 0, w, h);
-      g.fillStyle = "rgba(255,255,255,0.82)";
-      g.beginPath();
-      g.ellipse(w * 0.24, h * 0.16, 22, 11, 0, 0, Math.PI * 2);
-      g.ellipse(w * 0.74, h * 0.12, 26, 13, 0, 0, Math.PI * 2);
-      g.fill();
+      paintPreviewBg(g, w, h);
       g.save();
       g.translate(w / 2, h * 0.92);
-      const s = w / 86;
-      g.scale(s, s);
+      g.scale(w / 86, w / 86);
       drawAvatar(g, {
         gender: cv.dataset.previewGender,
-        outfitId: avatar.outfitId,
+        outfitId:
+          cv.dataset.previewGender === avatar.gender
+            ? avatar.outfitId
+            : outfitsFor(cv.dataset.previewGender)[0].id,
         runT: performance.now() / 140,
+        swingT: 0,
+        flip: false,
+      });
+      g.restore();
+    });
+    document.querySelectorAll("canvas[data-preview-outfit]").forEach((cv) => {
+      if (cv.closest(".hidden")) return;
+      const g = cv.getContext("2d");
+      const w = cv.width;
+      const h = cv.height;
+      g.clearRect(0, 0, w, h);
+      paintPreviewBg(g, w, h);
+      g.save();
+      g.translate(w / 2, h * 0.94);
+      g.scale(w / 72, w / 72);
+      drawAvatar(g, {
+        gender: avatar.gender,
+        outfitId: cv.dataset.previewOutfit,
+        runT: performance.now() / 160,
         swingT: 0,
         flip: false,
       });
@@ -2061,17 +2806,40 @@
     document.querySelectorAll("canvas[data-hammer-preview]").forEach((cv) => {
       if (cv.closest(".hidden")) return;
       const g = cv.getContext("2d");
-      const w = cv.width;
-      const h = cv.height;
-      g.clearRect(0, 0, w, h);
-      g.fillStyle = "#efe8d4";
-      g.fillRect(0, 0, w, h);
-      g.save();
-      g.translate(w * 0.42, h * 0.78);
-      g.scale(3.4, 3.4);
-      drawMallet(g, 0.12);
-      g.restore();
+      drawHammerPortrait(g, hammerOf(cv.dataset.hammerPreview), cv.width, cv.height);
     });
+    if (el.titleMe && scene === "title" && loggedIn()) {
+      const cv = el.titleMe;
+      const g = cv.getContext("2d");
+      paintPreviewBg(g, cv.width, cv.height);
+      g.save();
+      g.translate(cv.width / 2, cv.height * 0.92);
+      g.scale(cv.width / 78, cv.width / 78);
+      drawAvatar(g, {
+        gender: avatar.gender,
+        outfitId: avatar.outfitId,
+        runT: performance.now() / 140,
+        swingT: 0.08,
+        flip: false,
+      });
+      g.restore();
+    }
+    if (el.profileMe && scene === "profile" && profilePage === "home") {
+      const cv = el.profileMe;
+      const g = cv.getContext("2d");
+      paintPreviewBg(g, cv.width, cv.height);
+      g.save();
+      g.translate(cv.width / 2, cv.height * 0.92);
+      g.scale(cv.width / 78, cv.width / 78);
+      drawAvatar(g, {
+        gender: avatar.gender,
+        outfitId: avatar.outfitId,
+        runT: performance.now() / 140,
+        swingT: 0.08,
+        flip: false,
+      });
+      g.restore();
+    }
   }
 
   function drawWorld() {
@@ -2131,6 +2899,11 @@
       ctx.stroke();
     }
     ctx.restore();
+    const tint = currentStage().tint;
+    if (tint) {
+      ctx.fillStyle = tint;
+      ctx.fillRect(0, 0, viewW, viewH);
+    }
     if (stunKind === "skunk") {
       ctx.fillStyle = "rgba(150, 190, 40, 0.28)";
       ctx.fillRect(0, 0, viewW, viewH);
@@ -2154,7 +2927,7 @@
     update(dt);
     ctx.clearRect(0, 0, viewW, viewH);
     drawWorld();
-    if (scene === "title" || scene === "shop") drawAvatarPreviews();
+    if (scene === "title" || scene === "profile") drawAvatarPreviews();
     requestAnimationFrame(loop);
   }
 
@@ -2237,7 +3010,51 @@
       ensureAudio();
       resetProgress();
       player = makePlayer();
-      startRound();
+      openBriefing();
+    });
+    document.getElementById("btn-apple").addEventListener("click", () => {
+      ensureAudio();
+      signInWithApple();
+    });
+    document.getElementById("btn-open-profile").addEventListener("click", () => {
+      ensureAudio();
+      openProfile();
+    });
+    document.getElementById("btn-page-custom").addEventListener("click", () => {
+      profileStep = 0;
+      showProfilePage("custom");
+    });
+    document.getElementById("btn-page-stages").addEventListener("click", () => {
+      showProfilePage("stages");
+    });
+    document.getElementById("btn-profile-to-title").addEventListener("click", () => {
+      showTitle();
+    });
+    document.getElementById("btn-stages-back").addEventListener("click", () => {
+      showProfilePage("home");
+    });
+    document.getElementById("btn-profile-back").addEventListener("click", () => {
+      if (profileStep === 0) {
+        if (avatar.complete) showProfilePage("home");
+        return;
+      }
+      profileStep -= 1;
+      renderProfileStep();
+    });
+    document.getElementById("btn-profile-next").addEventListener("click", () => {
+      if (profileStep >= 2) {
+        finishProfile();
+        return;
+      }
+      profileStep += 1;
+      renderProfileStep();
+    });
+    document.getElementById("btn-logout").addEventListener("click", () => {
+      logout();
+    });
+    document.getElementById("btn-briefing-go").addEventListener("click", () => {
+      ensureAudio();
+      beginPlay();
     });
     document.getElementById("btn-shop").addEventListener("click", () => {
       ensureAudio();
@@ -2264,7 +3081,7 @@
       resetProgress();
       player = makePlayer();
       holes = placeHoles();
-      startRound();
+      openBriefing();
     });
   }
 
@@ -2277,14 +3094,19 @@
 
   function init() {
     resize();
+    loadAccount();
+    loadProgress();
     loadAvatar();
-    mountAvatarPickers();
+    mountGenderCards();
+    syncHammerButton();
     placeDecor();
     holes = placeHoles();
     parkCanvas = bakePark();
     player = makePlayer();
     resetProgress();
     bindControls();
+    showTitle();
+    if (account && !avatar.complete) openProfile();
     window.addEventListener("resize", resize);
     window.addEventListener("pointerdown", ensureAudio, { once: true });
     requestAnimationFrame(loop);
