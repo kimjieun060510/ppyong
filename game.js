@@ -3053,32 +3053,43 @@
     g.stroke();
 
     g.fillStyle = HAIR;
+    g.strokeStyle = LINE;
+    g.lineWidth = 1.55;
     if (girl) {
       g.beginPath();
-      g.ellipse(0, -54, 14.4, 10, 0, Math.PI, Math.PI * 2);
-      g.fill();
-      g.beginPath();
-      g.ellipse(-11.5, -46, 4.8, 8, 0.25, 0, Math.PI * 2);
-      g.ellipse(11.5, -46, 4.8, 8, -0.25, 0, Math.PI * 2);
-      g.fill();
-      g.beginPath();
-      g.ellipse(-5, -57, 6, 4.5, -0.4, 0, Math.PI * 2);
-      g.ellipse(6, -57, 6, 4.5, 0.35, 0, Math.PI * 2);
-      g.fill();
-    } else {
-      g.beginPath();
-      g.ellipse(0, -55, 13.4, 8.5, 0, 0, Math.PI * 2);
-      g.fill();
-      g.beginPath();
-      g.moveTo(-11, -54);
-      g.lineTo(-7, -64);
-      g.lineTo(-3, -55);
-      g.lineTo(1, -63);
-      g.lineTo(5, -55);
-      g.lineTo(9, -62);
-      g.lineTo(12, -52);
+      g.moveTo(-9.8, -53);
+      g.bezierCurveTo(-16.6, -52.2, -18.4, -40.2, -13.8, -36.6);
+      g.bezierCurveTo(-10.4, -34.6, -8.5, -40.8, -9.2, -47.2);
+      g.quadraticCurveTo(-8, -51.2, -6.4, -53.4);
+      g.quadraticCurveTo(-5, -51.8, -2.6, -53.6);
+      g.quadraticCurveTo(0, -55.8, 2.6, -53.6);
+      g.quadraticCurveTo(5, -51.8, 6.4, -53.4);
+      g.quadraticCurveTo(8, -51.2, 9.2, -47.2);
+      g.bezierCurveTo(8.5, -40.8, 10.4, -34.6, 13.8, -36.6);
+      g.bezierCurveTo(18.4, -40.2, 16.6, -52.2, 9.8, -53);
+      g.quadraticCurveTo(15.4, -59.8, 7.2, -65.6);
+      g.quadraticCurveTo(0, -69.6, -7.2, -65.6);
+      g.quadraticCurveTo(-15.4, -59.8, -9.8, -53);
       g.closePath();
       g.fill();
+      g.stroke();
+    } else {
+      g.beginPath();
+      g.moveTo(-12.2, -46.4);
+      g.quadraticCurveTo(-16.2, -49.2, -13.6, -55.4);
+      g.quadraticCurveTo(-14.2, -60.6, -8.4, -64.6);
+      g.quadraticCurveTo(-4.4, -67.4, 0, -65.4);
+      g.quadraticCurveTo(4.6, -67.6, 8.6, -64.4);
+      g.quadraticCurveTo(14.2, -60.6, 13.6, -55.4);
+      g.quadraticCurveTo(16.2, -49.2, 12.2, -46.4);
+      g.quadraticCurveTo(10.2, -51.2, 7.8, -53.2);
+      g.quadraticCurveTo(4.6, -51.6, 2.2, -53.4);
+      g.quadraticCurveTo(0, -55.2, -2.2, -53.4);
+      g.quadraticCurveTo(-4.6, -51.6, -7.8, -53.2);
+      g.quadraticCurveTo(-10.2, -51.2, -12.2, -46.4);
+      g.closePath();
+      g.fill();
+      g.stroke();
     }
 
     if (o.beanie) {
