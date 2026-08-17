@@ -2038,18 +2038,18 @@
     if (!m || m.height <= 0.02) return;
     const pop = m.height;
     const x = hole.x;
-    const y = hole.y + 2 + (1 - pop) * 16 + Math.sin(m.bob) * 1.1;
+    const y = hole.y + (1 - pop) * 16 + Math.sin(m.bob) * 1.1;
     drawShadow(x, hole.y + 6, 12 + pop * 6, 5);
+    drawHole(hole);
 
     ctx.save();
     ctx.beginPath();
     ctx.rect(x - 80, hole.y - 140, 160, 140);
-    ctx.ellipse(hole.x, hole.y + 1, 26, 7, 0, 0, Math.PI * 2);
+    ctx.ellipse(hole.x, hole.y + 2, 18, 8, 0, 0, Math.PI * 2);
     ctx.clip();
     drawAnimal(m.kind, x, y, pop, "body");
     ctx.restore();
 
-    drawHole(hole);
     drawAnimal(m.kind, x, hole.y, pop, "paws");
   }
 
