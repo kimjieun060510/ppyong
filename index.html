@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#6bb34d" />
-    <title>공원 두더지 팡!</title>
+    <title>뿅</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -40,18 +40,67 @@
 
     <div id="title" class="overlay">
       <div class="panel title-panel">
-        <p class="eyebrow">PARK MOLE CATCHER</p>
-        <h1>공원 두더지 팡!</h1>
+        <p class="eyebrow">PPYONG</p>
+        <h1>뿅</h1>
+        <p class="stage">공원편</p>
         <p class="lead">
-          공원 곳곳에 구멍이 열려요. 뛰어다니며 두더지를 잡고,
-          모은 코인으로 뿅망치를 업그레이드하세요.
+          공원 구멍마다 누군가 고개를 내민다.
+          뿅망치를 들고 뛰어다녀 봐. 누구를 때릴지는 네가 정하는 거야.
         </p>
+        <div class="picker">
+          <p class="picker-label">캐릭터</p>
+          <div class="char-row" id="title-chars"></div>
+          <p class="picker-label">오늘의 코디</p>
+          <div class="outfit-grid" id="title-outfits"></div>
+        </div>
+        <section class="rumors" aria-label="공원에 도는 소문">
+          <p class="picker-label">공원에 도는 소문</p>
+          <article class="rumor" data-kind="mole">
+            <span class="rumor-swatch" aria-hidden="true"></span>
+            <div>
+              <h3>두더지</h3>
+              <p>맨날 구멍에서 코를 내밀고, 주머니엔 코인이 가득하다. 뿅망치가 제일 반기는 이웃.</p>
+            </div>
+          </article>
+          <article class="rumor" data-kind="gold">
+            <span class="rumor-swatch" aria-hidden="true"></span>
+            <div>
+              <h3>황금 두더지</h3>
+              <p>왕관을 쓴 두더지. 다른 두더지보다 코인을 훨씬 많이 들고 다닌다. 놓치면 아까운 손님.</p>
+            </div>
+          </article>
+          <article class="rumor" data-kind="skunk">
+            <span class="rumor-swatch" aria-hidden="true"></span>
+            <div>
+              <h3>스컹크</h3>
+              <p>한 번 건드리면 공원 공기가 끝장난다. 오늘은 조용히 지나가 달라는 눈치다.</p>
+            </div>
+          </article>
+          <article class="rumor" data-kind="rabbit">
+            <span class="rumor-swatch" aria-hidden="true"></span>
+            <div>
+              <h3>토끼</h3>
+              <p>귀엽다고 다가가면 당근을 뿌려 길을 미끄럽게 만든다. 발이 묶인 채로 시간만 간다.</p>
+            </div>
+          </article>
+          <article class="rumor" data-kind="raccoon">
+            <span class="rumor-swatch" aria-hidden="true"></span>
+            <div>
+              <h3>너구리</h3>
+              <p>눈 가리개를 한 도둑. 반짝이는 코인만 보면 할퀴고 달아난다.</p>
+            </div>
+          </article>
+          <article class="rumor" data-kind="pond">
+            <span class="rumor-swatch" aria-hidden="true"></span>
+            <div>
+              <h3>연못</h3>
+              <p>가운데 연못은 생각보다 깊다. 풍덩 빠지면 허우적대는 동안 시계는 멈추지 않는다.</p>
+            </div>
+          </article>
+        </section>
         <ul class="howto">
           <li>이동: 키보드 WASD / 왼쪽 동그라미를 끌어서</li>
           <li>공격: 스페이스 또는 오른쪽 뿅망치 버튼을 눌러야 잡혀요</li>
-          <li>갈색·황금 두더지만 잡으세요</li>
-          <li>스컹크 방귀는 게임 오버, 토끼 당근은 3초 멈춤, 너구리는 할퀴어 코인을 빼앗아요</li>
-          <li>연못에 빠지면 허우적거리며 5초 동안 못 움직여요. 제한 시간은 계속 줄어요</li>
         </ul>
         <button id="btn-start" type="button" class="primary">게임 시작</button>
       </div>
@@ -62,6 +111,11 @@
         <div class="shop-head">
           <h2>뿅망치 상점</h2>
           <p>코인 <strong id="shop-coins">0</strong></p>
+        </div>
+        <div class="coordi-block">
+          <p class="picker-label">코디 갈아입기</p>
+          <div class="char-row compact" id="shop-chars"></div>
+          <div class="outfit-grid compact" id="shop-outfits"></div>
         </div>
         <div id="shop-list" class="shop-list"></div>
         <div class="shop-actions">
@@ -84,7 +138,7 @@
 
     <div id="result" class="overlay hidden">
       <div class="panel">
-        <h2 id="result-title">오늘 공원은 여기까지!</h2>
+        <h2 id="result-title">오늘은 여기까지!</h2>
         <p id="result-summary" class="lead"></p>
         <button id="btn-retry" type="button" class="primary">한 판 더</button>
       </div>
