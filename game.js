@@ -320,7 +320,7 @@
       state: "rise",
       t: 0,
       height: 0,
-      stay: 1 + Math.random() * 4,
+      stay: 2.8 + Math.random() * 1.4,
       bob: Math.random() * Math.PI * 2,
     };
     sfx("pop");
@@ -497,7 +497,7 @@
       if (!m) continue;
       m.bob += dt * 8;
       if (m.state === "rise") {
-        m.t += dt / 0.22;
+        m.t += dt / 0.32;
         m.height = clamp(m.t, 0, 1);
         if (m.t >= 1) {
           m.state = "up";
@@ -551,6 +551,10 @@
     burst(player.x, player.y - 10, "#fff", 8);
   }
 
+  function blockedByTree(x, y) {
+    return trees.some((t) => Math.hypot(t.x - x, t.y - y) < 26);
+  }
+
   function updatePlayer(dt) {
     let ix = joy.x;
     let iy = joy.y;
@@ -567,10 +571,10 @@
       player.facing = Math.atan2(iy, ix);
       player.runT += dt * 10;
       const sp = upgradeValue("move");
-      player.x += ix * sp * dt;
-      player.y += iy * sp * dt;
-      player.x = clamp(player.x, 36, WORLD_W - 36);
-      player.y = clamp(player.y, 48, WORLD_H - 36);
+      const nx = clamp(player.x + ix * sp * dt, 36, WORLD_W - 36);
+      const ny = clamp(player.y + iy * sp * dt, 48, WORLD_H - 36);
+      if (!blockedByTree(nx, player.y)) player.x = nx;
+      if (!blockedByTree(player.x, ny)) player.y = ny;
       if (inPond(player.x, player.y, -14)) fallInWater();
     } else {
       player.runT *= 0.85;
@@ -663,53 +667,64 @@
   }
 
   function drawHole(hole) {
-    ctx.fillStyle = "#6b4a2a";
+    ctx.fillStyle = "#7a5230";
     ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y, 34, 16, 0, 0, Math.PI * 2);
+    ctx.ellipse(hole.x, hole.y + 2, 42, 20, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#1d120c";
+    ctx.fillStyle = "#1a100a";
     ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y, 24, 11, 0, 0, Math.PI * 2);
+    ctx.ellipse(hole.x, hole.y, 30, 14, 0, 0, Math.PI * 2);
     ctx.fill();
   }
 
   function drawMole(hole) {
     const m = hole.mole;
     if (!m || m.height <= 0.02) return;
-    const h = m.height * (m.kind === "gold" ? 40 : 34);
+    const pop = m.height;
     const x = hole.x;
-    const y = hole.y - h + Math.sin(m.bob) * 1.4;
-    drawShadow(hole.x, hole.y, 16, 7);
+    const y = hole.y - 6 - pop * 58;
+    drawShadow(hole.x, hole.y + 4, 18 + pop * 6, 8);
     ctx.save();
+    ctx.fillStyle = m.kind === "gold" ? "#f0c43a" : "#8b542c";
     ctx.beginPath();
-    ctx.ellipse(hole.x, hole.y, 24, 11, 0, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.fillStyle = m.kind === "gold" ? "#e6b423" : "#8a5a32";
-    ctx.beginPath();
-    ctx.ellipse(x, y, 18, 22, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y, 24, 30, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#f4b8c8";
+    ctx.strokeStyle = "#3b2414";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = "#f7c3d0";
     ctx.beginPath();
-    ctx.arc(x, y - 4, 4.2, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 2, 11, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#ff8aa8";
+    ctx.beginPath();
+    ctx.arc(x, y + 1, 5.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#1c120c";
     ctx.beginPath();
-    ctx.arc(x - 6, y - 10, 2.2, 0, Math.PI * 2);
-    ctx.arc(x + 6, y - 10, 2.2, 0, Math.PI * 2);
+    ctx.arc(x - 8, y - 10, 3.2, 0, Math.PI * 2);
+    ctx.arc(x + 8, y - 10, 3.2, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#fff";
     ctx.beginPath();
-    ctx.arc(x - 5.4, y - 10.7, 0.8, 0, Math.PI * 2);
-    ctx.arc(x + 6.6, y - 10.7, 0.8, 0, Math.PI * 2);
+    ctx.arc(x - 7, y - 11, 1.2, 0, Math.PI * 2);
+    ctx.arc(x + 9, y - 11, 1.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = m.kind === "gold" ? "#d4a21a" : "#6e4122";
+    ctx.beginPath();
+    ctx.ellipse(x - 16, hole.y - 4, 8, 5, -0.4, 0, Math.PI * 2);
+    ctx.ellipse(x + 16, hole.y - 4, 8, 5, 0.4, 0, Math.PI * 2);
     ctx.fill();
     if (m.kind === "gold") {
       ctx.fillStyle = "#ffe56b";
       ctx.beginPath();
-      ctx.moveTo(x - 10, y - 20);
-      ctx.lineTo(x, y - 30);
-      ctx.lineTo(x + 10, y - 20);
+      ctx.moveTo(x - 12, y - 22);
+      ctx.lineTo(x, y - 38);
+      ctx.lineTo(x + 12, y - 22);
       ctx.closePath();
       ctx.fill();
+      ctx.strokeStyle = "#c48a00";
+      ctx.stroke();
     }
     ctx.restore();
   }
@@ -795,9 +810,11 @@
     ctx.drawImage(parkCanvas, 0, 0);
 
     for (const hole of holes) drawHole(hole);
-    for (const hole of holes) drawMole(hole);
 
     const sprites = trees.map((t) => ({ y: t.y, draw: () => drawTree(t) }));
+    holes.forEach((hole) => {
+      if (hole.mole) sprites.push({ y: hole.y, draw: () => drawMole(hole) });
+    });
     sprites.push({ y: player.y, draw: drawPlayer });
     sprites.sort((a, b) => a.y - b.y);
     sprites.forEach((s) => s.draw());
