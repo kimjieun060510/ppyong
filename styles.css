@@ -808,14 +808,14 @@ canvas#game {
   bottom: calc(24px + var(--safe-bottom));
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   z-index: 6;
   pointer-events: none;
 }
 
 #stick {
-  width: 104px;
-  height: 104px;
+  width: 92px;
+  height: 92px;
   pointer-events: auto;
   touch-action: none;
   display: flex;
@@ -913,9 +913,9 @@ canvas#game {
 
 #btn-hammer {
   pointer-events: auto;
-  width: 74px;
-  height: 74px;
-  margin: 0 0 4px;
+  width: 92px;
+  height: 92px;
+  margin: 0;
   border-radius: 50%;
   background:
     radial-gradient(circle at 32% 28%, #fff8ea 0%, #f0d7a0 42%, #d4a45a 100%);
@@ -991,6 +991,10 @@ canvas#game {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+.gender-shop {
+  margin-top: 12px;
 }
 
 .profile-menu #btn-page-gender,
@@ -1253,8 +1257,8 @@ canvas#game {
   }
 
   #stick {
-    width: 100px;
-    height: 100px;
+    width: 88px;
+    height: 88px;
   }
 
   #stick-base {
@@ -1268,8 +1272,8 @@ canvas#game {
   }
 
   #btn-hammer {
-    width: 70px;
-    height: 70px;
+    width: 88px;
+    height: 88px;
   }
 
   #btn-hammer .mallet-icon {
@@ -1338,8 +1342,8 @@ canvas#game {
   }
 
   #stick {
-    width: 88px;
-    height: 88px;
+    width: 78px;
+    height: 78px;
   }
 
   #stick-base {
@@ -1353,8 +1357,8 @@ canvas#game {
   }
 
   #btn-hammer {
-    width: 64px;
-    height: 64px;
+    width: 78px;
+    height: 78px;
     margin: 0;
   }
 

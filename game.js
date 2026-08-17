@@ -13,6 +13,9 @@
     { x: 4020, y: 560, rx: 196, ry: 108 },
     { x: 4680, y: 2160, rx: 154, ry: 88 },
     { x: 2580, y: 3480, rx: 188, ry: 102 },
+    { x: 2040, y: 1680, rx: 176, ry: 96 },
+    { x: 3360, y: 2520, rx: 160, ry: 90 },
+    { x: 1920, y: 480, rx: 150, ry: 86 },
   ];
   const SAFE_SPAWN = { x: WORLD_W * 0.55, y: WORLD_H * 0.42 };
 
@@ -1589,169 +1592,6 @@
     return list;
   }
 
-  function midsOf(a, b) {
-    return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
-  }
-
-  function forEachSmoothQuad(points, closed, fn) {
-    const p = points.slice();
-    if (closed) p.push(p[0], p[1]);
-    else if (p.length >= 2) p.push(p[p.length - 1]);
-    let prev = midsOf(p[0], p[1]);
-    for (let i = 1; i < p.length - 1; i += 1) {
-      const next = midsOf(p[i], p[i + 1]);
-      fn(prev, p[i], next);
-      prev = next;
-    }
-  }
-
-  function traceSmooth(g, points, closed) {
-    g.beginPath();
-    let started = false;
-    forEachSmoothQuad(points, closed, (a, c, b) => {
-      if (!started) {
-        g.moveTo(a[0], a[1]);
-        started = true;
-      }
-      g.quadraticCurveTo(c[0], c[1], b[0], b[1]);
-    });
-  }
-
-  function sampleSmooth(points, closed, step) {
-    const out = [];
-    forEachSmoothQuad(points, closed, (a, c, b) => {
-      const dist =
-        Math.hypot(b[0] - a[0], b[1] - a[1]) +
-        Math.hypot(c[0] - a[0], c[1] - a[1]) * 0.5;
-      const n = Math.max(4, Math.ceil(dist / step));
-      for (let k = 0; k < n; k += 1) {
-        const t = k / n;
-        const mt = 1 - t;
-        out.push({
-          x: mt * mt * a[0] + 2 * mt * t * c[0] + t * t * b[0],
-          y: mt * mt * a[1] + 2 * mt * t * c[1] + t * t * b[1],
-        });
-      }
-    });
-    return out;
-  }
-
-  function makeGravel(g, rand) {
-    const pc = document.createElement("canvas");
-    pc.width = 72;
-    pc.height = 72;
-    const pg = pc.getContext("2d");
-    pg.fillStyle = "#d2ae74";
-    pg.fillRect(0, 0, 72, 72);
-    for (let i = 0; i < 260; i += 1) {
-      pg.fillStyle = rand() > 0.55 ? "#c19a5c" : "#e4c58a";
-      pg.globalAlpha = 0.35 + rand() * 0.45;
-      pg.beginPath();
-      pg.ellipse(
-        rand() * 72,
-        rand() * 72,
-        1.1 + rand() * 2.2,
-        0.8 + rand() * 1.5,
-        rand() * Math.PI,
-        0,
-        Math.PI * 2
-      );
-      pg.fill();
-    }
-    pg.globalAlpha = 1;
-    return g.createPattern(pc, "repeat");
-  }
-
-  function paintWalkway(g, points, width, closed, rand, gravel) {
-    g.lineCap = "round";
-    g.lineJoin = "round";
-    traceSmooth(g, points, closed);
-    g.strokeStyle = "rgba(48, 108, 40, 0.4)";
-    g.lineWidth = width + 36;
-    g.stroke();
-    g.strokeStyle = "#7d5a32";
-    g.lineWidth = width + 16;
-    g.stroke();
-    g.strokeStyle = "#b8894c";
-    g.lineWidth = width + 6;
-    g.stroke();
-    g.strokeStyle = gravel;
-    g.lineWidth = width;
-    g.stroke();
-    g.strokeStyle = "rgba(246, 226, 176, 0.32)";
-    g.lineWidth = Math.max(16, width * 0.34);
-    g.stroke();
-
-    const samples = sampleSmooth(points, closed, 18);
-    for (let i = 1; i < samples.length; i += 1) {
-      const a = samples[i - 1];
-      const b = samples[i];
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const len = Math.hypot(dx, dy) || 1;
-      const nx = -dy / len;
-      const ny = dx / len;
-      if (rand() < 0.5) {
-        const o = (rand() - 0.5) * width * 0.52;
-        g.fillStyle = rand() > 0.5 ? "rgba(110, 78, 38, 0.3)" : "rgba(255, 236, 190, 0.32)";
-        g.beginPath();
-        g.ellipse(
-          b.x + nx * o,
-          b.y + ny * o,
-          1.5 + rand() * 2.3,
-          1 + rand() * 1.5,
-          rand() * Math.PI,
-          0,
-          Math.PI * 2
-        );
-        g.fill();
-      }
-      if (rand() < 0.1) {
-        const side = rand() > 0.5 ? 1 : -1;
-        const d = width * 0.52 + 4 + rand() * 7;
-        g.fillStyle = rand() > 0.5 ? "rgba(58, 132, 46, 0.55)" : "rgba(92, 168, 58, 0.42)";
-        g.beginPath();
-        g.ellipse(
-          b.x + nx * side * d,
-          b.y + ny * side * d,
-          3.2 + rand() * 4,
-          2 + rand() * 2.8,
-          0,
-          0,
-          Math.PI * 2
-        );
-        g.fill();
-      }
-    }
-  }
-
-  function paintPlaza(g, x, y, rx, ry, rand, gravel) {
-    g.fillStyle = "rgba(48, 108, 40, 0.35)";
-    g.beginPath();
-    g.ellipse(x, y, rx + 22, ry + 18, 0, 0, Math.PI * 2);
-    g.fill();
-    g.fillStyle = "#7d5a32";
-    g.beginPath();
-    g.ellipse(x, y, rx + 12, ry + 10, 0, 0, Math.PI * 2);
-    g.fill();
-    g.fillStyle = gravel;
-    g.beginPath();
-    g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
-    g.fill();
-    g.fillStyle = "rgba(246, 226, 176, 0.28)";
-    g.beginPath();
-    g.ellipse(x, y, rx * 0.58, ry * 0.54, 0, 0, Math.PI * 2);
-    g.fill();
-    for (let i = 0; i < 28; i += 1) {
-      const a = rand() * Math.PI * 2;
-      const d = rand() * Math.min(rx, ry) * 0.78;
-      g.fillStyle = rand() > 0.5 ? "rgba(110, 78, 38, 0.28)" : "rgba(255, 236, 190, 0.3)";
-      g.beginPath();
-      g.ellipse(x + Math.cos(a) * d, y + Math.sin(a) * d * 0.72, 2 + rand() * 3, 1.4 + rand() * 2, a, 0, Math.PI * 2);
-      g.fill();
-    }
-  }
-
   function bakePark() {
     const c = document.createElement("canvas");
     c.width = WORLD_W;
@@ -1773,66 +1613,39 @@
       g.fillRect(x, y, 2 + rand() * 2, 3 + rand() * 5);
     }
 
-    const gravel = makeGravel(g, rand) || "#d2ae74";
-    const loop = [
-      [500, 1600],
-      [490, 1020],
-      [540, 520],
-      [1180, 390],
-      [2140, 350],
-      [3180, 390],
-      [3660, 520],
-      [3720, 900],
-      [4240, 1120],
-      [4980, 1360],
-      [5100, 1820],
-      [5040, 2380],
-      [4860, 2720],
-      [4380, 3200],
-      [3520, 3660],
-      [2680, 3800],
-      [1860, 3720],
-      [1080, 3480],
-      [540, 2980],
-      [500, 2280],
+    const paths = [
+      [
+        [240, 660],
+        [1560, 840, 2100, 1560],
+        [2820, 2460, 3840, 2280],
+        [4680, 2100, 5100, 2940],
+      ],
+      [
+        [360, 3180],
+        [1680, 2100, 2760, 1260],
+        [3900, 720, 5040, 480],
+      ],
+      [
+        [720, 1860],
+        [1980, 2400, 3180, 1980],
+        [4200, 1500, 4860, 1860],
+      ],
     ];
-    const promenade = [
-      [760, 3120],
-      [1180, 2460],
-      [1860, 1680],
-      [SAFE_SPAWN.x, SAFE_SPAWN.y],
-      [3540, 1080],
-      [4120, 1520],
-      [4480, 1980],
-      [4380, 2680],
-      [4320, 3120],
-    ];
-    const cross = [
-      [1080, 920],
-      [1680, 1280],
-      [1860, 1680],
-      [2360, 2140],
-      [2580, 2860],
-      [2580, 3260],
-    ];
-    const eastSpur = [
-      [4480, 1980],
-      [4680, 1880],
-      [4920, 1980],
-    ];
-    paintWalkway(g, loop, 68, true, rand, gravel);
-    paintWalkway(g, promenade, 84, false, rand, gravel);
-    paintWalkway(g, cross, 62, false, rand, gravel);
-    paintWalkway(g, eastSpur, 52, false, rand, gravel);
-
-    [
-      [SAFE_SPAWN.x, SAFE_SPAWN.y, 92, 64],
-      [3540, 1080, 78, 54],
-      [1860, 1680, 74, 52],
-      [4320, 3120, 80, 56],
-      [2580, 3260, 58, 42],
-      [1080, 920, 52, 38],
-    ].forEach(([x, y, rx, ry]) => paintPlaza(g, x, y, rx, ry, rand, gravel));
+    paths.forEach((pts) => {
+      g.lineCap = "round";
+      g.lineJoin = "round";
+      g.beginPath();
+      g.moveTo(pts[0][0], pts[0][1]);
+      for (let i = 1; i < pts.length; i++) {
+        g.quadraticCurveTo(pts[i][0], pts[i][1], pts[i][2], pts[i][3]);
+      }
+      g.strokeStyle = "#b8894c";
+      g.lineWidth = 70;
+      g.stroke();
+      g.strokeStyle = "#e2c48a";
+      g.lineWidth = 46;
+      g.stroke();
+    });
 
     PONDS.forEach((p) => {
       g.fillStyle = "#5ec3d8";
@@ -1848,6 +1661,19 @@
       g.beginPath();
       g.ellipse(p.x, p.y, p.rx + 18, p.ry + 16, 0, 0, Math.PI * 2);
       g.stroke();
+    });
+
+    [
+      [3540, 1080, -0.2],
+      [1860, 1680, 0.35],
+      [4320, 3120, -0.5],
+    ].forEach(([x, y, rot]) => {
+      g.fillStyle = "#e8d27a";
+      g.save();
+      g.translate(x, y);
+      g.rotate(rot);
+      g.fillRect(-70, -48, 140, 96);
+      g.restore();
     });
 
     for (const f of flowers) {
@@ -3057,19 +2883,33 @@
     g.lineWidth = 1.55;
     if (girl) {
       g.beginPath();
-      g.moveTo(-9.8, -53);
-      g.bezierCurveTo(-16.6, -52.2, -18.4, -40.2, -13.8, -36.6);
-      g.bezierCurveTo(-10.4, -34.6, -8.5, -40.8, -9.2, -47.2);
-      g.quadraticCurveTo(-8, -51.2, -6.4, -53.4);
-      g.quadraticCurveTo(-5, -51.8, -2.6, -53.6);
-      g.quadraticCurveTo(0, -55.8, 2.6, -53.6);
-      g.quadraticCurveTo(5, -51.8, 6.4, -53.4);
-      g.quadraticCurveTo(8, -51.2, 9.2, -47.2);
-      g.bezierCurveTo(8.5, -40.8, 10.4, -34.6, 13.8, -36.6);
-      g.bezierCurveTo(18.4, -40.2, 16.6, -52.2, 9.8, -53);
-      g.quadraticCurveTo(15.4, -59.8, 7.2, -65.6);
-      g.quadraticCurveTo(0, -69.6, -7.2, -65.6);
-      g.quadraticCurveTo(-15.4, -59.8, -9.8, -53);
+      g.moveTo(-10.4, -53.8);
+      g.lineTo(-6.8, -52.4);
+      g.quadraticCurveTo(-3.4, -51.2, 0, -52.6);
+      g.quadraticCurveTo(3.4, -51.2, 6.8, -52.4);
+      g.lineTo(10.4, -53.8);
+      g.quadraticCurveTo(12.4, -56.2, 11.6, -59.4);
+      g.quadraticCurveTo(7.2, -65.8, 0, -66.4);
+      g.quadraticCurveTo(-7.2, -65.8, -11.6, -59.4);
+      g.quadraticCurveTo(-12.4, -56.2, -10.4, -53.8);
+      g.closePath();
+      g.fill();
+      g.stroke();
+      g.beginPath();
+      g.moveTo(-11.2, -54.6);
+      g.quadraticCurveTo(-15.8, -52.4, -15.2, -36);
+      g.quadraticCurveTo(-14.6, -26.8, -12.2, -24.6);
+      g.quadraticCurveTo(-10.4, -23.8, -10.2, -28.4);
+      g.quadraticCurveTo(-10.6, -40, -10.4, -52.8);
+      g.closePath();
+      g.fill();
+      g.stroke();
+      g.beginPath();
+      g.moveTo(11.2, -54.6);
+      g.quadraticCurveTo(15.8, -52.4, 15.2, -36);
+      g.quadraticCurveTo(14.6, -26.8, 12.2, -24.6);
+      g.quadraticCurveTo(10.4, -23.8, 10.2, -28.4);
+      g.quadraticCurveTo(10.6, -40, 10.4, -52.8);
       g.closePath();
       g.fill();
       g.stroke();
@@ -3647,6 +3487,14 @@
       openShop(1);
     });
     document.getElementById("btn-page-hammer").addEventListener("click", () => {
+      ensureAudio();
+      openShop(2);
+    });
+    document.getElementById("btn-gender-outfit").addEventListener("click", () => {
+      ensureAudio();
+      openShop(1);
+    });
+    document.getElementById("btn-gender-hammer").addEventListener("click", () => {
       ensureAudio();
       openShop(2);
     });
