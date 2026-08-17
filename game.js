@@ -38,6 +38,13 @@
     profileHome: document.getElementById("profile-home"),
     profileCustom: document.getElementById("profile-custom"),
     profileMe: document.getElementById("profile-me"),
+    buyConfirm: document.getElementById("buy-confirm"),
+    buyLead: document.getElementById("buy-lead"),
+    buyCost: document.getElementById("buy-cost"),
+    buyHave: document.getElementById("buy-have"),
+    buyAfter: document.getElementById("buy-after"),
+    buyNote: document.getElementById("buy-note"),
+    buyOk: document.getElementById("btn-buy-ok"),
     profileBestTime: document.getElementById("profile-best-time"),
     profileBestScore: document.getElementById("profile-best-score"),
     score: document.getElementById("score-count"),
@@ -883,6 +890,7 @@
     hammerId: "cherry-stripe",
     complete: false,
   };
+  let pendingBuy = null;
   let profileStep = 0;
   let profilePage = "home";
   let runScore = 0;
@@ -984,6 +992,51 @@
   function ownsHammer(id) {
     const h = hammerOf(id);
     return !h.cost || progress.ownedHammers.includes(id);
+  }
+
+  function objectParticle(name) {
+    const last = name.charCodeAt(name.length - 1);
+    if (last < 0xac00 || last > 0xd7a3) return `${name}를`;
+    return `${name}${(last - 0xac00) % 28 ? "을" : "를"}`;
+  }
+
+  function closeBuyConfirm() {
+    pendingBuy = null;
+    show("buyConfirm", false);
+  }
+
+  function openBuyConfirm(kind, id) {
+    const item = kind === "outfit" ? outfitOf(id) : hammerOf(id);
+    if (!item || !item.cost) return;
+    pendingBuy = { kind, id };
+    const have = progress.wallet;
+    const after = have - item.cost;
+    const can = after >= 0;
+    if (el.buyLead) {
+      el.buyLead.textContent = `${objectParticle(item.name)} ${item.cost}코인으로 살까요?`;
+    }
+    if (el.buyCost) el.buyCost.textContent = String(item.cost);
+    if (el.buyHave) el.buyHave.textContent = String(have);
+    if (el.buyAfter) el.buyAfter.textContent = can ? String(after) : "부족";
+    if (el.buyNote) el.buyNote.classList.toggle("hidden", can);
+    if (el.buyOk) el.buyOk.disabled = !can;
+    show("buyConfirm", true);
+  }
+
+  function confirmBuy() {
+    if (!pendingBuy) return;
+    const { kind, id } = pendingBuy;
+    const ok = kind === "outfit" ? buyOutfit(id) : buyHammer(id);
+    if (ok) {
+      if (kind === "outfit") avatar.outfitId = id;
+      else avatar.hammerId = id;
+      persistAvatar();
+      mountOutfitCards();
+      mountHammerCards();
+      syncAvatarPickerUI();
+      syncHammerButton();
+    }
+    closeBuyConfirm();
   }
 
   function buyOutfit(id) {
@@ -1314,6 +1367,7 @@
     show("hud", false);
     show("controls", false);
     show("soaked", false);
+    closeBuyConfirm();
     show("title", true);
     const ready = loggedIn();
     if (el.guestBlock) el.guestBlock.classList.toggle("hidden", ready);
@@ -1352,6 +1406,7 @@
   function openProfile() {
     scene = "profile";
     profileStep = 0;
+    closeBuyConfirm();
     show("login", false);
     show("title", false);
     show("briefing", false);
@@ -3132,7 +3187,10 @@
       btn.append(cv, txt);
       if (!ownsOutfit(o.id)) btn.classList.add("locked");
       btn.addEventListener("click", () => {
-        if (!ownsOutfit(o.id) && !buyOutfit(o.id)) return;
+        if (!ownsOutfit(o.id)) {
+          openBuyConfirm("outfit", o.id);
+          return;
+        }
         avatar.outfitId = o.id;
         persistAvatar();
         mountOutfitCards();
@@ -3168,7 +3226,10 @@
       btn.append(cv, txt);
       if (!ownsHammer(d.id)) btn.classList.add("locked");
       btn.addEventListener("click", () => {
-        if (!ownsHammer(d.id) && !buyHammer(d.id)) return;
+        if (!ownsHammer(d.id)) {
+          openBuyConfirm("hammer", d.id);
+          return;
+        }
         avatar.hammerId = d.id;
         persistAvatar();
         mountHammerCards();
@@ -3525,6 +3586,12 @@
     });
     document.getElementById("btn-profile-next").addEventListener("click", () => {
       finishProfile();
+    });
+    document.getElementById("btn-buy-ok").addEventListener("click", () => {
+      confirmBuy();
+    });
+    document.getElementById("btn-buy-cancel").addEventListener("click", () => {
+      closeBuyConfirm();
     });
     document.getElementById("btn-logout").addEventListener("click", () => {
       logout();

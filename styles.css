@@ -776,9 +776,25 @@ canvas#game {
   margin: 0;
 }
 
-.stun-overlay {
-  z-index: 12;
-  pointer-events: none;
+.buy-overlay {
+  z-index: 16;
+  background: rgba(20, 40, 16, 0.52);
+}
+
+.buy-panel {
+  width: min(400px, 100%);
+  padding: 22px 20px 18px;
+}
+
+.buy-panel .stat-list {
+  margin-bottom: 12px;
+}
+
+.buy-panel .primary:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+  box-shadow: 0 2px 0 #2b3a24;
 }
 
 .stun-overlay .panel {
