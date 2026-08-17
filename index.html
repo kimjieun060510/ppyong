@@ -56,9 +56,7 @@
         <p class="stage">공원편</p>
 
         <div id="guest-block">
-          <p class="lead">
-            공원 구멍마다 누군가 고개를 내민다. Apple로 로그인하면 캐릭터와 단계가 저장돼요.
-          </p>
+          <p class="lead">구멍에서 고개가 쏙. 두더지만 잡고, 스컹크는 피해!</p>
           <button id="btn-apple" type="button" class="apple-btn">
             <svg viewBox="0 0 14 18" width="18" height="22" aria-hidden="true">
               <path
@@ -66,31 +64,23 @@
                 d="M13.04 6.12c-.07-2.12 1.73-3.14 1.81-3.19-1-1.46-2.54-1.66-3.08-1.68-1.3-.13-2.55.77-3.21.77-.67 0-1.7-.75-2.8-.73-1.43.02-2.76.84-3.5 2.14-1.5 2.61-.38 6.46 1.07 8.57.72 1.03 1.57 2.18 2.68 2.14 1.08-.04 1.49-.7 2.8-.7 1.3 0 1.67.7 2.81.67 1.17-.02 1.9-1.04 2.61-2.08.83-1.2 1.17-2.37 1.19-2.43-.03-.01-2.27-.87-2.3-3.46zM10.9.32c.59-.72.98-1.72.87-2.72-.84.04-1.87.57-2.47 1.28-.54.62-1.02 1.64-.89 2.6.95.07 1.9-.48 2.49-1.16z"
               />
             </svg>
-            Apple로 로그인
+            Apple로 시작
           </button>
-          <p class="login-note">
-            iPhone 앱에서는 Apple 로그인 창이 열려요. 브라우저 미리보기에서는 이
-            기기 계정으로 진행돼요.
-          </p>
           <p class="login-note">
             <a href="privacy.html">개인정보 처리방침</a>
           </p>
         </div>
 
         <div id="play-block" class="hidden">
-          <p class="lead" id="title-hello">열린 단계를 고르고 시작하세요.</p>
-          <p class="wallet-line" id="title-wallet">보유 코인 0</p>
+          <p class="lead" id="title-hello">오늘 뛰는 공원은?</p>
+          <p class="wallet-line" id="title-wallet">코인 0</p>
           <canvas id="title-me" width="220" height="250"></canvas>
-          <p class="picker-label">단계 선택</p>
+          <p class="picker-label">공원</p>
           <div id="title-stages" class="stage-row"></div>
           <div class="title-actions">
-            <button id="btn-start" type="button" class="primary">이 단계로 시작</button>
-            <button id="btn-open-profile" type="button">프로필</button>
+            <button id="btn-start" type="button" class="primary">뛰어들기</button>
+            <button id="btn-open-profile" type="button">내 캐릭터</button>
           </div>
-          <ul class="howto">
-            <li>이동: WASD / 왼쪽 동그라미</li>
-            <li>공격: 스페이스 또는 오른쪽 뿅망치</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -101,28 +91,28 @@
           <h2 id="profile-heading">프로필</h2>
           <p id="profile-account">Apple ID</p>
         </div>
-        <p class="wallet-line" id="profile-wallet">보유 코인 0</p>
+        <p class="wallet-line" id="profile-wallet">코인 0</p>
         <p class="login-note account-actions">
           <button id="btn-logout" type="button" class="text-btn">로그아웃</button>
           <button id="btn-delete-account" type="button" class="text-btn danger">
-            계정 삭제
+            기록 삭제
           </button>
         </p>
 
         <div id="profile-home" class="profile-page">
           <canvas id="profile-me" width="220" height="250"></canvas>
-          <p class="lead" id="profile-stage-now">현재 단계: 공원 낮</p>
+          <p class="lead" id="profile-stage-now">다음 판: 공원 낮</p>
           <div class="profile-menu">
             <button id="btn-page-custom" type="button" class="primary">
-              캐릭터 꾸미기
+              코디 바꾸기
             </button>
-            <button id="btn-page-stages" type="button">스테이지</button>
-            <button id="btn-profile-to-title" type="button">타이틀로</button>
+            <button id="btn-page-stages" type="button">기록</button>
+            <button id="btn-profile-to-title" type="button">나가기</button>
           </div>
         </div>
 
         <div id="profile-custom" class="profile-page hidden">
-          <p class="picker-label" id="profile-step-label">1. 성별을 정하세요</p>
+          <p class="picker-label" id="profile-step-label">누구로 뛸까?</p>
           <div id="profile-step-gender" class="profile-step">
             <div class="char-row" id="profile-chars"></div>
           </div>
@@ -139,10 +129,10 @@
         </div>
 
         <div id="profile-stages" class="profile-page hidden">
-          <p class="picker-label">해금과 최고 점수예요. 고르면 타이틀에서 그 단계로 시작해요.</p>
+          <p class="picker-label">최고 기록. 고르면 다음 판은 여기서 뛴다.</p>
           <div id="stage-row" class="stage-list"></div>
           <div class="profile-nav">
-            <button id="btn-stages-back" type="button">프로필로</button>
+            <button id="btn-stages-back" type="button">돌아가기</button>
           </div>
         </div>
       </div>
@@ -150,79 +140,79 @@
 
     <div id="briefing" class="overlay hidden">
       <div class="panel">
-        <h2>오늘 공원에 나오는 녀석들</h2>
-        <p class="lead">잡고 피할 대상을 확인하고 출발하세요.</p>
+        <h2>수배서</h2>
+        <p class="lead">두더지만 노리고, 나머지는 피해!</p>
         <section class="rumors" aria-label="동물 설명">
           <article class="rumor" data-kind="mole">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>두더지</h3>
-              <p>맨날 구멍에서 코를 내밀고, 주머니엔 코인이 가득하다. 뿅망치가 제일 반기는 이웃.</p>
+              <p>구멍에서 코만 빼꼼. 주머니엔 코인이 가득하다.</p>
             </div>
           </article>
           <article class="rumor" data-kind="gold">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>황금 두더지</h3>
-              <p>왕관을 쓴 두더지. 다른 두더지보다 코인을 훨씬 많이 들고 다닌다. 놓치면 아까운 손님.</p>
+              <p>왕관을 쓴 대박. 놓치면 밤새 아쉽다.</p>
             </div>
           </article>
           <article class="rumor" data-kind="skunk">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>스컹크</h3>
-              <p>한 번 건드리면 공원 공기가 끝장난다. 오늘은 조용히 지나가 달라는 눈치다.</p>
+              <p>건드리는 순간 공원 끝. 그냥 지나쳐.</p>
             </div>
           </article>
           <article class="rumor" data-kind="rabbit">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>토끼</h3>
-              <p>귀엽다고 다가가면 당근을 뿌려 길을 미끄럽게 만든다. 발이 묶인 채로 시간만 간다.</p>
+              <p>당근을 뿌려 발을 묶는다. 귀엽다고 다가가지 마.</p>
             </div>
           </article>
           <article class="rumor" data-kind="raccoon">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>너구리</h3>
-              <p>눈 가리개를 한 도둑. 반짝이는 코인만 보면 할퀴고 달아난다.</p>
+              <p>눈 가리개 도둑. 코인만 보면 할퀸다.</p>
             </div>
           </article>
           <article class="rumor" data-kind="pond">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>연못</h3>
-              <p>가운데 연못은 생각보다 깊다. 풍덩 빠지면 허우적대는 동안 시계는 멈추지 않는다.</p>
+              <p>풍덩 빠지면 허우적. 시계는 안 멈춰.</p>
             </div>
           </article>
         </section>
         <button id="btn-briefing-go" type="button" class="primary">
-          알겠어요, 출발!
+          뛰어!
         </button>
       </div>
     </div>
 
     <div id="round-over" class="overlay hidden">
       <div class="panel">
-        <h2>라운드 끝!</h2>
+        <h2>타임 업!</h2>
         <p id="round-summary" class="lead"></p>
         <button id="btn-next-round" type="button" class="primary">
-          다음 라운드
+          계속 뛰어!
         </button>
       </div>
     </div>
 
     <div id="result" class="overlay hidden">
       <div class="panel">
-        <h2 id="result-title">오늘은 여기까지!</h2>
+        <h2 id="result-title">공원 마감!</h2>
         <p id="result-summary" class="lead"></p>
-        <button id="btn-retry" type="button" class="primary">한 판 더</button>
+        <button id="btn-retry" type="button" class="primary">다시 뛰자!</button>
       </div>
     </div>
 
     <div id="soaked" class="stun-banner hidden">
       <h2 id="stun-title">풍덩!</h2>
-      <p id="stun-lead">물에 빠졌어요. 허우적거리는 중...</p>
+      <p id="stun-lead">허우적! 시계는 그대로 간다</p>
       <p id="soak-count" class="countdown">5</p>
     </div>
 

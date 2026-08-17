@@ -508,9 +508,9 @@ canvas#game {
 
 #controls {
   position: fixed;
-  left: calc(8px + var(--safe-left));
-  right: calc(8px + var(--safe-right));
-  bottom: calc(16px + var(--safe-bottom));
+  left: calc(10px + var(--safe-left));
+  right: calc(12px + var(--safe-right));
+  bottom: calc(20px + var(--safe-bottom));
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -519,8 +519,8 @@ canvas#game {
 }
 
 #stick {
-  width: 168px;
-  height: 168px;
+  width: 104px;
+  height: 104px;
   pointer-events: auto;
   touch-action: none;
   display: flex;
@@ -529,21 +529,17 @@ canvas#game {
 }
 
 #stick-base {
-  width: 148px;
-  height: 148px;
+  width: 92px;
+  height: 92px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: 4px solid rgba(255, 255, 255, 0.5);
-  box-shadow: inset 0 0 0 2px rgba(43, 58, 36, 0.18);
+  background: rgba(255, 255, 255, 0.22);
+  border: 3px solid rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(43, 58, 36, 0.16);
   position: relative;
 }
 
 .stick-dir {
-  position: absolute;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
 .stick-dir.north {
@@ -588,8 +584,8 @@ canvas#game {
 }
 
 #stick-knob {
-  width: 68px;
-  height: 68px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.78);
   border: 3px solid rgba(255, 255, 255, 0.95);
@@ -604,14 +600,14 @@ canvas#game {
 
 #btn-hammer {
   pointer-events: auto;
-  width: 112px;
-  height: 112px;
-  margin: 8px 8px 12px;
+  width: 74px;
+  height: 74px;
+  margin: 0 0 4px;
   border-radius: 50%;
   background:
     radial-gradient(circle at 32% 28%, #fff8ea 0%, #f0d7a0 42%, #d4a45a 100%);
-  border: 4px solid #2b3a24;
-  box-shadow: 0 5px 0 #2b3a24, inset 0 2px 0 rgba(255, 255, 255, 0.45);
+  border: 3px solid #2b3a24;
+  box-shadow: 0 4px 0 #2b3a24, inset 0 2px 0 rgba(255, 255, 255, 0.45);
   color: #fff;
   touch-action: none;
   user-select: none;
@@ -622,8 +618,8 @@ canvas#game {
 }
 
 #btn-hammer .mallet-icon {
-  width: 64px;
-  height: 64px;
+  width: 42px;
+  height: 42px;
   transform: rotate(-28deg);
   filter: drop-shadow(0 3px 0 rgba(43, 58, 36, 0.35));
   pointer-events: none;
@@ -935,28 +931,28 @@ canvas#game {
   }
 
   #stick {
-    width: 132px;
-    height: 132px;
+    width: 100px;
+    height: 100px;
   }
 
   #stick-base {
-    width: 116px;
-    height: 116px;
+    width: 88px;
+    height: 88px;
   }
 
   #stick-knob {
-    width: 52px;
-    height: 52px;
+    width: 40px;
+    height: 40px;
   }
 
   #btn-hammer {
-    width: 92px;
-    height: 92px;
+    width: 70px;
+    height: 70px;
   }
 
   #btn-hammer .mallet-icon {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
   }
 
   .hammer-card canvas {
@@ -985,35 +981,35 @@ canvas#game {
   }
 
   #controls {
-    left: calc(10px + var(--safe-left));
-    right: calc(10px + var(--safe-right));
-    bottom: max(8px, var(--safe-bottom));
+    left: calc(14px + var(--safe-left));
+    right: calc(16px + var(--safe-right));
+    bottom: max(10px, var(--safe-bottom));
   }
 
   #stick {
-    width: 118px;
-    height: 118px;
+    width: 88px;
+    height: 88px;
   }
 
   #stick-base {
-    width: 104px;
-    height: 104px;
+    width: 78px;
+    height: 78px;
   }
 
   #stick-knob {
-    width: 46px;
-    height: 46px;
+    width: 34px;
+    height: 34px;
   }
 
   #btn-hammer {
-    width: 78px;
-    height: 78px;
-    margin: 4px;
+    width: 64px;
+    height: 64px;
+    margin: 0;
   }
 
   #btn-hammer .mallet-icon {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
   }
 
   .overlay {

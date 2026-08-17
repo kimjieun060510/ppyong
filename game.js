@@ -506,7 +506,7 @@
     {
       id: "park-1",
       name: "공원 낮",
-      hint: "구멍이 천천히 열리고, 동물도 조금 오래 나와 있어요",
+      hint: "느긋한 오후. 두더지가 여유롭다",
       unlockScore: 0,
       tint: null,
       trap: 0.16,
@@ -521,7 +521,7 @@
     {
       id: "park-2",
       name: "공원 노을",
-      hint: "구멍이 더 자주 열리고, 동물이 빨리 들어가요",
+      hint: "구멍 대란. 눈 깜빡하면 들어간다",
       unlockScore: 90,
       tint: "rgba(255,120,50,0.18)",
       trap: 0.24,
@@ -536,7 +536,7 @@
     {
       id: "park-3",
       name: "공원 밤",
-      hint: "구멍이 아주 자주 열리고, 눈 깜짝할 새 들어가요",
+      hint: "한순간이다. 망설이면 놓친다",
       unlockScore: 160,
       tint: "rgba(18,28,70,0.36)",
       trap: 0.3,
@@ -701,14 +701,14 @@
     let extra = "";
     if (next && runScore >= next.unlockScore && !progress.unlocked.includes(next.id)) {
       progress.unlocked.push(next.id);
-      extra = ` ${next.name} 해금!`;
+      extra = ` ${next.name} 열렸다!`;
     } else if (next && !progress.unlocked.includes(next.id)) {
-      extra = ` 다음 단계까지 점수 ${next.unlockScore}점이 필요해요.`;
+      extra = ` ${next.name}까지 ${next.unlockScore}점!`;
     }
     persistProgress();
     if (el.resultTitle) el.resultTitle.textContent = title;
     if (el.resultSummary) {
-      el.resultSummary.textContent = `점수 ${runScore}점 → 코인 +${payout} (보유 ${progress.wallet}). 두더지 ${totalCaught}마리.${extra}`;
+      el.resultSummary.textContent = `${runScore}점! 코인 +${payout} (지금 ${progress.wallet}) · 두더지 ${totalCaught}마리.${extra}`;
     }
   }
 
@@ -860,12 +860,9 @@
         if (!isAppleCancel(err)) {
           const code = String((err && (err.code || err.error)) || "");
           if (code === "1000") {
-            alert("Apple 로그인 창을 열지 못했어요. 시뮬레이터보다 실제 아이폰에서 다시 눌러 보세요.");
+            alert("지금은 Apple 로그인을 열 수 없어요. 아이폰에서 다시 눌러 봐!");
           } else {
-            alert(
-              "Apple 로그인에 실패했어요. " +
-                ((err && (err.message || err.error)) || "다시 시도해 주세요.")
-            );
+            alert("Apple 로그인이 막혔어. 잠시 후 다시 뛰어 봐!");
           }
         }
       }
@@ -910,7 +907,7 @@
   function deleteAccount() {
     if (!account) return;
     const ok = window.confirm(
-      "이 기기의 뿅 계정, 코인, 코디, 기록을 모두 지울까요? 되돌릴 수 없어요."
+      "뿅 기록을 전부 지울까? 코인이랑 코디도 사라진다!"
     );
     if (!ok) return;
     const id = account.id;
@@ -943,11 +940,11 @@
     if (el.titleHello) {
       const who = account && account.name ? `${account.name}님, ` : "";
       el.titleHello.textContent = ready
-        ? `${who}열린 단계를 고르고 시작하세요.`
-        : "공원 구멍마다 누군가 고개를 내민다.";
+        ? `${who}오늘 뛰는 공원은?`
+        : "구멍에서 고개가 쏙. 두더지만 잡고, 스컹크는 피해!";
     }
     const start = document.getElementById("btn-start");
-    if (start) start.textContent = `${st.name}으로 시작`;
+    if (start) start.textContent = `${st.name}, 출발!`;
     syncWalletUI();
     if (ready) {
       mountStageCards(el.titleStages, true);
@@ -959,7 +956,7 @@
     const st = currentStage();
     if (el.profileStageNow) {
       const best = progress.best[st.id] || 0;
-      el.profileStageNow.textContent = `현재 단계: ${st.name}${best ? ` · 최고 ${best}점` : ""}`;
+      el.profileStageNow.textContent = `다음 판: ${st.name}${best ? ` · 최고 ${best}` : ""}`;
     }
   }
 
@@ -968,7 +965,7 @@
     if (el.profileHome) el.profileHome.classList.toggle("hidden", page !== "home");
     if (el.profileCustom) el.profileCustom.classList.toggle("hidden", page !== "custom");
     if (el.profileStages) el.profileStages.classList.toggle("hidden", page !== "stages");
-    const titles = { home: "프로필", custom: "캐릭터 꾸미기", stages: "스테이지" };
+    const titles = { home: "내 캐릭터", custom: "코디", stages: "기록" };
     if (el.profileHeading) el.profileHeading.textContent = titles[page] || "프로필";
     if (page === "custom") renderProfileStep();
     if (page === "stages") mountStageCards(el.stageRow, false);
@@ -976,7 +973,7 @@
   }
 
   function syncWalletUI() {
-    const text = `보유 코인 ${progress.wallet}`;
+    const text = `코인 ${progress.wallet}`;
     if (el.titleWallet) el.titleWallet.textContent = text;
     if (el.profileWallet) el.profileWallet.textContent = text;
   }
@@ -995,9 +992,9 @@
       name.textContent = st.name;
       const hint = document.createElement("small");
       const best = progress.best[st.id] || 0;
-      if (locked) hint.textContent = `${st.unlockScore}점 해금`;
-      else if (compact) hint.textContent = best ? `최고 ${best}점` : "열림";
-      else hint.textContent = best ? `${st.hint} · 최고 ${best}점` : st.hint;
+      if (locked) hint.textContent = `${st.unlockScore}점`;
+      else if (compact) hint.textContent = best ? `최고 ${best}` : "GO";
+      else hint.textContent = best ? `${st.hint} · 최고 ${best}` : st.hint;
       btn.append(name, hint);
       btn.disabled = locked;
       btn.addEventListener("click", () => {
@@ -1008,7 +1005,7 @@
         mountStageCards(el.stageRow, false);
         updateProfileHome();
         const start = document.getElementById("btn-start");
-        if (start) start.textContent = `${st.name}으로 시작`;
+        if (start) start.textContent = `${st.name}, 출발!`;
       });
       root.append(btn);
     });
@@ -1026,7 +1023,7 @@
       el.profileAccount.textContent = account
         ? account.apple
           ? account.email || "Apple ID"
-          : "로컬 계정"
+          : "이 기기"
         : "Apple ID";
     }
     renderProfileStep();
@@ -1044,7 +1041,7 @@
     show("controls", false);
     show("briefing", true);
     const briefTitle = document.querySelector("#briefing h2");
-    if (briefTitle) briefTitle.textContent = `${currentStage().name}에 나오는 녀석들`;
+    if (briefTitle) briefTitle.textContent = `${currentStage().name} 수배서`;
   }
 
   function beginPlay() {
@@ -1371,7 +1368,7 @@
         "skunk",
         2.4,
         "GAME OVER",
-        "스컹크 방귀가 너무 지독해요!"
+        "공원 공기가 끝났다..."
       );
       el.soaked.classList.add("gas");
       el.soakCount.classList.add("hidden");
@@ -1380,7 +1377,7 @@
     if (kind === "rabbit") {
       burst(hole.x, hole.y - 18, "#ff9f43", 12);
       throwCarrots(player.x, player.y);
-      startStun("rabbit", RABBIT_TIME, "미끄럼!", "토끼가 당근을 잔뜩 뿌렸어요. 3초 동안 못 움직여요.");
+      startStun("rabbit", RABBIT_TIME, "당근 함정!", "발이 미끄러워 꼼짝 마!");
       return;
     }
     const loss = Math.max(12, Math.round(coins * 0.35));
@@ -1396,7 +1393,7 @@
     floatTexts.push({
       x: player.x,
       y: player.y - 36,
-      text: `할퀴힘 -${loss}`,
+      text: `-${loss}`,
       t: 0,
       color: "#a33",
     });
@@ -1411,7 +1408,7 @@
     show("controls", false);
     show("hud", true);
     show("result", true);
-    settleRun("이런!");
+    settleRun("펑!");
     if (reason && el.resultSummary) {
       el.resultSummary.textContent = `${reason} ${el.resultSummary.textContent}`;
     }
@@ -1631,7 +1628,7 @@
     sfx("splash");
     burst(player.x, player.y - 8, "#9fe7ff", 18);
     burst(player.x, player.y - 4, "#5ec3d8", 10);
-    startStun("water", WATER_TIME, "풍덩!", "허우적거려서 5초 동안 못 움직여요.");
+    startStun("water", WATER_TIME, "풍덩!", "허우적! 시계는 그대로 간다");
   }
 
   function recoverFromStun() {
@@ -1648,7 +1645,7 @@
       burst(player.x, player.y - 10, "#9fe7ff", 8);
     }
     if (kind === "skunk") {
-      gameOver("스컹크 방귀가 퍼져서 게임이 끝났어요.");
+      gameOver("스컹크가 공원을 덮쳤어!");
     }
   }
 
@@ -1737,12 +1734,12 @@
       show("controls", false);
       show("hud", true);
       show("result", true);
-      settleRun("오늘은 여기까지!");
+      settleRun("공원 마감!");
       return;
     }
     scene = "roundOver";
     show("roundOver", true);
-    el.roundSummary.textContent = `${round}라운드에서 두더지 ${roundCaught}마리를 잡았어요.`;
+    el.roundSummary.textContent = `${round}라운드 · 두더지 ${roundCaught}마리 포획!`;
   }
 
   function update(dt) {
@@ -2767,7 +2764,7 @@
   }
 
   function renderProfileStep() {
-    const labels = ["1. 성별을 정하세요", "2. 코디를 고르세요", "3. 뿅망치를 고르세요"];
+    const labels = ["누구로 뛸까?", "오늘 코디", "오늘의 뿅망치"];
     if (el.profileStepLabel) el.profileStepLabel.textContent = labels[profileStep];
     el.profileStepGender.classList.toggle("hidden", profileStep !== 0);
     el.profileStepOutfit.classList.toggle("hidden", profileStep !== 1);
@@ -2775,8 +2772,8 @@
     const back = document.getElementById("btn-profile-back");
     const next = document.getElementById("btn-profile-next");
     back.disabled = profileStep === 0 && !avatar.complete;
-    back.textContent = profileStep === 0 ? "프로필로" : "이전";
-    next.textContent = profileStep === 2 ? "완료" : "다음";
+    back.textContent = profileStep === 0 ? "돌아가기" : "이전";
+    next.textContent = profileStep === 2 ? "이 모습으로!" : "다음";
     if (profileStep === 1) mountOutfitCards();
     if (profileStep === 2) mountHammerCards();
     syncAvatarPickerUI();
