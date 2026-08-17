@@ -853,7 +853,44 @@
     else openProfile();
   }
 
+  function isNativeApple() {
+    return Boolean(window.PpyongApple && window.PpyongApple.isNative && window.PpyongApple.isNative());
+  }
+
+  function accountFromNative(result) {
+    const r = (result && result.response) || result || {};
+    const name = [r.givenName, r.familyName].filter(Boolean).join(" ");
+    let id = r.user;
+    if (!id && r.identityToken) {
+      id = appleUserId({ authorization: { id_token: r.identityToken } });
+    }
+    return {
+      id: id || `apple-${Date.now()}`,
+      name: name || "플레이어",
+      email: r.email || "",
+      apple: true,
+    };
+  }
+
+  function isAppleCancel(err) {
+    const msg = String(
+      (err && (err.message || err.error || err.code)) || err || ""
+    );
+    return /cancel|1001|popup_closed_by_user|user_cancelled_authorize/i.test(msg);
+  }
+
   async function signInWithApple() {
+    if (isNativeApple()) {
+      try {
+        const result = await window.PpyongApple.signIn();
+        finishLogin(accountFromNative(result));
+      } catch (err) {
+        if (!isAppleCancel(err)) {
+          alert("Apple 로그인에 실패했어요. Xcode에서 Sign in with Apple이 켜져 있는지 확인해 주세요.");
+        }
+      }
+      return;
+    }
     if (APPLE_CLIENT_ID && window.AppleID && window.AppleID.auth) {
       try {
         window.AppleID.auth.init({
@@ -875,9 +912,7 @@
         });
         return;
       } catch (err) {
-        if (err && (err.error === "popup_closed_by_user" || err.error === "user_cancelled_authorize")) {
-          return;
-        }
+        if (isAppleCancel(err)) return;
       }
     }
     finishLogin(localAppleAccount());
@@ -887,6 +922,26 @@
     account = null;
     persistAccount();
     avatar.complete = false;
+    show("profile", false);
+    show("briefing", false);
+    showTitle();
+  }
+
+  function deleteAccount() {
+    if (!account) return;
+    const ok = window.confirm(
+      "이 기기의 뿅 계정, 코인, 코디, 기록을 모두 지울까요? 되돌릴 수 없어요."
+    );
+    if (!ok) return;
+    const id = account.id;
+    localStorage.removeItem(ACCOUNT_KEY);
+    localStorage.removeItem(`ppyong-progress-${id}`);
+    localStorage.removeItem(`ppyong-avatar-${id}`);
+    localStorage.removeItem("ppyong-local-id");
+    account = null;
+    avatar.complete = false;
+    loadProgress();
+    loadAvatar();
     show("profile", false);
     show("briefing", false);
     showTitle();
@@ -3051,6 +3106,9 @@
     });
     document.getElementById("btn-logout").addEventListener("click", () => {
       logout();
+    });
+    document.getElementById("btn-delete-account").addEventListener("click", () => {
+      deleteAccount();
     });
     document.getElementById("btn-briefing-go").addEventListener("click", () => {
       ensureAudio();

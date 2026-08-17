@@ -34,7 +34,14 @@
 
 ## Apple ID 로그인 (App Store)
 
-실제 Sign in with Apple을 쓰려면 Apple Developer에서 Services ID를 만들고, `game.js`의 `APPLE_CLIENT_ID`에 넣으세요. Return URL은 게임이 열리는 HTTPS 주소와 같아야 합니다. 값이 비어 있으면 미리보기용 로컬 계정으로 진행됩니다. 프로필은 계정마다 `localStorage`에 저장됩니다.
+iOS 앱에서는 Capacitor로 감싼 뒤 **네이티브 Sign in with Apple**을 씁니다. Bundle ID는 `com.kimjieun.ppyong` 입니다. 웹용 Services ID는 필요 없습니다.
+
+```bash
+npm install
+npm run ios
+```
+
+자세한 단계는 [IOS_RELEASE.md](IOS_RELEASE.md)를 보세요. 브라우저 미리보기에서는 네이티브 시트가 없어서 이 기기 로컬 계정으로 진행됩니다. 프로필·코인·단계는 계정마다 기기에 저장됩니다.
 
 ## 로컬에서 열기
 
