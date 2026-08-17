@@ -350,19 +350,40 @@ canvas#game {
 
 #btn-hammer {
   pointer-events: auto;
-  width: 108px;
-  height: 108px;
+  width: 112px;
+  height: 112px;
   margin: 8px 8px 12px;
   border-radius: 50%;
-  background: #ff8a5b;
+  background:
+    radial-gradient(circle at 32% 28%, #fff8ea 0%, #f0d7a0 42%, #d4a45a 100%);
+  border: 4px solid #2b3a24;
+  box-shadow: 0 5px 0 #2b3a24, inset 0 2px 0 rgba(255, 255, 255, 0.45);
   color: #fff;
-  font-size: 36px;
   touch-action: none;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+#btn-hammer .mallet-icon {
+  width: 64px;
+  height: 64px;
+  transform: rotate(-28deg);
+  filter: drop-shadow(0 3px 0 rgba(43, 58, 36, 0.35));
+  pointer-events: none;
 }
 
 #btn-hammer.held {
-  background: #ff6b3a;
+  background:
+    radial-gradient(circle at 32% 28%, #ffe7c2 0%, #e2c078 50%, #c48a3a 100%);
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #2b3a24, inset 0 2px 0 rgba(255, 255, 255, 0.35);
+}
+
+#btn-hammer.held .mallet-icon {
+  transform: rotate(18deg);
 }
 
 @media (max-width: 520px) {
@@ -387,8 +408,12 @@ canvas#game {
   }
 
   #btn-hammer {
-    width: 96px;
-    height: 96px;
-    font-size: 32px;
+    width: 100px;
+    height: 100px;
+  }
+
+  #btn-hammer .mallet-icon {
+    width: 56px;
+    height: 56px;
   }
 }
