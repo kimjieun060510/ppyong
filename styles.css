@@ -68,33 +68,118 @@ canvas#game {
   pointer-events: none;
   background: rgba(255, 246, 228, 0.94);
   border: 3px solid #2b3a24;
-  border-radius: 999px;
-  padding: 5px 10px;
-  font-size: clamp(13px, 2.6vw, 18px);
+  border-radius: 14px;
+  padding: 4px 10px 5px;
+  font-size: clamp(15px, 2.8vw, 18px);
   box-shadow: 0 3px 0 #2b3a24;
   white-space: nowrap;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  line-height: 1.1;
-  min-height: 32px;
+  gap: 0;
+  line-height: 1.15;
+  min-height: 36px;
+}
+
+.chip .k {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #6b7a62;
+  line-height: 1.2;
 }
 
 .chip.coin {
   color: #9a6b00;
 }
 
-.chip.coin .icon {
-  display: inline-block;
-  width: 0.9em;
-  color: var(--gold);
-  text-shadow: 0 0 0 #c48a00;
+.chip.coin .k {
+  color: #b08628;
 }
 
-.chip.time {
-  min-width: 56px;
-  text-align: center;
+.hud-btn {
+  pointer-events: auto;
+  cursor: pointer;
+  font-family: inherit;
+  background: rgba(255, 246, 228, 0.94);
+  border: 3px solid #2b3a24;
+  border-radius: 14px;
+  padding: 6px 12px;
+  font-size: 16px;
+  box-shadow: 0 3px 0 #2b3a24;
+  color: var(--ink);
+  min-height: 36px;
+}
+
+.hud-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #2b3a24;
+}
+
+.stack-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.stack-actions button:not(.primary) {
+  font-family: inherit;
+  cursor: pointer;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 16px;
+  padding: 10px 18px;
+  font-size: 18px;
+  box-shadow: 0 4px 0 #2b3a24;
+}
+
+.stack-actions button:not(.primary):active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #2b3a24;
+}
+
+.life-chip {
+  pointer-events: none;
+  min-width: min(220px, 42vw);
+  background: rgba(255, 246, 228, 0.94);
+  border: 3px solid #2b3a24;
+  border-radius: 14px;
+  padding: 4px 10px 6px;
+  box-shadow: 0 3px 0 #2b3a24;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.life-chip .k {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #4a5a42;
+  line-height: 1;
+}
+
+.life-track {
+  height: 12px;
+  background: #d8c8a0;
+  border: 2px solid #2b3a24;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#life-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(#9dff6a, #4cbf3a);
+  transform-origin: left center;
+}
+
+.life-chip.low #life-fill {
+  background: linear-gradient(#ffd15c, #ff7a28);
+}
+
+.life-chip.critical #life-fill {
+  background: linear-gradient(#ff8a8a, #e23b3b);
 }
 
 #btn-hammer,
@@ -117,10 +202,10 @@ canvas#game {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));
+  padding: max(12px, var(--safe-top)) 16px max(14px, var(--safe-bottom));
   background: rgba(20, 40, 16, 0.38);
   z-index: 10;
-  overflow: auto;
+  overflow: hidden;
   touch-action: pan-y;
 }
 
@@ -133,7 +218,10 @@ canvas#game {
   box-shadow: 0 10px 0 #2b3a24;
   text-align: center;
   touch-action: pan-y;
-  max-height: min(92vh, 920px);
+  max-height: calc(
+    100dvh - max(12px, var(--safe-top)) - max(14px, var(--safe-bottom)) - 12px
+  );
+  min-height: 0;
   overflow: auto;
 }
 
@@ -151,9 +239,14 @@ canvas#game {
 
 .title-panel h1 {
   margin: 0;
-  font-size: clamp(44px, 12vw, 72px);
+  font-size: clamp(36px, 9vw, 56px);
   letter-spacing: 0.04em;
-  line-height: 1;
+  line-height: 1.1;
+}
+
+.title-panel:has(#play-block:not(.hidden)) h1 {
+  font-size: clamp(28px, 7vw, 42px);
+  margin-bottom: 2px;
 }
 
 .stage {
@@ -171,9 +264,161 @@ canvas#game {
 
 .lead {
   margin: 0 0 16px;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.45;
   font-weight: 400;
+  color: #4a5a42;
+}
+
+.hello {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: var(--grass-dark);
+}
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.home-stats.compact {
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 14px;
+}
+
+.home-stat {
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 16px;
+  padding: 8px 6px 10px;
+  box-shadow: 0 3px 0 #2b3a24;
+  min-width: 0;
+}
+
+.home-stat span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #6b7a62;
+}
+
+.home-stat b {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(16px, 4.4vw, 22px);
+  font-weight: 400;
+  line-height: 1.15;
+  word-break: break-all;
+}
+
+.section-label {
+  margin: 12px 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--grass-dark);
+}
+
+.section-label:first-child {
+  margin-top: 0;
+}
+
+.stat-list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+
+.stat-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+.stat-list span {
+  font-size: 14px;
+  color: #6b7a62;
+}
+
+.stat-list b {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.stat-vals {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.stat-list small {
+  font-size: 13px;
+  color: #6b7a62;
+}
+
+.stat-list small.fresh {
+  color: #c45c00;
+}
+
+.record-cheer {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  background: #fff4c2;
+  border: 3px solid #c48a00;
+  border-radius: 16px;
+  color: #9a6b00;
+  font-size: 22px;
+}
+
+.record-cheer.pop {
+  animation: pop-record 0.55s ease;
+}
+
+.panel.got-record {
+  border-color: #c48a00;
+  box-shadow: 0 10px 0 #c48a00;
+}
+
+@keyframes pop-record {
+  0% {
+    transform: scale(0.62);
+  }
+  58% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.best-line {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: #4a5a42;
+}
+
+.note {
+  margin: 0 0 16px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--grass-dark);
+}
+
+.stage-now {
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: #4a5a42;
+  text-align: center;
 }
 
 .howto {
@@ -451,7 +696,6 @@ canvas#game {
 
 .shop-panel {
   width: min(640px, 100%);
-  max-height: min(88vh, 820px);
   overflow: auto;
   text-align: left;
 }
@@ -464,63 +708,130 @@ canvas#game {
   margin-bottom: 12px;
 }
 
-.shop-head h2 {
-  margin: 0;
+.panel h2 {
+  margin: 0 0 8px;
   font-size: 28px;
 }
 
-.stun-banner {
-  position: fixed;
-  top: calc(64px + var(--safe-top));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 12;
-  pointer-events: none;
-  min-width: min(320px, calc(100vw - 24px));
-  background: rgba(255, 246, 228, 0.94);
-  border: 4px solid #2b3a24;
-  border-radius: 22px;
-  box-shadow: 0 6px 0 #2b3a24;
-  padding: 12px 18px 10px;
-  text-align: center;
+.briefing-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 14px;
 }
 
-.stun-banner.gas {
-  background: rgba(196, 230, 120, 0.94);
+.briefing-panel h2 {
+  font-size: 24px;
+  margin: 0 0 4px;
 }
 
-.stun-banner h2 {
+.briefing-panel .lead {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.briefing-panel .rumors {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  gap: 6px;
+  margin: 0 0 10px;
+}
+
+.briefing-panel .rumor {
+  padding: 7px 10px;
+  border-width: 2px;
+  border-radius: 12px;
+}
+
+.briefing-panel .rumor h3 {
+  font-size: 15px;
+}
+
+.briefing-panel .rumor p {
+  font-size: 13px;
+}
+
+.briefing-panel .stack-actions {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+@media (max-height: 860px) {
+  .briefing-panel .rumors {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .briefing-panel .section-label {
+    grid-column: 1 / -1;
+    margin: 2px 0 0;
+  }
+
+  .briefing-panel .lead {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+}
+
+.shop-head h2 {
   margin: 0;
-  font-size: 26px;
 }
 
-.stun-banner p {
-  margin: 4px 0 0;
-  font-size: 16px;
+.buy-overlay {
+  z-index: 16;
+  background: rgba(20, 40, 16, 0.52);
+}
+
+.buy-panel {
+  width: min(400px, 100%);
+  padding: 22px 20px 18px;
+}
+
+.buy-panel .stat-list {
+  margin-bottom: 12px;
+}
+
+.buy-panel .primary:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+  box-shadow: 0 2px 0 #2b3a24;
+}
+
+.stun-overlay .panel {
+  width: min(400px, 100%);
+  pointer-events: none;
+}
+
+.stun-overlay.gas {
+  background: rgba(70, 100, 16, 0.46);
+}
+
+.stun-overlay.gas .panel {
+  background: #e4f4a8;
 }
 
 .countdown {
   margin: 4px 0 0;
-  font-size: 34px;
+  font-size: 40px;
   line-height: 1;
   color: #1a6a8a;
 }
 
 #controls {
   position: fixed;
-  left: calc(10px + var(--safe-left));
-  right: calc(12px + var(--safe-right));
-  bottom: calc(20px + var(--safe-bottom));
+  left: calc(34px + var(--safe-left));
+  right: calc(36px + var(--safe-right));
+  bottom: calc(24px + var(--safe-bottom));
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   z-index: 6;
   pointer-events: none;
 }
 
 #stick {
-  width: 104px;
-  height: 104px;
+  width: 92px;
+  height: 92px;
   pointer-events: auto;
   touch-action: none;
   display: flex;
@@ -532,64 +843,82 @@ canvas#game {
   width: 92px;
   height: 92px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
-  border: 3px solid rgba(255, 255, 255, 0.55);
-  box-shadow: inset 0 0 0 2px rgba(43, 58, 36, 0.16);
+  background:
+    radial-gradient(circle at 46% 34%, #fff8ea 0%, #f3e4b8 42%, #d8c48a 100%);
+  border: 3px solid #2b3a24;
+  box-shadow:
+    0 4px 0 #2b3a24,
+    inset 0 2px 0 rgba(255, 255, 255, 0.5);
   position: relative;
 }
 
+#stick-base::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  border: 2px solid #3f8a32;
+  box-shadow: inset 0 0 0 4px rgba(107, 179, 77, 0.28);
+  pointer-events: none;
+}
+
 .stick-dir {
-  display: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 1;
+  opacity: 0.85;
 }
 
 .stick-dir.north {
-  top: 8px;
+  top: 7px;
   left: 50%;
   transform: translateX(-50%);
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-bottom: 14px solid rgba(255, 255, 255, 0.92);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 8px solid #2b3a24;
 }
 
 .stick-dir.south {
-  bottom: 8px;
+  bottom: 7px;
   left: 50%;
   transform: translateX(-50%);
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-top: 14px solid rgba(255, 255, 255, 0.92);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #2b3a24;
 }
 
 .stick-dir.east {
-  right: 8px;
+  right: 7px;
   top: 50%;
   transform: translateY(-50%);
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
-  border-left: 14px solid rgba(255, 255, 255, 0.92);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid #2b3a24;
 }
 
 .stick-dir.west {
-  left: 8px;
+  left: 7px;
   top: 50%;
   transform: translateY(-50%);
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
-  border-right: 14px solid rgba(255, 255, 255, 0.92);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 8px solid #2b3a24;
 }
 
 #stick.active #stick-base {
-  background: rgba(255, 255, 255, 0.32);
-  border-color: rgba(255, 255, 255, 0.72);
+  background:
+    radial-gradient(circle at 46% 34%, #fffdf4 0%, #ffe9a8 48%, #d4b45c 100%);
 }
 
 #stick-knob {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.78);
-  border: 3px solid rgba(255, 255, 255, 0.95);
-  box-shadow: 0 6px 12px rgba(43, 58, 36, 0.28);
+  background:
+    radial-gradient(circle at 32% 28%, #fff8ea 0%, #ffe34a 46%, #e8c01c 100%);
+  border: 3px solid #2b3a24;
+  box-shadow: 0 3px 0 #2b3a24, inset 0 2px 0 rgba(255, 255, 255, 0.45);
   position: absolute;
   left: 50%;
   top: 50%;
@@ -600,9 +929,9 @@ canvas#game {
 
 #btn-hammer {
   pointer-events: auto;
-  width: 74px;
-  height: 74px;
-  margin: 0 0 4px;
+  width: 92px;
+  height: 92px;
+  margin: 0;
   border-radius: 50%;
   background:
     radial-gradient(circle at 32% 28%, #fff8ea 0%, #f0d7a0 42%, #d4a45a 100%);
@@ -660,7 +989,7 @@ canvas#game {
 
 .wallet-line {
   margin: 0 0 12px;
-  font-size: 16px;
+  font-size: 15px;
   color: #9a6b00;
 }
 
@@ -676,7 +1005,12 @@ canvas#game {
 
 .profile-menu {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 10px;
+}
+
+.gender-shop {
+  margin-top: 12px;
 }
 
 .profile-menu button:not(.primary):not(.text-btn) {
@@ -760,9 +1094,9 @@ canvas#game {
 
 #title-me {
   display: block;
-  width: min(180px, 48vw);
+  width: min(168px, 44vw);
   height: auto;
-  margin: 4px auto 16px;
+  margin: 2px auto 12px;
   background: linear-gradient(#9fd8ff, #b8e986);
   border: 3px solid #2b3a24;
   border-radius: 22px;
@@ -786,7 +1120,7 @@ canvas#game {
 
 .profile-nav {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
+  grid-template-columns: 1fr;
   gap: 10px;
   margin-top: 16px;
 }
@@ -910,29 +1244,32 @@ canvas#game {
 
   .hud-left {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
     width: 100%;
     gap: 6px;
   }
 
   .hud-right {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: block;
     width: 100%;
-    gap: 6px;
+  }
+
+  .life-chip {
+    min-width: 0;
+    width: 100%;
   }
 
   .chip {
     width: 100%;
     min-width: 0;
-    font-size: 13px;
-    padding: 5px 4px;
+    font-size: 15px;
+    padding: 4px 4px 5px;
     box-shadow: 0 3px 0 #2b3a24;
   }
 
   #stick {
-    width: 100px;
-    height: 100px;
+    width: 88px;
+    height: 88px;
   }
 
   #stick-base {
@@ -946,8 +1283,8 @@ canvas#game {
   }
 
   #btn-hammer {
-    width: 70px;
-    height: 70px;
+    width: 88px;
+    height: 88px;
   }
 
   #btn-hammer .mallet-icon {
@@ -973,22 +1310,51 @@ canvas#game {
   }
 
   .chip {
-    font-size: 13px;
-    padding: 4px 9px;
-    min-height: 28px;
+    font-size: 14px;
+    padding: 3px 8px 4px;
+    min-height: 30px;
+    box-shadow: 0 2px 0 #2b3a24;
+    border-width: 2px;
+    border-radius: 12px;
+  }
+
+  .chip .k {
+    font-size: 9px;
+  }
+
+  .hud-btn {
+    font-size: 14px;
+    min-height: 30px;
+    padding: 3px 10px;
     box-shadow: 0 2px 0 #2b3a24;
     border-width: 2px;
   }
 
+  .life-chip {
+    min-width: 168px;
+    padding: 3px 8px 5px;
+    box-shadow: 0 2px 0 #2b3a24;
+    border-width: 2px;
+    border-radius: 12px;
+  }
+
+  .life-chip .k {
+    font-size: 9px;
+  }
+
+  .life-track {
+    height: 10px;
+  }
+
   #controls {
-    left: calc(14px + var(--safe-left));
-    right: calc(16px + var(--safe-right));
-    bottom: max(10px, var(--safe-bottom));
+    left: calc(32px + var(--safe-left));
+    right: calc(34px + var(--safe-right));
+    bottom: max(16px, var(--safe-bottom));
   }
 
   #stick {
-    width: 88px;
-    height: 88px;
+    width: 78px;
+    height: 78px;
   }
 
   #stick-base {
@@ -1002,8 +1368,8 @@ canvas#game {
   }
 
   #btn-hammer {
-    width: 64px;
-    height: 64px;
+    width: 78px;
+    height: 78px;
     margin: 0;
   }
 
@@ -1013,13 +1379,15 @@ canvas#game {
   }
 
   .overlay {
-    padding: calc(8px + var(--safe-top)) calc(16px + var(--safe-right))
-      calc(8px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    padding: max(8px, var(--safe-top)) calc(16px + var(--safe-right))
+      max(8px, var(--safe-bottom)) calc(16px + var(--safe-left));
     align-items: stretch;
   }
 
   .panel {
-    max-height: calc(100dvh - 16px);
+    max-height: calc(
+      100dvh - max(8px, var(--safe-top)) - max(8px, var(--safe-bottom)) - 12px
+    );
     padding: 14px 18px 12px;
     margin: auto;
   }
@@ -1031,7 +1399,7 @@ canvas#game {
   }
 
   .title-panel h1 {
-    font-size: clamp(28px, 8vh, 48px);
+    font-size: clamp(24px, 6vh, 36px);
   }
 
   .hammer-card canvas {
