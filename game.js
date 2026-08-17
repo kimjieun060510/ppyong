@@ -21,7 +21,9 @@
     titleMe: document.getElementById("title-me"),
     titleHello: document.getElementById("title-hello"),
     titleWallet: document.getElementById("title-wallet"),
-    titleStageLabel: document.getElementById("title-stage-label"),
+    guestBlock: document.getElementById("guest-block"),
+    playBlock: document.getElementById("play-block"),
+    titleStages: document.getElementById("title-stages"),
     profileWallet: document.getElementById("profile-wallet"),
     profileHeading: document.getElementById("profile-heading"),
     profileHome: document.getElementById("profile-home"),
@@ -591,7 +593,7 @@
   let lastTs = 0;
   let parkCanvas = null;
   let audioCtx = null;
-  let scene = "login";
+  let scene = "title";
   let holes = [];
   let trees = [];
   let flowers = [];
@@ -885,26 +887,37 @@
     account = null;
     persistAccount();
     avatar.complete = false;
-    scene = "login";
     show("profile", false);
-    show("title", false);
     show("briefing", false);
-    show("login", true);
+    showTitle();
+  }
+
+  function loggedIn() {
+    return Boolean(account && avatar.complete);
   }
 
   function showTitle() {
     scene = "title";
-    show("login", false);
     show("profile", false);
     show("briefing", false);
     show("title", true);
+    const ready = loggedIn();
+    if (el.guestBlock) el.guestBlock.classList.toggle("hidden", ready);
+    if (el.playBlock) el.playBlock.classList.toggle("hidden", !ready);
     const st = currentStage();
-    if (el.titleStageLabel) el.titleStageLabel.textContent = st.name;
     if (el.titleHello) {
       const who = account && account.name ? `${account.name}님, ` : "";
-      el.titleHello.textContent = `${who}${st.hint}`;
+      el.titleHello.textContent = ready
+        ? `${who}열린 단계를 고르고 시작하세요.`
+        : "공원 구멍마다 누군가 고개를 내민다.";
     }
+    const start = document.getElementById("btn-start");
+    if (start) start.textContent = `${st.name}으로 시작`;
     syncWalletUI();
+    if (ready) {
+      mountStageCards(el.titleStages, true);
+      mountStageCards(el.stageRow, false);
+    }
   }
 
   function updateProfileHome() {
@@ -923,7 +936,7 @@
     const titles = { home: "프로필", custom: "캐릭터 꾸미기", stages: "스테이지" };
     if (el.profileHeading) el.profileHeading.textContent = titles[page] || "프로필";
     if (page === "custom") renderProfileStep();
-    if (page === "stages") mountStageRow();
+    if (page === "stages") mountStageCards(el.stageRow, false);
     if (page === "home") updateProfileHome();
   }
 
@@ -933,8 +946,7 @@
     if (el.profileWallet) el.profileWallet.textContent = text;
   }
 
-  function mountStageRow() {
-    const root = el.stageRow;
+  function mountStageCards(root, compact) {
     if (!root) return;
     root.innerHTML = "";
     STAGES.forEach((st) => {
@@ -948,7 +960,8 @@
       name.textContent = st.name;
       const hint = document.createElement("small");
       const best = progress.best[st.id] || 0;
-      if (locked) hint.textContent = `${st.unlockScore}점으로 해금`;
+      if (locked) hint.textContent = `${st.unlockScore}점 해금`;
+      else if (compact) hint.textContent = best ? `최고 ${best}점` : "열림";
       else hint.textContent = best ? `${st.hint} · 최고 ${best}점` : st.hint;
       btn.append(name, hint);
       btn.disabled = locked;
@@ -956,8 +969,11 @@
         if (locked) return;
         progress.stageId = st.id;
         persistProgress();
-        mountStageRow();
+        mountStageCards(el.titleStages, true);
+        mountStageCards(el.stageRow, false);
         updateProfileHome();
+        const start = document.getElementById("btn-start");
+        if (start) start.textContent = `${st.name}으로 시작`;
       });
       root.append(btn);
     });
@@ -2742,7 +2758,7 @@
   function finishProfile() {
     avatar.complete = true;
     persistAvatar();
-    showProfilePage("home");
+    showTitle();
   }
 
   function drawAvatarPreviews() {
@@ -2792,7 +2808,7 @@
       const g = cv.getContext("2d");
       drawHammerPortrait(g, hammerOf(cv.dataset.hammerPreview), cv.width, cv.height);
     });
-    if (el.titleMe && scene === "title") {
+    if (el.titleMe && scene === "title" && loggedIn()) {
       const cv = el.titleMe;
       const g = cv.getContext("2d");
       paintPreviewBg(g, cv.width, cv.height);
@@ -3089,8 +3105,8 @@
     player = makePlayer();
     resetProgress();
     bindControls();
-    if (account && avatar.complete) showTitle();
-    else if (account) openProfile();
+    showTitle();
+    if (account && !avatar.complete) openProfile();
     window.addEventListener("resize", resize);
     window.addEventListener("pointerdown", ensureAudio, { once: true });
     requestAnimationFrame(loop);

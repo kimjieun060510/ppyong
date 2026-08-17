@@ -736,6 +736,18 @@ canvas#game {
   box-shadow: 0 4px 0 #2b3a24;
 }
 
+.stage-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.stage-row .stage-chip {
+  padding: 8px 4px;
+  text-align: center;
+}
+
 .stage-list {
   display: grid;
   gap: 10px;
