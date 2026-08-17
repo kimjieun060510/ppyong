@@ -25,8 +25,6 @@
     combo: document.getElementById("combo-count"),
     round: document.getElementById("round-count"),
     time: document.getElementById("time-left"),
-    joyBase: document.getElementById("joy-base"),
-    joyKnob: document.getElementById("joy-knob"),
   };
 
   const UPGRADE_DEFS = [
@@ -68,7 +66,8 @@
   ];
 
   const keys = Object.create(null);
-  const joy = { x: 0, y: 0, pointerId: null };
+  const pad = { up: false, down: false, left: false, right: false };
+  const joy = { x: 0, y: 0 };
   let viewW = 800;
   let viewH = 600;
   let camX = 0;
@@ -400,11 +399,13 @@
     show("result", false);
     show("hud", true);
     show("controls", true);
+    resetPad();
     el.round.textContent = String(round);
   }
 
   function openShop(fromRound) {
     scene = "shop";
+    resetPad();
     show("roundOver", false);
     show("shop", true);
     renderShop(fromRound);
@@ -796,46 +797,54 @@
     requestAnimationFrame(loop);
   }
 
-  function setJoy(dx, dy) {
-    const max = 46;
-    const len = Math.hypot(dx, dy);
-    const k = len > max ? max / len : 1;
-    joy.x = (dx * k) / max;
-    joy.y = (dy * k) / max;
-    el.joyKnob.style.transform = `translate(calc(-50% + ${dx * k}px), calc(-50% + ${dy * k}px))`;
+  function syncPad() {
+    joy.x = (pad.right ? 1 : 0) - (pad.left ? 1 : 0);
+    joy.y = (pad.down ? 1 : 0) - (pad.up ? 1 : 0);
   }
 
-  function resetJoy() {
-    joy.x = 0;
-    joy.y = 0;
-    joy.pointerId = null;
-    el.joyKnob.style.transform = "translate(-50%, -50%)";
+  function resetPad() {
+    pad.up = pad.down = pad.left = pad.right = false;
+    document.querySelectorAll(".dpad-btn.held").forEach((btn) => {
+      btn.classList.remove("held");
+    });
+    syncPad();
+  }
+
+  function bindPadButton(btn) {
+    const dir = btn.dataset.dir;
+    const press = (e) => {
+      e.preventDefault();
+      btn.setPointerCapture(e.pointerId);
+      pad[dir] = true;
+      btn.classList.add("held");
+      syncPad();
+    };
+    const release = () => {
+      pad[dir] = false;
+      btn.classList.remove("held");
+      syncPad();
+    };
+    btn.addEventListener("pointerdown", press);
+    btn.addEventListener("pointerup", release);
+    btn.addEventListener("pointercancel", release);
+    btn.addEventListener("lostpointercapture", release);
+    btn.addEventListener("contextmenu", (e) => e.preventDefault());
   }
 
   function bindControls() {
-    const zone = document.getElementById("joy-zone");
-    zone.addEventListener("pointerdown", (e) => {
-      zone.setPointerCapture(e.pointerId);
-      joy.pointerId = e.pointerId;
-      const r = el.joyBase.getBoundingClientRect();
-      setJoy(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
-    });
-    zone.addEventListener("pointermove", (e) => {
-      if (joy.pointerId !== e.pointerId) return;
-      const r = el.joyBase.getBoundingClientRect();
-      setJoy(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
-    });
-    const endJoy = (e) => {
-      if (joy.pointerId === e.pointerId) resetJoy();
-    };
-    zone.addEventListener("pointerup", endJoy);
-    zone.addEventListener("pointercancel", endJoy);
+    document.querySelectorAll(".dpad-btn").forEach(bindPadButton);
 
-    document.getElementById("btn-hammer").addEventListener("pointerdown", (e) => {
+    const hammer = document.getElementById("btn-hammer");
+    hammer.addEventListener("pointerdown", (e) => {
       e.preventDefault();
+      hammer.classList.add("held");
       ensureAudio();
       trySwing(false);
     });
+    const releaseHammer = () => hammer.classList.remove("held");
+    hammer.addEventListener("pointerup", releaseHammer);
+    hammer.addEventListener("pointercancel", releaseHammer);
+    hammer.addEventListener("contextmenu", (e) => e.preventDefault());
 
     window.addEventListener("keydown", (e) => {
       keys[e.key.toLowerCase()] = true;

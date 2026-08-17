@@ -245,7 +245,7 @@ canvas#game {
   position: fixed;
   left: calc(8px + var(--safe-left));
   right: calc(8px + var(--safe-right));
-  bottom: calc(12px + var(--safe-bottom));
+  bottom: calc(16px + var(--safe-bottom));
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -253,51 +253,72 @@ canvas#game {
   pointer-events: none;
 }
 
-#joy-zone {
-  width: 150px;
-  height: 150px;
+#dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 68px);
+  grid-template-rows: repeat(3, 68px);
+  gap: 8px;
   pointer-events: auto;
   touch-action: none;
+  padding: 4px;
 }
 
-#joy-base {
-  width: 118px;
-  height: 118px;
-  margin: 16px;
-  border-radius: 50%;
-  background: rgba(255, 246, 228, 0.35);
-  border: 3px solid rgba(43, 58, 36, 0.45);
-  position: relative;
-}
-
-#joy-knob {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: rgba(255, 246, 228, 0.92);
+.dpad-btn {
+  font-family: inherit;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+  background: rgba(255, 246, 228, 0.94);
   border: 3px solid #2b3a24;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  border-radius: 18px;
   box-shadow: 0 4px 0 #2b3a24;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+.dpad-btn[data-dir="up"] {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.dpad-btn[data-dir="left"] {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.dpad-btn[data-dir="right"] {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.dpad-btn[data-dir="down"] {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.dpad-btn.held,
+.dpad-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #2b3a24;
+  background: #ffe08a;
 }
 
 #btn-hammer {
   pointer-events: auto;
-  width: 92px;
-  height: 92px;
-  margin: 12px;
+  width: 108px;
+  height: 108px;
+  margin: 8px 8px 12px;
   border-radius: 50%;
   background: #ff8a5b;
   color: #fff;
-  font-size: 32px;
+  font-size: 36px;
+  touch-action: none;
+  user-select: none;
 }
 
-@media (pointer: fine) {
-  #joy-zone {
-    opacity: 0.35;
-  }
+#btn-hammer.held {
+  background: #ff6b3a;
 }
 
 @media (max-width: 520px) {
@@ -306,9 +327,20 @@ canvas#game {
     padding: 5px 10px;
   }
 
+  #dpad {
+    grid-template-columns: repeat(3, 62px);
+    grid-template-rows: repeat(3, 62px);
+    gap: 6px;
+  }
+
+  .dpad-btn {
+    font-size: 22px;
+    border-radius: 16px;
+  }
+
   #btn-hammer {
-    width: 80px;
-    height: 80px;
-    font-size: 28px;
+    width: 96px;
+    height: 96px;
+    font-size: 32px;
   }
 }
