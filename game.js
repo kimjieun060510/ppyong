@@ -51,9 +51,8 @@
     resultCoins: document.getElementById("result-coins"),
     resultMoles: document.getElementById("result-moles"),
     resultNote: document.getElementById("result-note"),
+    pause: document.getElementById("pause"),
     controls: document.getElementById("controls"),
-    coins: document.getElementById("coin-count"),
-    combo: document.getElementById("combo-count"),
     lifeChip: document.getElementById("life-chip"),
     lifeFill: document.getElementById("life-fill"),
     stick: document.getElementById("stick"),
@@ -513,6 +512,7 @@
       id: "dot-sky",
       name: "하늘점",
       hint: "파란 머리에 도트",
+      cost: 40,
       color: "#4aa3e8",
       pattern: "dots",
       handle: "#d4a06a",
@@ -522,6 +522,7 @@
       id: "check-lime",
       name: "라임 체커",
       hint: "연두 머리에 체크",
+      cost: 60,
       color: "#7dff4a",
       pattern: "checker",
       handle: "#3a2418",
@@ -531,6 +532,7 @@
       id: "zig-purple",
       name: "퍼플 지그",
       hint: "보라 머리에 지그재그",
+      cost: 80,
       color: "#9b6dff",
       pattern: "zigzag",
       handle: "#d4a06a",
@@ -540,6 +542,7 @@
       id: "mint-solid",
       name: "민트 민무늬",
       hint: "민트색 통짜 머리",
+      cost: 100,
       color: "#5ee0c0",
       pattern: "solid",
       handle: "#c47a3a",
@@ -549,6 +552,7 @@
       id: "orange-stripe",
       name: "오렌지 사선",
       hint: "주황 머리에 사선",
+      cost: 120,
       color: "#ff7a28",
       pattern: "stripe",
       handle: "#5a3518",
@@ -558,6 +562,7 @@
       id: "night-stars",
       name: "밤하늘",
       hint: "검정 머리에 노란 별",
+      cost: 160,
       color: "#222226",
       pattern: "stars",
       handle: "#111114",
@@ -567,32 +572,111 @@
       id: "cream-dots",
       name: "크림 도트",
       hint: "아이보리 머리에 빨간 점",
+      cost: 180,
       color: "#f4f1ea",
       pattern: "dots",
       handle: "#c47a3a",
       grip: "#e23b3b",
     },
     {
-      id: "pond-paddle",
-      name: "연못 노",
-      hint: "배 패들로 뿅",
-      tool: "paddle",
-      cost: 120,
-      color: "#c47a3a",
-      pattern: "solid",
-      handle: "#8a5a32",
-      grip: "#5a3518",
+      id: "coral-hearts",
+      name: "코랄 하트",
+      hint: "코랄 머리에 하트",
+      cost: 50,
+      color: "#ff7a8a",
+      pattern: "hearts",
+      handle: "#d4a06a",
+      grip: "#ffe0e6",
     },
     {
-      id: "park-racket",
-      name: "배드민턴 채",
-      hint: "공원 밤 랠리용",
-      tool: "racket",
-      cost: 180,
-      color: "#4aa3e8",
-      pattern: "solid",
+      id: "grape-dots",
+      name: "포도점",
+      hint: "보라 머리에 연두 점",
+      cost: 70,
+      color: "#7b4dff",
+      pattern: "dots",
+      handle: "#3a2418",
+      grip: "#c8f56a",
+    },
+    {
+      id: "peach-stripe",
+      name: "피치 사선",
+      hint: "복숭아 머리에 흰 줄",
+      cost: 90,
+      color: "#ffb07a",
+      pattern: "stripe",
+      handle: "#c47a3a",
+      grip: "#ffffff",
+    },
+    {
+      id: "aqua-stars",
+      name: "아쿠아 별",
+      hint: "민트블루 머리에 별",
+      cost: 110,
+      color: "#3ee0e8",
+      pattern: "stars",
       handle: "#2b3a24",
+      grip: "#ffffff",
+    },
+    {
+      id: "honey-checker",
+      name: "허니 체커",
+      hint: "꿀색 머리에 체크",
+      cost: 130,
+      color: "#f0c040",
+      pattern: "checker",
+      handle: "#8a5a32",
+      grip: "#2b3a24",
+    },
+    {
+      id: "rose-zigzag",
+      name: "로즈 지그",
+      hint: "장미색 머리에 지그재그",
+      cost: 150,
+      color: "#d94a7a",
+      pattern: "zigzag",
+      handle: "#c47a3a",
+      grip: "#ffd1e0",
+    },
+    {
+      id: "navy-solid",
+      name: "네이비 민무늬",
+      hint: "남색 통짜 머리",
+      cost: 170,
+      color: "#1c3a7a",
+      pattern: "solid",
+      handle: "#111114",
       grip: "#ffe34a",
+    },
+    {
+      id: "candy-stripe",
+      name: "캔디 사선",
+      hint: "핫핑크 머리에 흰 줄",
+      cost: 190,
+      color: "#ff4da6",
+      pattern: "stripe",
+      handle: "#d4a06a",
+      grip: "#ffffff",
+    },
+    {
+      id: "forest-dots",
+      name: "포레스트 도트",
+      hint: "초록 머리에 크림 점",
+      cost: 220,
+      color: "#2f8a4a",
+      pattern: "dots",
+      handle: "#3a2418",
+      grip: "#fff6e4",
+    },
+    {
+      id: "gold-stars",
+      name: "골드 스타",
+      hint: "금색 머리에 별",
+      cost: 260,
+      color: "#ffd15c",
+      pattern: "stars",
+      handle: "#5a3518",
+      grip: "#222226",
     },
   ];
 
@@ -634,7 +718,6 @@
   let particles = [];
   let floatTexts = [];
   let player = null;
-  let coins = 0;
   let combo = 0;
   let comboTimer = 0;
   let life = LIFE_MAX;
@@ -663,12 +746,13 @@
   let profileStep = 0;
   let profilePage = "home";
   let runScore = 0;
+  let runSettled = false;
   let progress = {
     wallet: 0,
     ownedOutfits: [],
     ownedHammers: [],
     best: 0,
-    shopRev: 1,
+    shopRev: 2,
   };
 
   function progressKey() {
@@ -689,7 +773,7 @@
       ownedOutfits: freeOutfitIds(),
       ownedHammers: freeHammerIds(),
       best: 0,
-      shopRev: 1,
+      shopRev: 2,
     };
     try {
       const raw = JSON.parse(localStorage.getItem(progressKey()) || "{}");
@@ -711,9 +795,14 @@
           })
         : savedOutfits.filter((id) => paidFromStart.has(id));
       progress.ownedOutfits = [...new Set([...freeOutfitIds(), ...kept])];
-      if (Array.isArray(raw.ownedHammers)) {
-        progress.ownedHammers = [...new Set([...freeHammerIds(), ...raw.ownedHammers])];
-      }
+      const savedHammers = Array.isArray(raw.ownedHammers) ? raw.ownedHammers : [];
+      const keptHammers = raw.shopRev >= 2
+        ? savedHammers.filter((id) => {
+            const h = HAMMER_DESIGNS.find((item) => item.id === id);
+            return h && h.cost;
+          })
+        : [];
+      progress.ownedHammers = [...new Set([...freeHammerIds(), ...keptHammers])];
       if (typeof raw.best === "number") progress.best = Math.max(0, raw.best);
       else if (raw.best && typeof raw.best === "object") {
         progress.best = Math.max(
@@ -763,10 +852,13 @@
   }
 
   function scoreToCoins(score) {
+    if (score <= 0) return 0;
     return Math.max(1, Math.floor(score / 4));
   }
 
   function settleRun(title, note) {
+    if (runSettled) return;
+    runSettled = true;
     const payout = scoreToCoins(runScore);
     progress.wallet += payout;
     progress.best = Math.max(progress.best || 0, runScore);
@@ -1001,6 +1093,11 @@
     scene = "title";
     show("profile", false);
     show("briefing", false);
+    show("result", false);
+    show("pause", false);
+    show("hud", false);
+    show("controls", false);
+    show("soaked", false);
     show("title", true);
     const ready = loggedIn();
     if (el.guestBlock) el.guestBlock.classList.toggle("hidden", ready);
@@ -1045,6 +1142,10 @@
     show("login", false);
     show("title", false);
     show("briefing", false);
+    show("result", false);
+    show("pause", false);
+    show("hud", false);
+    show("controls", false);
     show("profile", true);
     syncWalletUI();
     if (el.profileAccount) {
@@ -1064,6 +1165,7 @@
     show("profile", false);
     show("login", false);
     show("result", false);
+    show("pause", false);
     show("hud", false);
     show("controls", false);
     show("briefing", true);
@@ -1220,12 +1322,12 @@
   }
 
   function resetProgress() {
-    coins = 0;
     combo = 0;
     comboTimer = 0;
     life = LIFE_MAX;
     totalCaught = 0;
     runScore = 0;
+    runSettled = false;
     playTime = 0;
   }
 
@@ -1428,7 +1530,6 @@
     comboTimer = 2.1;
     const base = mole.kind === "gold" ? 12 : 5;
     const gain = Math.round(base * upgradeValue("luck") * (1 + Math.min(combo, 12) * 0.08));
-    coins += gain;
     runScore += gain;
     totalCaught += 1;
     life = Math.min(LIFE_MAX, life + (mole.kind === "gold" ? 18 : 10) + Math.min(combo, 8));
@@ -1442,6 +1543,15 @@
       t: 0,
       color: "#9a6b00",
     });
+    if (combo >= 2) {
+      floatTexts.push({
+        x: hole.x + 18,
+        y: hole.y - 54,
+        text: `콤보 ${combo}`,
+        t: 0,
+        color: "#c45c5c",
+      });
+    }
     return true;
   }
 
@@ -1465,8 +1575,8 @@
       startStun("rabbit", RABBIT_TIME, "당근", "3초 동안 움직일 수 없습니다.");
       return;
     }
-    const loss = Math.max(12, Math.round(coins * 0.35));
-    coins = Math.max(0, coins - loss);
+    const loss = Math.max(12, Math.round(runScore * 0.35));
+    runScore = Math.max(0, runScore - loss);
     slashT = 0.7;
     slashes = [0, 1, 2].map((i) => ({
       ang: -0.7 + i * 0.55,
@@ -1491,10 +1601,42 @@
     stunKind = null;
     scene = "result";
     show("soaked", false);
+    show("pause", false);
     show("controls", false);
     show("hud", true);
     show("result", true);
     settleRun("게임 오버", reason);
+  }
+
+  function openPause() {
+    if (scene !== "play") return;
+    scene = "pause";
+    show("pause", true);
+    show("controls", false);
+  }
+
+  function resumePause() {
+    if (scene !== "pause") return;
+    scene = "play";
+    show("pause", false);
+    show("controls", true);
+  }
+
+  function leaveRun(dest) {
+    ensureAudio();
+    if (scene === "play" || scene === "pause") settleRun("결과");
+    soaked = 0;
+    stunKind = null;
+    carrots = [];
+    gasClouds = [];
+    show("soaked", false);
+    show("pause", false);
+    show("hud", false);
+    show("controls", false);
+    show("briefing", false);
+    show("result", false);
+    if (dest === "profile") openProfile();
+    else showTitle();
   }
 
   function burst(x, y, color, n) {
@@ -1564,6 +1706,7 @@
     show("profile", false);
     show("briefing", false);
     show("result", false);
+    show("pause", false);
     show("soaked", false);
     show("hud", true);
     show("controls", true);
@@ -1583,9 +1726,7 @@
   }
 
   function syncHud() {
-    el.coins.textContent = String(coins);
     if (el.score) el.score.textContent = String(runScore);
-    el.combo.textContent = String(combo);
     const pct = clamp((life / LIFE_MAX) * 100, 0, 100);
     if (el.lifeFill) el.lifeFill.style.width = `${pct}%`;
     if (el.lifeChip) {
@@ -1831,6 +1972,7 @@
       updateFx(dt);
       return;
     }
+    if (scene === "pause") return;
     if (scene === "play") {
       playTime += dt;
       drainLife(dt);
@@ -2327,49 +2469,6 @@
     const color = d.color || "#e23b3b";
     const pattern = d.pattern || "solid";
     const cap = hammerAccent(color);
-    if (d.tool === "paddle") {
-      fillRound(g, -2, -2, 4, 30, 2, d.handle || "#8a5a32");
-      g.strokeStyle = LINE;
-      g.lineWidth = 1.3;
-      g.stroke();
-      g.fillStyle = color;
-      g.beginPath();
-      g.ellipse(0, -16, 8, 13, 0, 0, Math.PI * 2);
-      g.fill();
-      g.stroke();
-      return;
-    }
-    if (d.tool === "racket") {
-      fillRound(g, -1.5, 0, 3, 22, 1.4, d.handle || "#2b3a24");
-      g.strokeStyle = LINE;
-      g.lineWidth = 1.2;
-      g.stroke();
-      g.fillStyle = color;
-      g.beginPath();
-      g.ellipse(0, -18, 9, 11, 0, 0, Math.PI * 2);
-      g.fill();
-      g.stroke();
-      g.save();
-      g.beginPath();
-      g.ellipse(0, -18, 7, 9, 0, 0, Math.PI * 2);
-      g.clip();
-      g.strokeStyle = "rgba(255,255,255,0.75)";
-      g.lineWidth = 0.7;
-      for (let i = -6; i <= 6; i += 3) {
-        g.beginPath();
-        g.moveTo(i, -28);
-        g.lineTo(i, -8);
-        g.stroke();
-      }
-      for (let i = -8; i <= 8; i += 3) {
-        g.beginPath();
-        g.moveTo(-8, -18 + i);
-        g.lineTo(8, -18 + i);
-        g.stroke();
-      }
-      g.restore();
-      return;
-    }
     fillRound(g, -2.4, -4, 4.8, 24, 1.8, d.handle || "#d4a06a");
     g.strokeStyle = LINE;
     g.lineWidth = 1.2;
@@ -3092,6 +3191,10 @@
         ensureAudio();
         trySwing();
       }
+      if (e.key === "Escape") {
+        if (scene === "play") openPause();
+        else if (scene === "pause") resumePause();
+      }
     });
     window.addEventListener("keyup", (e) => {
       keys[e.key.toLowerCase()] = false;
@@ -3144,12 +3247,38 @@
       ensureAudio();
       beginPlay();
     });
+    document.getElementById("btn-briefing-back").addEventListener("click", () => {
+      ensureAudio();
+      showTitle();
+    });
+    document.getElementById("btn-pause").addEventListener("click", () => {
+      ensureAudio();
+      openPause();
+    });
+    document.getElementById("btn-pause-resume").addEventListener("click", () => {
+      ensureAudio();
+      resumePause();
+    });
+    document.getElementById("btn-pause-home").addEventListener("click", () => {
+      leaveRun("home");
+    });
+    document.getElementById("btn-pause-profile").addEventListener("click", () => {
+      leaveRun("profile");
+    });
     document.getElementById("btn-retry").addEventListener("click", () => {
       ensureAudio();
       resetProgress();
       player = makePlayer();
       holes = placeHoles();
       openBriefing();
+    });
+    document.getElementById("btn-result-home").addEventListener("click", () => {
+      ensureAudio();
+      leaveRun("home");
+    });
+    document.getElementById("btn-result-profile").addEventListener("click", () => {
+      ensureAudio();
+      leaveRun("profile");
     });
   }
 

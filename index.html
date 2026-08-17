@@ -29,17 +29,10 @@
 
     <div id="hud" class="hidden">
       <div class="hud-left">
-        <div class="chip coin">
-          <span class="k">코인</span>
-          <span id="coin-count">0</span>
-        </div>
+        <button id="btn-pause" type="button" class="hud-btn">메뉴</button>
         <div class="chip">
           <span class="k">점수</span>
           <span id="score-count">0</span>
-        </div>
-        <div class="chip">
-          <span class="k">콤보</span>
-          <span id="combo-count">0</span>
         </div>
       </div>
       <div class="hud-right">
@@ -87,7 +80,7 @@
           <canvas id="title-me" width="220" height="250"></canvas>
           <div class="title-actions">
             <button id="btn-start" type="button" class="primary">시작</button>
-            <button id="btn-open-profile" type="button">캐릭터</button>
+            <button id="btn-open-profile" type="button">프로필</button>
           </div>
         </div>
       </div>
@@ -114,7 +107,7 @@
             <button id="btn-page-custom" type="button" class="primary">
               코디
             </button>
-            <button id="btn-profile-to-title" type="button">돌아가기</button>
+            <button id="btn-profile-to-title" type="button">홈</button>
           </div>
         </div>
 
@@ -177,7 +170,7 @@
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>너구리</h3>
-              <p>코인을 빼앗아 갑니다.</p>
+              <p>점수를 빼앗아 갑니다.</p>
             </div>
           </article>
           <p class="section-label">주의</p>
@@ -189,7 +182,10 @@
             </div>
           </article>
         </section>
-        <button id="btn-briefing-go" type="button" class="primary">시작</button>
+        <div class="stack-actions">
+          <button id="btn-briefing-go" type="button" class="primary">시작</button>
+          <button id="btn-briefing-back" type="button">홈</button>
+        </div>
       </div>
     </div>
 
@@ -211,7 +207,23 @@
           </li>
         </ul>
         <p id="result-note" class="note hidden"></p>
-        <button id="btn-retry" type="button" class="primary">한 판 더</button>
+        <div class="stack-actions">
+          <button id="btn-retry" type="button" class="primary">한 판 더</button>
+          <button id="btn-result-home" type="button">홈</button>
+          <button id="btn-result-profile" type="button">프로필</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pause" class="overlay hidden">
+      <div class="panel">
+        <h2>잠시 멈춤</h2>
+        <p class="lead">이어서 뛰거나, 홈이나 프로필로 나갈 수 있습니다.</p>
+        <div class="stack-actions">
+          <button id="btn-pause-resume" type="button" class="primary">계속</button>
+          <button id="btn-pause-home" type="button">홈</button>
+          <button id="btn-pause-profile" type="button">프로필</button>
+        </div>
       </div>
     </div>
 
@@ -219,7 +231,7 @@
       <div class="panel">
         <h2 id="stun-title">풍덩</h2>
         <p id="stun-lead" class="lead">
-          5초 동안 움직일 수 없습니다. 시간은 그대로 갑니다.
+          5초 동안 움직일 수 없습니다. 생명 바는 그대로 줄어듭니다.
         </p>
         <p id="soak-count" class="countdown">5</p>
       </div>
