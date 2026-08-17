@@ -57,7 +57,7 @@
     {
       id: "move",
       name: "달리기",
-      desc: "공원에서 더 빠르게 달려요",
+      desc: "더 빠르게 달려요",
       costs: [35, 80, 140, 230],
       values: [185, 225, 270, 320, 380],
     },
@@ -698,7 +698,7 @@
       burst(player.x, player.y - 10, "#9fe7ff", 8);
     }
     if (kind === "skunk") {
-      gameOver("스컹크 방귀가 공원에 퍼져서 게임이 끝났어요.");
+      gameOver("스컹크 방귀가 퍼져서 게임이 끝났어요.");
     }
   }
 
@@ -787,7 +787,7 @@
       show("controls", false);
       show("hud", true);
       show("result", true);
-      el.resultTitle.textContent = "오늘 공원은 여기까지!";
+      el.resultTitle.textContent = "오늘은 여기까지!";
       const best = Number(localStorage.getItem("mole-best") || 0);
       const score = totalCaught;
       if (score > best) localStorage.setItem("mole-best", String(score));
