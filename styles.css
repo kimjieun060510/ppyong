@@ -202,10 +202,10 @@ canvas#game {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));
+  padding: max(12px, var(--safe-top)) 16px max(14px, var(--safe-bottom));
   background: rgba(20, 40, 16, 0.38);
   z-index: 10;
-  overflow: auto;
+  overflow: hidden;
   touch-action: pan-y;
 }
 
@@ -218,7 +218,10 @@ canvas#game {
   box-shadow: 0 10px 0 #2b3a24;
   text-align: center;
   touch-action: pan-y;
-  max-height: min(92vh, 920px);
+  max-height: calc(
+    100dvh - max(12px, var(--safe-top)) - max(14px, var(--safe-bottom)) - 12px
+  );
+  min-height: 0;
   overflow: auto;
 }
 
@@ -693,7 +696,6 @@ canvas#game {
 
 .shop-panel {
   width: min(640px, 100%);
-  max-height: min(88vh, 820px);
   overflow: auto;
   text-align: left;
 }
@@ -709,6 +711,65 @@ canvas#game {
 .panel h2 {
   margin: 0 0 8px;
   font-size: 28px;
+}
+
+.briefing-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 14px;
+}
+
+.briefing-panel h2 {
+  font-size: 24px;
+  margin: 0 0 4px;
+}
+
+.briefing-panel .lead {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.briefing-panel .rumors {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  gap: 6px;
+  margin: 0 0 10px;
+}
+
+.briefing-panel .rumor {
+  padding: 7px 10px;
+  border-width: 2px;
+  border-radius: 12px;
+}
+
+.briefing-panel .rumor h3 {
+  font-size: 15px;
+}
+
+.briefing-panel .rumor p {
+  font-size: 13px;
+}
+
+.briefing-panel .stack-actions {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+@media (max-height: 860px) {
+  .briefing-panel .rumors {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .briefing-panel .section-label {
+    grid-column: 1 / -1;
+    margin: 2px 0 0;
+  }
+
+  .briefing-panel .lead {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
 }
 
 .shop-head h2 {
@@ -1303,13 +1364,15 @@ canvas#game {
   }
 
   .overlay {
-    padding: calc(8px + var(--safe-top)) calc(16px + var(--safe-right))
-      calc(8px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    padding: max(8px, var(--safe-top)) calc(16px + var(--safe-right))
+      max(8px, var(--safe-bottom)) calc(16px + var(--safe-left));
     align-items: stretch;
   }
 
   .panel {
-    max-height: calc(100dvh - 16px);
+    max-height: calc(
+      100dvh - max(8px, var(--safe-top)) - max(8px, var(--safe-bottom)) - 12px
+    );
     padding: 14px 18px 12px;
     margin: auto;
   }
