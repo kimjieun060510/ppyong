@@ -623,6 +623,12 @@
   const ACCOUNT_KEY = "ppyong-account";
   const APPLE_CLIENT_ID = "";
   let account = null;
+  let avatar = {
+    gender: "girl",
+    outfitId: "lemon",
+    hammerId: "cherry-stripe",
+    complete: false,
+  };
   let profileStep = 0;
   let profilePage = "home";
   let runScore = 0;
