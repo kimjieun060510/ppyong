@@ -1642,9 +1642,9 @@
     burst(player.x, player.y - 18, "#ffd15c", 10);
     burst(player.x, player.y - 10, "#c45c5c", 8);
     floatTexts.push({
-      x: player.x,
-      y: player.y - 36,
-      text: `-${loss}`,
+      x: hole.x,
+      y: hole.y - 40,
+      text: `뺏김 -${loss}`,
       t: 0,
       color: "#a33",
     });
@@ -1894,11 +1894,15 @@
     comboTimer = 0;
     resetStick();
     shake = 8;
+    if (kind !== "skunk") {
+      show("soaked", false);
+      return;
+    }
     el.stunTitle.textContent = title;
     el.stunLead.textContent = lead;
     el.soakCount.textContent = String(Math.ceil(seconds));
-    el.soakCount.classList.toggle("hidden", kind === "skunk");
-    el.soaked.classList.toggle("gas", kind === "skunk");
+    el.soakCount.classList.add("hidden");
+    el.soaked.classList.add("gas");
     show("soaked", true);
   }
 
@@ -2039,9 +2043,6 @@
       }
       if (soaked > 0) {
         soaked -= dt;
-        if (stunKind !== "skunk") {
-          el.soakCount.textContent = String(Math.max(1, Math.ceil(soaked)));
-        }
         if (stunKind === "water" && Math.random() < 0.45) {
           burst(player.x, player.y - 6, "#9fe7ff", 3);
         }
@@ -3110,6 +3111,26 @@
     }
   }
 
+  function drawStunNotice() {
+    if (soaked <= 0 || !player || stunKind === "skunk") return;
+    const title = stunKind === "rabbit" ? "당근" : stunKind === "water" ? "풍덩" : "";
+    if (!title) return;
+    const label = `${title} ${Math.max(1, Math.ceil(soaked))}`;
+    const x = player.x;
+    const y = player.y - 74;
+    ctx.save();
+    ctx.font = "20px Jua, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const w = Math.max(78, ctx.measureText(label).width + 22);
+    const h = 30;
+    fillRound(ctx, x - w / 2, y - h / 2, w, h, 12, "rgba(255,246,228,0.95)");
+    strokeRound(ctx, x - w / 2, y - h / 2, w, h, 12);
+    ctx.fillStyle = stunKind === "water" ? "#1a6a8a" : "#c45c00";
+    ctx.fillText(label, x, y + 1);
+    ctx.restore();
+  }
+
   function drawWorld() {
     const sx = (Math.random() - 0.5) * shake;
     const sy = (Math.random() - 0.5) * shake;
@@ -3158,6 +3179,7 @@
       ctx.fillText(f.text, f.x, f.y);
       ctx.globalAlpha = 1;
     }
+    drawStunNotice();
 
     if (scene === "play" && player.swingT > 0) {
       ctx.strokeStyle = "rgba(255,255,255,0.28)";
