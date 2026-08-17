@@ -1298,39 +1298,24 @@
     if (!audioCtx || bedNodes) return;
     const master = audioCtx.createGain();
     master.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-    master.gain.exponentialRampToValueAtTime(1, audioCtx.currentTime + 0.8);
+    master.gain.exponentialRampToValueAtTime(1, audioCtx.currentTime + 0.45);
     master.connect(audioCtx.destination);
-
-    const pad = audioCtx.createGain();
-    pad.gain.value = 0.04;
-    pad.connect(master);
-    const oscs = [196, 246.94, 293.66].map((freq, i) => {
-      const osc = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      g.gain.value = i === 0 ? 0.42 : i === 1 ? 0.28 : 0.16;
-      osc.connect(g).connect(pad);
-      osc.start();
-      return osc;
-    });
-
-    bedNodes = { master, oscs, pad };
-    songNext = audioCtx.currentTime + 0.6;
+    bedNodes = { master };
+    songNext = audioCtx.currentTime + 0.25;
     songIndex = 0;
   }
 
   function playMelodyNote(freq, dur, t0) {
     const osc = audioCtx.createOscillator();
     const g = audioCtx.createGain();
-    osc.type = "sine";
+    osc.type = "triangle";
     osc.frequency.setValueAtTime(freq, t0);
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.linearRampToValueAtTime(0.028, t0 + 0.12);
-    g.gain.linearRampToValueAtTime(0.0001, t0 + dur * 0.98);
+    g.gain.exponentialRampToValueAtTime(0.055, t0 + 0.035);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur * 0.92);
     osc.connect(g).connect(bedNodes.master);
     osc.start(t0);
-    osc.stop(t0 + dur + 0.08);
+    osc.stop(t0 + dur + 0.04);
   }
 
   function tickParkSong() {
