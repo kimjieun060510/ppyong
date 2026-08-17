@@ -3,7 +3,7 @@
 
   const WORLD_W = 5280;
   const WORLD_H = 3960;
-  const ZOOM = 1.15;
+  const ZOOM_BASE = 1.15;
   const LIFE_MAX = 100;
   const WATER_TIME = 5;
   const RABBIT_TIME = 3;
@@ -3378,11 +3378,20 @@
     ctx.restore();
   }
 
+  function worldZoom() {
+    const ui =
+      typeof window.ppyongUiScale === "function"
+        ? window.ppyongUiScale()
+        : 1;
+    return ZOOM_BASE * ui;
+  }
+
   function drawWorld() {
     const sx = (Math.random() - 0.5) * shake;
     const sy = (Math.random() - 0.5) * shake;
-    const visW = viewW / ZOOM;
-    const visH = viewH / ZOOM;
+    const zoom = worldZoom();
+    const visW = viewW / zoom;
+    const visH = viewH / zoom;
     const targetX = clamp(player.x - visW / 2, 0, Math.max(0, WORLD_W - visW));
     const targetY = clamp(player.y - visH / 2, 0, Math.max(0, WORLD_H - visH));
     camX += (targetX - camX) * 0.12;
@@ -3390,7 +3399,7 @@
 
     ctx.save();
     ctx.translate(sx, sy);
-    ctx.scale(ZOOM, ZOOM);
+    ctx.scale(zoom, zoom);
     ctx.translate(-camX, -camY);
     ctx.drawImage(parkCanvas, 0, 0);
 
@@ -3445,6 +3454,7 @@
   function resize() {
     viewW = window.innerWidth;
     viewH = window.innerHeight;
+    if (typeof window.ppyongUiScale === "function") window.ppyongUiScale();
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.floor(viewW * dpr);
     canvas.height = Math.floor(viewH * dpr);
