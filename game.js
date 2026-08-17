@@ -668,6 +668,7 @@
     ownedOutfits: [],
     ownedHammers: [],
     best: 0,
+    shopRev: 1,
   };
 
   function progressKey() {
@@ -688,13 +689,28 @@
       ownedOutfits: freeOutfitIds(),
       ownedHammers: freeHammerIds(),
       best: 0,
+      shopRev: 1,
     };
     try {
       const raw = JSON.parse(localStorage.getItem(progressKey()) || "{}");
       if (typeof raw.wallet === "number") progress.wallet = Math.max(0, raw.wallet);
-      if (Array.isArray(raw.ownedOutfits)) {
-        progress.ownedOutfits = [...new Set([...freeOutfitIds(), ...raw.ownedOutfits])];
-      }
+      const savedOutfits = Array.isArray(raw.ownedOutfits) ? raw.ownedOutfits : [];
+      const paidFromStart = new Set([
+        "picnic",
+        "sailor",
+        "nightglow",
+        "puffer",
+        "denim",
+        "cityboy",
+        "moto",
+      ]);
+      const kept = raw.shopRev >= 1
+        ? savedOutfits.filter((id) => {
+            const o = OUTFITS.find((item) => item.id === id);
+            return o && o.cost;
+          })
+        : savedOutfits.filter((id) => paidFromStart.has(id));
+      progress.ownedOutfits = [...new Set([...freeOutfitIds(), ...kept])];
       if (Array.isArray(raw.ownedHammers)) {
         progress.ownedHammers = [...new Set([...freeHammerIds(), ...raw.ownedHammers])];
       }
@@ -708,6 +724,7 @@
     } catch (err) {
       /* keep defaults */
     }
+    persistProgress();
   }
 
   function persistProgress() {
@@ -1107,39 +1124,39 @@
     if (!audioCtx || bedNodes) return;
     const master = audioCtx.createGain();
     master.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-    master.gain.exponentialRampToValueAtTime(1, audioCtx.currentTime + 0.45);
+    master.gain.exponentialRampToValueAtTime(1, audioCtx.currentTime + 0.8);
     master.connect(audioCtx.destination);
 
     const pad = audioCtx.createGain();
-    pad.gain.value = 0.028;
+    pad.gain.value = 0.04;
     pad.connect(master);
-    const oscs = [196, 246.94].map((freq, i) => {
+    const oscs = [196, 246.94, 293.66].map((freq, i) => {
       const osc = audioCtx.createOscillator();
       const g = audioCtx.createGain();
       osc.type = "sine";
       osc.frequency.value = freq;
-      g.gain.value = i === 0 ? 0.5 : 0.3;
+      g.gain.value = i === 0 ? 0.42 : i === 1 ? 0.28 : 0.16;
       osc.connect(g).connect(pad);
       osc.start();
       return osc;
     });
 
     bedNodes = { master, oscs, pad };
-    songNext = audioCtx.currentTime + 0.25;
+    songNext = audioCtx.currentTime + 0.6;
     songIndex = 0;
   }
 
   function playMelodyNote(freq, dur, t0) {
     const osc = audioCtx.createOscillator();
     const g = audioCtx.createGain();
-    osc.type = "triangle";
+    osc.type = "sine";
     osc.frequency.setValueAtTime(freq, t0);
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(0.055, t0 + 0.035);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur * 0.92);
+    g.gain.linearRampToValueAtTime(0.028, t0 + 0.12);
+    g.gain.linearRampToValueAtTime(0.0001, t0 + dur * 0.98);
     osc.connect(g).connect(bedNodes.master);
     osc.start(t0);
-    osc.stop(t0 + dur + 0.04);
+    osc.stop(t0 + dur + 0.08);
   }
 
   function tickParkSong() {
@@ -1172,28 +1189,22 @@
 
   function sfx(name) {
     if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    if (name === "pop") {
-      if (now - lastSfxAt.pop < 0.22) return;
-      lastSfxAt.pop = now;
-      tone(180, 0.12, "square", 0.07, 320);
+    if (name === "swing") {
+      tone(92, 0.16, "sine", 0.14, 58);
+      tone(148, 0.08, "triangle", 0.06, 90);
       return;
     }
-    if (name === "hit") {
-      tone(140, 0.1, "sawtooth", 0.09, 60);
-      tone(420, 0.08, "square", 0.05, 180);
-    }
+    if (name === "hit") return;
+    if (name === "pop") return;
+    if (name === "miss") return;
     if (name === "coin") {
-      tone(660, 0.08, "sine", 0.08, 990);
-    }
-    if (name === "buy") tone(520, 0.16, "triangle", 0.08, 780);
-    if (name === "miss") {
-      if (now - lastSfxAt.miss < 0.28) return;
-      lastSfxAt.miss = now;
-      tone(180, 0.14, "sine", 0.07, 90);
+      tone(660, 0.08, "sine", 0.06, 990);
       return;
     }
-    if (name === "swing") tone(240, 0.06, "triangle", 0.05, 120);
+    if (name === "buy") {
+      tone(520, 0.16, "triangle", 0.06, 780);
+      return;
+    }
     if (name === "splash") {
       tone(90, 0.22, "sine", 0.09, 40);
       tone(220, 0.16, "triangle", 0.06, 80);
@@ -1397,7 +1408,6 @@
       stay: d.stayMin + Math.random() * d.stayVar,
       bob: Math.random() * Math.PI * 2,
     };
-    sfx("pop");
     burst(hole.x, hole.y - 8, isTrap(kind) ? "#c45c5c" : "#c9a36b", 7);
   }
 
@@ -1423,7 +1433,6 @@
     totalCaught += 1;
     life = Math.min(LIFE_MAX, life + (mole.kind === "gold" ? 18 : 10) + Math.min(combo, 8));
     shake = mole.kind === "gold" ? 8 : 5;
-    sfx("hit");
     sfx("coin");
     burst(hole.x, hole.y - 24, mole.kind === "gold" ? "#ffd15c" : "#fff", 14);
     floatTexts.push({
@@ -1634,7 +1643,6 @@
           hole.mole = null;
           if (scene === "play" && !isTrap(m.kind)) {
             combo = 0;
-            sfx("miss");
           }
         }
       } else if (m.state === "hit") {
@@ -1801,7 +1809,7 @@
 
   function drainLife(dt) {
     if (stunKind === "skunk") return;
-    life -= (2.8 + playTime * 0.07) * dt;
+    life -= (1.4 + playTime * 0.035) * dt;
     if (life > 0) return;
     life = 0;
     gameOver("생명 바가 다 떨어졌습니다.");
@@ -3165,7 +3173,8 @@
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", resize);
     }
-    window.addEventListener("pointerdown", ensureAudio);
+    window.addEventListener("pointerdown", ensureAudio, { capture: true });
+    window.addEventListener("touchstart", ensureAudio, { capture: true, passive: true });
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible") ensureAudio();
     });
