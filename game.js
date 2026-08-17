@@ -8,7 +8,13 @@
   const TOTAL_ROUNDS = 6;
   const WATER_TIME = 5;
   const RABBIT_TIME = 3;
-  const POND = { x: 1290, y: 2940, rx: 210, ry: 114 };
+  const PONDS = [
+    { x: 1290, y: 2940, rx: 210, ry: 114 },
+    { x: 780, y: 720, rx: 168, ry: 94 },
+    { x: 4020, y: 560, rx: 196, ry: 108 },
+    { x: 4680, y: 2160, rx: 154, ry: 88 },
+    { x: 2580, y: 3480, rx: 188, ry: 102 },
+  ];
   const SAFE_SPAWN = { x: WORLD_W * 0.55, y: WORLD_H * 0.42 };
 
   const canvas = document.getElementById("game");
@@ -1098,9 +1104,14 @@
   }
 
   function inPond(x, y, pad = 0) {
-    const dx = (x - POND.x) / (POND.rx + pad);
-    const dy = (y - POND.y) / (POND.ry + pad);
-    return dx * dx + dy * dy < 1;
+    return PONDS.some((p) => {
+      const rx = p.rx + pad;
+      const ry = p.ry + pad;
+      if (rx <= 0 || ry <= 0) return false;
+      const dx = (x - p.x) / rx;
+      const dy = (y - p.y) / ry;
+      return dx * dx + dy * dy < 1;
+    });
   }
 
   function ensureAudio() {
@@ -1345,20 +1356,21 @@
       g.stroke();
     });
 
-    g.fillStyle = "#5ec3d8";
-    g.beginPath();
-    g.ellipse(POND.x, POND.y, POND.rx, POND.ry, 0, 0, Math.PI * 2);
-    g.fill();
-    g.fillStyle = "rgba(255,255,255,0.28)";
-    g.beginPath();
-    g.ellipse(POND.x - 40, POND.y - 18, 70, 18, -0.4, 0, Math.PI * 2);
-    g.fill();
-    g.fillStyle = "#4e9a3c";
-    g.beginPath();
-    g.ellipse(POND.x, POND.y, POND.rx + 18, POND.ry + 16, 0, 0, Math.PI * 2);
-    g.strokeStyle = "#3f8a32";
-    g.lineWidth = 18;
-    g.stroke();
+    PONDS.forEach((p) => {
+      g.fillStyle = "#5ec3d8";
+      g.beginPath();
+      g.ellipse(p.x, p.y, p.rx, p.ry, 0, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = "rgba(255,255,255,0.28)";
+      g.beginPath();
+      g.ellipse(p.x - p.rx * 0.19, p.y - p.ry * 0.16, p.rx * 0.33, p.ry * 0.16, -0.4, 0, Math.PI * 2);
+      g.fill();
+      g.strokeStyle = "#3f8a32";
+      g.lineWidth = 18;
+      g.beginPath();
+      g.ellipse(p.x, p.y, p.rx + 18, p.ry + 16, 0, 0, Math.PI * 2);
+      g.stroke();
+    });
 
     [
       [3540, 1080, -0.2],
