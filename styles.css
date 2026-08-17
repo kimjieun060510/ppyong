@@ -253,55 +253,43 @@ canvas#game {
   pointer-events: none;
 }
 
-#dpad {
-  display: grid;
-  grid-template-columns: repeat(3, 68px);
-  grid-template-rows: repeat(3, 68px);
-  gap: 8px;
+#stick {
+  width: 168px;
+  height: 168px;
   pointer-events: auto;
   touch-action: none;
-  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.dpad-btn {
-  font-family: inherit;
-  font-size: 26px;
-  line-height: 1;
-  color: var(--ink);
-  background: rgba(255, 246, 228, 0.94);
-  border: 3px solid #2b3a24;
-  border-radius: 18px;
-  box-shadow: 0 4px 0 #2b3a24;
-  cursor: pointer;
-  touch-action: none;
-  user-select: none;
+#stick-base {
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 4px solid rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 0 0 2px rgba(43, 58, 36, 0.18);
+  position: relative;
 }
 
-.dpad-btn[data-dir="up"] {
-  grid-column: 2;
-  grid-row: 1;
+#stick.active #stick-base {
+  background: rgba(255, 255, 255, 0.32);
+  border-color: rgba(255, 255, 255, 0.72);
 }
 
-.dpad-btn[data-dir="left"] {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.dpad-btn[data-dir="right"] {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.dpad-btn[data-dir="down"] {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-.dpad-btn.held,
-.dpad-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #2b3a24;
-  background: #ffe08a;
+#stick-knob {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.78);
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 12px rgba(43, 58, 36, 0.28);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 #btn-hammer {
@@ -327,15 +315,19 @@ canvas#game {
     padding: 5px 10px;
   }
 
-  #dpad {
-    grid-template-columns: repeat(3, 62px);
-    grid-template-rows: repeat(3, 62px);
-    gap: 6px;
+  #stick {
+    width: 150px;
+    height: 150px;
   }
 
-  .dpad-btn {
-    font-size: 22px;
-    border-radius: 16px;
+  #stick-base {
+    width: 132px;
+    height: 132px;
+  }
+
+  #stick-knob {
+    width: 60px;
+    height: 60px;
   }
 
   #btn-hammer {
