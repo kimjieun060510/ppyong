@@ -616,7 +616,7 @@
       state: "rise",
       t: 0,
       height: 0,
-      stay: 2.8 + Math.random() * 1.4,
+      stay: 3.4 + Math.random() * 1.6,
       bob: Math.random() * Math.PI * 2,
     };
     sfx("pop");
@@ -759,7 +759,7 @@
   function startRound() {
     scene = "play";
     timeLeft = ROUND_TIME;
-    spawnAcc = 0.4;
+    spawnAcc = 1;
     roundCaught = 0;
     combo = 0;
     comboTimer = 0;
@@ -848,8 +848,9 @@
   function difficulty() {
     const t = playTime + (round - 1) * 18;
     return {
-      interval: Math.max(0.38, 1.35 - t * 0.012),
-      maxUp: Math.min(16, 4 + Math.floor(t / 18)),
+      interval: Math.max(0.08, 0.22 - t * 0.004),
+      maxUp: Math.min(36, 14 + Math.floor(t / 10)),
+      burst: t > 40 ? 4 : t > 16 ? 3 : 2,
     };
   }
 
@@ -859,7 +860,8 @@
     spawnAcc += dt;
     if (scene === "play" && spawnAcc >= diff.interval && upCount < diff.maxUp) {
       spawnAcc = 0;
-      spawnMole();
+      const n = Math.min(diff.burst, diff.maxUp - upCount);
+      for (let i = 0; i < n; i++) spawnMole();
     }
 
     for (const hole of holes) {
@@ -1079,9 +1081,11 @@
         player.runT += dt * 8;
         player.facing = Math.sin(demoTime * 0.8) >= 0 ? 0 : Math.PI;
       }
-      if (demoTime > 0.9) {
-        demoTime = 0;
+      spawnAcc += dt;
+      if (spawnAcc > 0.28) {
+        spawnAcc = 0;
         spawnMole(Math.random() < 0.2);
+        spawnMole(Math.random() < 0.15);
       }
       updateMoles(dt);
       updateFx(dt);
