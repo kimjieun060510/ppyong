@@ -31,6 +31,10 @@
       <div class="hud-left">
         <button id="btn-pause" type="button" class="hud-btn">메뉴</button>
         <div class="chip">
+          <span class="k">생존</span>
+          <span id="time-count">0:00</span>
+        </div>
+        <div class="chip">
           <span class="k">점수</span>
           <span id="score-count">0</span>
         </div>
@@ -47,16 +51,7 @@
 
     <div id="title" class="overlay">
       <div class="panel title-panel">
-        <img
-          class="app-logo"
-          src="assets/app-icon.png"
-          width="1024"
-          height="1024"
-          alt="뿅"
-        />
-        <p class="eyebrow">PPYONG</p>
         <h1>뿅</h1>
-        <p class="stage">공원편</p>
 
         <div id="guest-block">
           <p class="lead">두더지만 잡고, 다른 동물은 피하세요.</p>
@@ -76,9 +71,21 @@
 
         <div id="play-block" class="hidden">
           <p class="hello" id="title-hello"></p>
-          <p class="wallet-line" id="title-wallet">코인 0</p>
-          <p class="best-line" id="title-best"></p>
           <canvas id="title-me" width="220" height="250"></canvas>
+          <div class="home-stats">
+            <div class="home-stat">
+              <span>생존</span>
+              <b id="title-best-time">-</b>
+            </div>
+            <div class="home-stat">
+              <span>점수</span>
+              <b id="title-best-score">-</b>
+            </div>
+            <div class="home-stat">
+              <span>코인</span>
+              <b id="title-wallet">0</b>
+            </div>
+          </div>
           <div class="title-actions">
             <button id="btn-start" type="button" class="primary">시작</button>
             <button id="btn-open-profile" type="button">프로필</button>
@@ -103,11 +110,20 @@
 
         <div id="profile-home" class="profile-page">
           <canvas id="profile-me" width="220" height="250"></canvas>
-          <p class="stage-now" id="profile-stage-now">공원편</p>
+          <div class="home-stats compact">
+            <div class="home-stat">
+              <span>생존</span>
+              <b id="profile-best-time">-</b>
+            </div>
+            <div class="home-stat">
+              <span>점수</span>
+              <b id="profile-best-score">-</b>
+            </div>
+          </div>
           <div class="profile-menu">
-            <button id="btn-page-custom" type="button" class="primary">
-              코디
-            </button>
+            <button id="btn-page-outfit" type="button" class="primary">옷</button>
+            <button id="btn-page-hammer" type="button" class="primary">뿅망치</button>
+            <button id="btn-page-gender" type="button">캐릭터</button>
             <button id="btn-profile-to-title" type="button">홈</button>
           </div>
         </div>
@@ -124,8 +140,8 @@
             <div class="hammer-grid" id="profile-hammers"></div>
           </div>
           <div class="profile-nav">
-            <button id="btn-profile-back" type="button">이전</button>
-            <button id="btn-profile-next" type="button" class="primary">다음</button>
+            <button id="btn-profile-back" type="button">돌아가기</button>
+            <button id="btn-profile-next" type="button" class="primary hidden">완료</button>
           </div>
         </div>
 
@@ -134,7 +150,7 @@
 
     <div id="briefing" class="overlay hidden">
       <div class="panel">
-        <h2 id="briefing-title">공원편</h2>
+        <h2 id="briefing-title">규칙</h2>
         <p class="lead">생명 바가 떨어지기 전에 두더지만 잡으세요.</p>
         <section class="rumors" aria-label="규칙">
           <p class="section-label">잡기</p>
@@ -196,17 +212,17 @@
         <p id="result-cheer" class="record-cheer hidden">최고기록 달성!</p>
         <ul class="stat-list">
           <li>
+            <span>생존</span>
+            <div class="stat-vals">
+              <b id="result-time">0:00</b>
+              <small id="result-time-cmp">최고 0:00</small>
+            </div>
+          </li>
+          <li>
             <span>점수</span>
             <div class="stat-vals">
               <b id="result-score">0</b>
               <small id="result-score-cmp">최고 0</small>
-            </div>
-          </li>
-          <li>
-            <span>시간</span>
-            <div class="stat-vals">
-              <b id="result-time">0:00</b>
-              <small id="result-time-cmp">최고 0:00</small>
             </div>
           </li>
           <li>

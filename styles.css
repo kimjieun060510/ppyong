@@ -241,6 +241,11 @@ canvas#game {
   line-height: 1;
 }
 
+.title-panel:has(#play-block:not(.hidden)) h1 {
+  font-size: clamp(34px, 9vw, 52px);
+  margin-bottom: 2px;
+}
+
 .stage {
   margin: 8px 0 14px;
   font-size: 18px;
@@ -266,6 +271,43 @@ canvas#game {
   margin: 0 0 6px;
   font-size: 16px;
   color: var(--grass-dark);
+}
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.home-stats.compact {
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 14px;
+}
+
+.home-stat {
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 16px;
+  padding: 8px 6px 10px;
+  box-shadow: 0 3px 0 #2b3a24;
+  min-width: 0;
+}
+
+.home-stat span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #6b7a62;
+}
+
+.home-stat b {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(16px, 4.4vw, 22px);
+  font-weight: 400;
+  line-height: 1.15;
+  word-break: break-all;
 }
 
 .section-label {
@@ -886,7 +928,13 @@ canvas#game {
 
 .profile-menu {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+.profile-menu #btn-page-gender,
+.profile-menu #btn-profile-to-title {
+  grid-column: 1 / -1;
 }
 
 .profile-menu button:not(.primary):not(.text-btn) {
@@ -970,9 +1018,9 @@ canvas#game {
 
 #title-me {
   display: block;
-  width: min(180px, 48vw);
+  width: min(168px, 44vw);
   height: auto;
-  margin: 4px auto 16px;
+  margin: 2px auto 12px;
   background: linear-gradient(#9fd8ff, #b8e986);
   border: 3px solid #2b3a24;
   border-radius: 22px;
@@ -996,7 +1044,7 @@ canvas#game {
 
 .profile-nav {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
+  grid-template-columns: 1fr;
   gap: 10px;
   margin-top: 16px;
 }
@@ -1120,7 +1168,7 @@ canvas#game {
 
   .hud-left {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
     width: 100%;
     gap: 6px;
   }

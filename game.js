@@ -26,6 +26,8 @@
     titleMe: document.getElementById("title-me"),
     titleHello: document.getElementById("title-hello"),
     titleWallet: document.getElementById("title-wallet"),
+    titleBestTime: document.getElementById("title-best-time"),
+    titleBestScore: document.getElementById("title-best-score"),
     guestBlock: document.getElementById("guest-block"),
     playBlock: document.getElementById("play-block"),
     profileWallet: document.getElementById("profile-wallet"),
@@ -33,8 +35,10 @@
     profileHome: document.getElementById("profile-home"),
     profileCustom: document.getElementById("profile-custom"),
     profileMe: document.getElementById("profile-me"),
-    profileStageNow: document.getElementById("profile-stage-now"),
+    profileBestTime: document.getElementById("profile-best-time"),
+    profileBestScore: document.getElementById("profile-best-score"),
     score: document.getElementById("score-count"),
+    timeCount: document.getElementById("time-count"),
     profile: document.getElementById("profile"),
     profileAccount: document.getElementById("profile-account"),
     profileStepLabel: document.getElementById("profile-step-label"),
@@ -55,7 +59,6 @@
     resultCoins: document.getElementById("result-coins"),
     resultMoles: document.getElementById("result-moles"),
     resultNote: document.getElementById("result-note"),
-    titleBest: document.getElementById("title-best"),
     pause: document.getElementById("pause"),
     controls: document.getElementById("controls"),
     lifeChip: document.getElementById("life-chip"),
@@ -871,23 +874,13 @@
     return `${m}:${String(r).padStart(2, "0")}`;
   }
 
-  function bestLine() {
-    if (!progress.best && !progress.bestTime) return "";
-    const bits = [];
-    if (progress.best) bits.push(`최고 ${progress.best}점`);
-    if (progress.bestTime) bits.push(formatTime(progress.bestTime));
-    return bits.join(" · ");
-  }
-
   function syncBestUI() {
-    const line = bestLine();
-    if (el.titleBest) {
-      el.titleBest.textContent = line;
-      el.titleBest.classList.toggle("hidden", !line);
-    }
-    if (el.profileStageNow) {
-      el.profileStageNow.textContent = line ? `공원편 · ${line}` : "공원편";
-    }
+    const timeText = progress.bestTime ? formatTime(progress.bestTime) : "-";
+    const scoreText = progress.best ? String(progress.best) : "-";
+    if (el.titleBestTime) el.titleBestTime.textContent = timeText;
+    if (el.titleBestScore) el.titleBestScore.textContent = scoreText;
+    if (el.profileBestTime) el.profileBestTime.textContent = timeText;
+    if (el.profileBestScore) el.profileBestScore.textContent = scoreText;
   }
 
   function settleRun(title, note) {
@@ -1195,16 +1188,16 @@
     profilePage = page;
     if (el.profileHome) el.profileHome.classList.toggle("hidden", page !== "home");
     if (el.profileCustom) el.profileCustom.classList.toggle("hidden", page !== "custom");
-    const titles = { home: "캐릭터", custom: "코디" };
+    const titles = { home: "프로필", custom: "코디" };
     if (el.profileHeading) el.profileHeading.textContent = titles[page] || "프로필";
+    if (el.profileWallet) el.profileWallet.classList.toggle("hidden", page !== "custom");
     if (page === "custom") renderProfileStep();
     if (page === "home") updateProfileHome();
   }
 
   function syncWalletUI() {
-    const text = `코인 ${progress.wallet}`;
-    if (el.titleWallet) el.titleWallet.textContent = text;
-    if (el.profileWallet) el.profileWallet.textContent = text;
+    if (el.titleWallet) el.titleWallet.textContent = String(progress.wallet);
+    if (el.profileWallet) el.profileWallet.textContent = `코인 ${progress.wallet}`;
     syncBestUI();
   }
 
@@ -1242,7 +1235,7 @@
     show("controls", false);
     show("briefing", true);
     const briefTitle = document.getElementById("briefing-title");
-    if (briefTitle) briefTitle.textContent = "공원편";
+    if (briefTitle) briefTitle.textContent = "규칙";
   }
 
   function beginPlay() {
@@ -1790,6 +1783,7 @@
 
   function syncHud() {
     if (el.score) el.score.textContent = String(runScore);
+    if (el.timeCount) el.timeCount.textContent = formatTime(playTime);
     const pct = clamp((life / LIFE_MAX) * 100, 0, 100);
     if (el.lifeFill) el.lifeFill.style.width = `${pct}%`;
     if (el.lifeChip) {
@@ -2998,15 +2992,26 @@
 
   function renderProfileStep() {
     const labels = ["캐릭터", "옷", "뿅망치"];
-    if (el.profileStepLabel) el.profileStepLabel.textContent = labels[profileStep];
+    if (el.profileHeading) el.profileHeading.textContent = labels[profileStep];
+    if (el.profileStepLabel) {
+      el.profileStepLabel.textContent =
+        profileStep === 0 ? "누구로 뛸까?" : profileStep === 1 ? "옷을 고르세요." : "뿅망치를 고르세요.";
+    }
     el.profileStepGender.classList.toggle("hidden", profileStep !== 0);
     el.profileStepOutfit.classList.toggle("hidden", profileStep !== 1);
     el.profileStepHammer.classList.toggle("hidden", profileStep !== 2);
     const back = document.getElementById("btn-profile-back");
     const next = document.getElementById("btn-profile-next");
-    back.disabled = profileStep === 0 && !avatar.complete;
-    back.textContent = profileStep === 0 ? "돌아가기" : "이전";
-    next.textContent = profileStep === 2 ? "완료" : "다음";
+    if (back) {
+      back.disabled = !avatar.complete;
+      back.classList.toggle("hidden", !avatar.complete);
+      back.textContent = "돌아가기";
+    }
+    if (next) {
+      const needFinish = !avatar.complete && profileStep === 0;
+      next.classList.toggle("hidden", !needFinish);
+      next.textContent = "완료";
+    }
     if (profileStep === 1) mountOutfitCards();
     if (profileStep === 2) mountHammerCards();
     syncAvatarPickerUI();
@@ -3016,7 +3021,12 @@
   function finishProfile() {
     avatar.complete = true;
     persistAvatar();
-    showTitle();
+    showProfilePage("home");
+  }
+
+  function openShop(step) {
+    profileStep = step;
+    showProfilePage("custom");
   }
 
   function drawAvatarPreviews() {
@@ -3277,28 +3287,26 @@
       ensureAudio();
       openProfile();
     });
-    document.getElementById("btn-page-custom").addEventListener("click", () => {
-      profileStep = 0;
-      showProfilePage("custom");
+    document.getElementById("btn-page-outfit").addEventListener("click", () => {
+      ensureAudio();
+      openShop(1);
+    });
+    document.getElementById("btn-page-hammer").addEventListener("click", () => {
+      ensureAudio();
+      openShop(2);
+    });
+    document.getElementById("btn-page-gender").addEventListener("click", () => {
+      ensureAudio();
+      openShop(0);
     });
     document.getElementById("btn-profile-to-title").addEventListener("click", () => {
       showTitle();
     });
     document.getElementById("btn-profile-back").addEventListener("click", () => {
-      if (profileStep === 0) {
-        if (avatar.complete) showProfilePage("home");
-        return;
-      }
-      profileStep -= 1;
-      renderProfileStep();
+      if (avatar.complete) showProfilePage("home");
     });
     document.getElementById("btn-profile-next").addEventListener("click", () => {
-      if (profileStep >= 2) {
-        finishProfile();
-        return;
-      }
-      profileStep += 1;
-      renderProfileStep();
+      finishProfile();
     });
     document.getElementById("btn-logout").addEventListener("click", () => {
       logout();
