@@ -3,6 +3,7 @@
 
   const WORLD_W = 1760;
   const WORLD_H = 1320;
+  const ZOOM = 2.25;
   const ROUND_TIME = 40;
   const TOTAL_ROUNDS = 6;
   const SOAK_TIME = 5;
@@ -319,6 +320,7 @@
       state: "rise",
       t: 0,
       height: 0,
+      stay: 1 + Math.random() * 4,
       bob: Math.random() * Math.PI * 2,
     };
     sfx("pop");
@@ -477,7 +479,6 @@
     const t = playTime + (round - 1) * 18;
     return {
       interval: Math.max(0.38, 1.35 - t * 0.012),
-      upTime: Math.max(0.72, 1.85 - t * 0.01),
       maxUp: Math.min(6, 2 + Math.floor(t / 28)),
     };
   }
@@ -505,8 +506,7 @@
       } else if (m.state === "up") {
         m.t += dt;
         m.height = 1;
-        const stay = m.kind === "gold" ? diff.upTime * 0.72 : diff.upTime;
-        if (m.t >= stay) {
+        if (m.t >= (m.stay || 2)) {
           m.state = "hide";
           m.t = 0;
         }
@@ -781,13 +781,17 @@
   function drawWorld() {
     const sx = (Math.random() - 0.5) * shake;
     const sy = (Math.random() - 0.5) * shake;
-    const targetX = clamp(player.x - viewW / 2, 0, Math.max(0, WORLD_W - viewW));
-    const targetY = clamp(player.y - viewH / 2, 0, Math.max(0, WORLD_H - viewH));
+    const visW = viewW / ZOOM;
+    const visH = viewH / ZOOM;
+    const targetX = clamp(player.x - visW / 2, 0, Math.max(0, WORLD_W - visW));
+    const targetY = clamp(player.y - visH / 2, 0, Math.max(0, WORLD_H - visH));
     camX += (targetX - camX) * 0.12;
     camY += (targetY - camY) * 0.12;
 
     ctx.save();
-    ctx.translate(-camX + sx, -camY + sy);
+    ctx.translate(sx, sy);
+    ctx.scale(ZOOM, ZOOM);
+    ctx.translate(-camX, -camY);
     ctx.drawImage(parkCanvas, 0, 0);
 
     for (const hole of holes) drawHole(hole);
