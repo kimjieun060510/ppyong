@@ -1766,9 +1766,16 @@
       startStun(
         "skunk",
         2.4,
-        "게임 오버",
+        "냄새 공격",
         "스컹크가 공원을 덮었습니다."
       );
+      floatTexts.push({
+        x: hole.x,
+        y: hole.y - 40,
+        text: "냄새 공격",
+        t: 0,
+        color: "#5a7a20",
+      });
       el.soaked.classList.add("gas");
       el.soakCount.classList.add("hidden");
       return;
@@ -1776,7 +1783,14 @@
     if (kind === "rabbit") {
       burst(hole.x, hole.y - 18, "#ff9f43", 12);
       throwCarrots(player.x, player.y);
-      startStun("rabbit", RABBIT_TIME, "당근", "3초 동안 움직일 수 없습니다.");
+      floatTexts.push({
+        x: hole.x,
+        y: hole.y - 40,
+        text: "당근 공격",
+        t: 0,
+        color: "#c45c00",
+      });
+      startStun("rabbit", RABBIT_TIME, "당근 공격", "3초 동안 움직일 수 없습니다.");
       return;
     }
     const loss = Math.max(12, Math.round(runScore * 0.35));
@@ -1792,7 +1806,7 @@
     floatTexts.push({
       x: hole.x,
       y: hole.y - 40,
-      text: `뺏김 -${loss}`,
+      text: `할큄 -${loss}`,
       t: 0,
       color: "#a33",
     });
@@ -3285,8 +3299,9 @@
   }
 
   function drawStunNotice() {
-    if (soaked <= 0 || !player || stunKind === "skunk") return;
-    const title = stunKind === "rabbit" ? "당근" : stunKind === "water" ? "풍덩" : "";
+    if (soaked <= 0 || !player) return;
+    const title =
+      stunKind === "rabbit" ? "당근 공격" : stunKind === "water" ? "풍덩" : stunKind === "skunk" ? "냄새 공격" : "";
     if (!title) return;
     const label = `${title} ${Math.max(1, Math.ceil(soaked))}`;
     const x = player.x;
