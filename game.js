@@ -2202,8 +2202,8 @@
     const pattern = d.pattern || "solid";
     const cap = hammerAccent(color);
     g.save();
-    g.translate(15, -30);
-    g.rotate(-0.85 + swing * 2.35);
+    g.translate(-15, -30);
+    g.rotate(0.85 - swing * 2.35);
     if (d.tool === "paddle") {
       fillRound(g, -2, -2, 4, 30, 2, d.handle || "#8a5a32");
       g.strokeStyle = LINE;
@@ -2358,10 +2358,10 @@
 
     g.fillStyle = SKIN;
     g.beginPath();
-    g.ellipse(-13, -28, 4.2, 3.4, -0.4, 0, Math.PI * 2);
+    g.ellipse(13, -28, 4.2, 3.4, 0.4, 0, Math.PI * 2);
     g.fill();
     g.beginPath();
-    g.ellipse(14, -27 + swing * -2, 4.4, 3.6, 0.2, 0, Math.PI * 2);
+    g.ellipse(-14, -27 + swing * -2, 4.4, 3.6, -0.2, 0, Math.PI * 2);
     g.fill();
 
     if (o.cut === "hoodie" || o.cut === "track") {
