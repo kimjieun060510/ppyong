@@ -11,7 +11,26 @@
     <meta name="theme-color" content="#6bb34d" />
     <link rel="icon" type="image/png" href="assets/app-icon.png" />
     <link rel="apple-touch-icon" href="assets/app-icon.png" />
-    <title>뿅</title>
+    <title>뿅 두더지</title>
+    <script>
+      window.ppyongUiScale = function () {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        var raw =
+          h >= w ? Math.min(w / 393, h / 852) : Math.min(w / 852, h / 393);
+        var ui = Math.min(1.28, Math.max(0.78, raw));
+        document.documentElement.style.setProperty("--ui", String(ui));
+        return ui;
+      };
+      window.ppyongUiScale();
+      window.addEventListener("resize", window.ppyongUiScale);
+      window.addEventListener("orientationchange", function () {
+        setTimeout(window.ppyongUiScale, 120);
+      });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", window.ppyongUiScale);
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -29,37 +48,32 @@
 
     <div id="hud" class="hidden">
       <div class="hud-left">
-        <div class="chip coin">
-          <span class="icon">●</span>
-          <span id="coin-count">0</span>
+        <button id="btn-pause" type="button" class="hud-btn">메뉴</button>
+        <div class="chip">
+          <span class="k">생존</span>
+          <span id="time-count">0:00</span>
         </div>
-        <div class="chip">점수 <span id="score-count">0</span></div>
-        <div class="chip">콤보 <span id="combo-count">0</span></div>
+        <div class="chip">
+          <span class="k">점수</span>
+          <span id="score-count">0</span>
+        </div>
       </div>
       <div class="hud-right">
-        <div class="chip">라운드 <span id="round-count">1</span></div>
-        <div class="chip time"><span id="time-left">40</span>초</div>
-        <button id="btn-shop" type="button">상점</button>
+        <div class="life-chip" id="life-chip">
+          <span class="k">생명</span>
+          <div class="life-track">
+            <i id="life-fill"></i>
+          </div>
+        </div>
       </div>
     </div>
 
     <div id="title" class="overlay">
       <div class="panel title-panel">
-        <img
-          class="app-logo"
-          src="assets/app-icon.png"
-          width="1024"
-          height="1024"
-          alt="뿅"
-        />
-        <p class="eyebrow">PPYONG</p>
-        <h1>뿅</h1>
-        <p class="stage">공원편</p>
+        <h1>뿅 두더지</h1>
 
         <div id="guest-block">
-          <p class="lead">
-            공원 구멍마다 누군가 고개를 내민다. Apple로 로그인하면 캐릭터와 단계가 저장돼요.
-          </p>
+          <p class="lead">두더지만 잡고, 다른 동물은 피하세요.</p>
           <button id="btn-apple" type="button" class="apple-btn">
             <svg viewBox="0 0 14 18" width="18" height="22" aria-hidden="true">
               <path
@@ -67,31 +81,34 @@
                 d="M13.04 6.12c-.07-2.12 1.73-3.14 1.81-3.19-1-1.46-2.54-1.66-3.08-1.68-1.3-.13-2.55.77-3.21.77-.67 0-1.7-.75-2.8-.73-1.43.02-2.76.84-3.5 2.14-1.5 2.61-.38 6.46 1.07 8.57.72 1.03 1.57 2.18 2.68 2.14 1.08-.04 1.49-.7 2.8-.7 1.3 0 1.67.7 2.81.67 1.17-.02 1.9-1.04 2.61-2.08.83-1.2 1.17-2.37 1.19-2.43-.03-.01-2.27-.87-2.3-3.46zM10.9.32c.59-.72.98-1.72.87-2.72-.84.04-1.87.57-2.47 1.28-.54.62-1.02 1.64-.89 2.6.95.07 1.9-.48 2.49-1.16z"
               />
             </svg>
-            Apple로 로그인
+            Apple로 시작
           </button>
-          <p class="login-note">
-            iPhone 앱에서는 Apple 로그인 창이 열려요. 브라우저 미리보기에서는 이
-            기기 계정으로 진행돼요.
-          </p>
           <p class="login-note">
             <a href="privacy.html">개인정보 처리방침</a>
           </p>
         </div>
 
         <div id="play-block" class="hidden">
-          <p class="lead" id="title-hello">열린 단계를 고르고 시작하세요.</p>
-          <p class="wallet-line" id="title-wallet">보유 코인 0</p>
+          <p class="hello" id="title-hello"></p>
           <canvas id="title-me" width="220" height="250"></canvas>
-          <p class="picker-label">단계 선택</p>
-          <div id="title-stages" class="stage-row"></div>
+          <div class="home-stats">
+            <div class="home-stat">
+              <span>생존</span>
+              <b id="title-best-time">-</b>
+            </div>
+            <div class="home-stat">
+              <span>점수</span>
+              <b id="title-best-score">-</b>
+            </div>
+            <div class="home-stat">
+              <span>코인</span>
+              <b id="title-wallet">0</b>
+            </div>
+          </div>
           <div class="title-actions">
-            <button id="btn-start" type="button" class="primary">이 단계로 시작</button>
+            <button id="btn-start" type="button" class="primary">시작</button>
             <button id="btn-open-profile" type="button">프로필</button>
           </div>
-          <ul class="howto">
-            <li>이동: WASD / 왼쪽 동그라미</li>
-            <li>공격: 스페이스 또는 오른쪽 뿅망치</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -99,33 +116,44 @@
     <div id="profile" class="overlay hidden">
       <div class="panel shop-panel">
         <div class="shop-head">
-          <h2 id="profile-heading">프로필</h2>
+          <h2 id="profile-heading">캐릭터</h2>
           <p id="profile-account">Apple ID</p>
         </div>
-        <p class="wallet-line" id="profile-wallet">보유 코인 0</p>
+        <p class="wallet-line" id="profile-wallet">코인 0</p>
         <p class="login-note account-actions">
           <button id="btn-logout" type="button" class="text-btn">로그아웃</button>
           <button id="btn-delete-account" type="button" class="text-btn danger">
-            계정 삭제
+            기록 삭제
           </button>
         </p>
 
         <div id="profile-home" class="profile-page">
           <canvas id="profile-me" width="220" height="250"></canvas>
-          <p class="lead" id="profile-stage-now">현재 단계: 공원 낮</p>
+          <div class="home-stats compact">
+            <div class="home-stat">
+              <span>생존</span>
+              <b id="profile-best-time">-</b>
+            </div>
+            <div class="home-stat">
+              <span>점수</span>
+              <b id="profile-best-score">-</b>
+            </div>
+          </div>
           <div class="profile-menu">
-            <button id="btn-page-custom" type="button" class="primary">
-              캐릭터 꾸미기
-            </button>
-            <button id="btn-page-stages" type="button">스테이지</button>
-            <button id="btn-profile-to-title" type="button">타이틀로</button>
+            <button id="btn-page-gender" type="button" class="primary">캐릭터</button>
+            <button id="btn-profile-to-title" type="button">홈</button>
           </div>
         </div>
 
         <div id="profile-custom" class="profile-page hidden">
-          <p class="picker-label" id="profile-step-label">1. 성별을 정하세요</p>
+          <p class="picker-label" id="profile-step-label">누구로 뛸까?</p>
           <div id="profile-step-gender" class="profile-step">
             <div class="char-row" id="profile-chars"></div>
+            <div class="profile-menu gender-shop">
+              <button id="btn-gender-outfit" type="button" class="primary">옷</button>
+              <button id="btn-gender-hammer" type="button" class="primary">뿅망치</button>
+              <button id="btn-gender-back" type="button">돌아가기</button>
+            </div>
           </div>
           <div id="profile-step-outfit" class="profile-step hidden">
             <div class="outfit-grid" id="profile-outfits"></div>
@@ -134,112 +162,155 @@
             <div class="hammer-grid" id="profile-hammers"></div>
           </div>
           <div class="profile-nav">
-            <button id="btn-profile-back" type="button">이전</button>
-            <button id="btn-profile-next" type="button" class="primary">다음</button>
+            <button id="btn-profile-back" type="button">돌아가기</button>
+            <button id="btn-profile-next" type="button" class="primary hidden">완료</button>
           </div>
         </div>
 
-        <div id="profile-stages" class="profile-page hidden">
-          <p class="picker-label">해금과 최고 점수예요. 고르면 타이틀에서 그 단계로 시작해요.</p>
-          <div id="stage-row" class="stage-list"></div>
-          <div class="profile-nav">
-            <button id="btn-stages-back" type="button">프로필로</button>
-          </div>
+      </div>
+    </div>
+
+    <div id="buy-confirm" class="overlay buy-overlay hidden">
+      <div class="panel buy-panel">
+        <h2>구매할까요?</h2>
+        <p class="lead" id="buy-lead">이 물건을 살까요?</p>
+        <ul class="stat-list">
+          <li>
+            <span>가격</span>
+            <b id="buy-cost">0</b>
+          </li>
+          <li>
+            <span>보유 코인</span>
+            <b id="buy-have">0</b>
+          </li>
+          <li>
+            <span>구매 후</span>
+            <b id="buy-after">0</b>
+          </li>
+        </ul>
+        <p id="buy-note" class="note hidden">코인이 부족해요.</p>
+        <div class="stack-actions">
+          <button id="btn-buy-ok" type="button" class="primary">구매</button>
+          <button id="btn-buy-cancel" type="button">취소</button>
         </div>
       </div>
     </div>
 
     <div id="briefing" class="overlay hidden">
-      <div class="panel">
-        <h2>오늘 공원에 나오는 녀석들</h2>
-        <p class="lead">잡고 피할 대상을 확인하고 출발하세요.</p>
-        <section class="rumors" aria-label="동물 설명">
+      <div class="panel briefing-panel">
+        <h2 id="briefing-title">규칙</h2>
+        <p class="lead">생명 바가 떨어지기 전에 두더지만 잡으세요.</p>
+        <section class="rumors" aria-label="규칙">
+          <p class="section-label">잡기</p>
           <article class="rumor" data-kind="mole">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>두더지</h3>
-              <p>맨날 구멍에서 코를 내밀고, 주머니엔 코인이 가득하다. 뿅망치가 제일 반기는 이웃.</p>
+              <p>잡으면 점수와 생명이 올라갑니다.</p>
             </div>
           </article>
           <article class="rumor" data-kind="gold">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>황금 두더지</h3>
-              <p>왕관을 쓴 두더지. 다른 두더지보다 코인을 훨씬 많이 들고 다닌다. 놓치면 아까운 손님.</p>
+              <p>점수와 생명을 더 많이 줍니다.</p>
             </div>
           </article>
+          <p class="section-label">피하기</p>
           <article class="rumor" data-kind="skunk">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>스컹크</h3>
-              <p>한 번 건드리면 공원 공기가 끝장난다. 오늘은 조용히 지나가 달라는 눈치다.</p>
+              <p>건드리면 게임이 끝납니다.</p>
             </div>
           </article>
           <article class="rumor" data-kind="rabbit">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>토끼</h3>
-              <p>귀엽다고 다가가면 당근을 뿌려 길을 미끄럽게 만든다. 발이 묶인 채로 시간만 간다.</p>
+              <p>3초 동안 움직일 수 없습니다.</p>
             </div>
           </article>
           <article class="rumor" data-kind="raccoon">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>너구리</h3>
-              <p>눈 가리개를 한 도둑. 반짝이는 코인만 보면 할퀴고 달아난다.</p>
+              <p>점수를 빼앗아 갑니다.</p>
             </div>
           </article>
+          <p class="section-label">주의</p>
           <article class="rumor" data-kind="pond">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>연못</h3>
-              <p>가운데 연못은 생각보다 깊다. 풍덩 빠지면 허우적대는 동안 시계는 멈추지 않는다.</p>
+              <p>빠지면 5초 정지. 생명 바는 그대로 줄어듭니다.</p>
             </div>
           </article>
         </section>
-        <button id="btn-briefing-go" type="button" class="primary">
-          알겠어요, 출발!
-        </button>
-      </div>
-    </div>
-
-    <div id="shop" class="overlay hidden">
-      <div class="panel shop-panel">
-        <div class="shop-head">
-          <h2>뿅망치 상점</h2>
-          <p>코인 <strong id="shop-coins">0</strong></p>
+        <div class="stack-actions">
+          <button id="btn-briefing-go" type="button" class="primary">시작</button>
+          <button id="btn-briefing-back" type="button">홈</button>
         </div>
-        <div id="shop-list" class="shop-list"></div>
-        <div class="shop-actions">
-          <button id="btn-close-shop" type="button" class="primary">
-            다시 잡으러 가기
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div id="round-over" class="overlay hidden">
-      <div class="panel">
-        <h2>라운드 끝!</h2>
-        <p id="round-summary" class="lead"></p>
-        <button id="btn-to-shop" type="button" class="primary">
-          상점에서 업그레이드
-        </button>
       </div>
     </div>
 
     <div id="result" class="overlay hidden">
       <div class="panel">
-        <h2 id="result-title">오늘은 여기까지!</h2>
-        <p id="result-summary" class="lead"></p>
-        <button id="btn-retry" type="button" class="primary">한 판 더</button>
+        <h2 id="result-title">결과</h2>
+        <p id="result-cheer" class="record-cheer hidden">최고기록 달성!</p>
+        <ul class="stat-list">
+          <li>
+            <span>생존</span>
+            <div class="stat-vals">
+              <b id="result-time">0:00</b>
+              <small id="result-time-cmp">최고 0:00</small>
+            </div>
+          </li>
+          <li>
+            <span>점수</span>
+            <div class="stat-vals">
+              <b id="result-score">0</b>
+              <small id="result-score-cmp">최고 0</small>
+            </div>
+          </li>
+          <li>
+            <span>코인</span>
+            <b id="result-coins">+0</b>
+          </li>
+          <li>
+            <span>두더지</span>
+            <b id="result-moles">0</b>
+          </li>
+        </ul>
+        <p id="result-note" class="note hidden"></p>
+        <div class="stack-actions">
+          <button id="btn-retry" type="button" class="primary">한 판 더</button>
+          <button id="btn-result-home" type="button">홈</button>
+          <button id="btn-result-profile" type="button">프로필</button>
+        </div>
       </div>
     </div>
 
-    <div id="soaked" class="stun-banner hidden">
-      <h2 id="stun-title">풍덩!</h2>
-      <p id="stun-lead">물에 빠졌어요. 허우적거리는 중...</p>
-      <p id="soak-count" class="countdown">5</p>
+    <div id="pause" class="overlay hidden">
+      <div class="panel">
+        <h2>잠시 멈춤</h2>
+        <p class="lead">이어서 뛰거나, 홈이나 프로필로 나갈 수 있습니다.</p>
+        <div class="stack-actions">
+          <button id="btn-pause-resume" type="button" class="primary">계속</button>
+          <button id="btn-pause-home" type="button">홈</button>
+          <button id="btn-pause-profile" type="button">프로필</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="soaked" class="overlay stun-overlay hidden">
+      <div class="panel">
+        <h2 id="stun-title">풍덩</h2>
+        <p id="stun-lead" class="lead">
+          5초 동안 움직일 수 없습니다. 생명 바는 그대로 줄어듭니다.
+        </p>
+        <p id="soak-count" class="countdown">5</p>
+      </div>
     </div>
 
     <div id="controls" class="hidden">

@@ -1,10 +1,10 @@
 {
   "appId": "com.kimjieun.ppyong",
-  "appName": "뿅",
+  "appName": "뿅 두더지",
   "webDir": "www",
   "ios": {
     "contentInset": "automatic",
-    "scheme": "Ppyong",
+    "scheme": "App",
     "preferredContentMode": "mobile"
   }
 }

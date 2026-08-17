@@ -1,4 +1,4 @@
-# 뿅 iOS 앱으로 내기
+# 뿅 두더지 iOS 앱으로 내기
 
 웹 게임을 Capacitor로 감싼 뒤, iPhone에서 **네이티브 Sign in with Apple**로 로그인합니다.
 Bundle ID는 `com.kimjieun.ppyong` 입니다.
@@ -12,7 +12,7 @@ Bundle ID는 `com.kimjieun.ppyong` 입니다.
 3. Team ID `65BCG32JFR` 로 서명할 수 있는지 확인합니다. 유료 Apple Developer Program이 있어야 App Store에 올립니다.
 4. [App Store Connect](https://appstoreconnect.apple.com)에서 새 앱을 만듭니다.
    - Bundle ID: `com.kimjieun.ppyong`
-   - 이름: 뿅
+   - 이름: 뿅 두더지
    - 개인정보 처리방침 URL: 아래 `privacy.html`을 공개 주소로 올린 뒤 그 URL
 
 ## 이 저장소에서 빌드
