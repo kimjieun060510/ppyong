@@ -4,8 +4,7 @@
   const WORLD_W = 5280;
   const WORLD_H = 3960;
   const ZOOM = 1.15;
-  const ROUND_TIME = 40;
-  const TOTAL_ROUNDS = 6;
+  const LIFE_MAX = 100;
   const WATER_TIME = 5;
   const RABBIT_TIME = 3;
   const PONDS = [
@@ -29,15 +28,12 @@
     titleWallet: document.getElementById("title-wallet"),
     guestBlock: document.getElementById("guest-block"),
     playBlock: document.getElementById("play-block"),
-    titleStages: document.getElementById("title-stages"),
     profileWallet: document.getElementById("profile-wallet"),
     profileHeading: document.getElementById("profile-heading"),
     profileHome: document.getElementById("profile-home"),
     profileCustom: document.getElementById("profile-custom"),
-    profileStages: document.getElementById("profile-stages"),
     profileMe: document.getElementById("profile-me"),
     profileStageNow: document.getElementById("profile-stage-now"),
-    stageRow: document.getElementById("stage-row"),
     score: document.getElementById("score-count"),
     profile: document.getElementById("profile"),
     profileAccount: document.getElementById("profile-account"),
@@ -49,9 +45,6 @@
     profileOutfits: document.getElementById("profile-outfits"),
     profileHammers: document.getElementById("profile-hammers"),
     briefing: document.getElementById("briefing"),
-    roundOver: document.getElementById("round-over"),
-    roundNum: document.getElementById("round-num"),
-    roundMoles: document.getElementById("round-moles"),
     result: document.getElementById("result"),
     resultTitle: document.getElementById("result-title"),
     resultScore: document.getElementById("result-score"),
@@ -61,8 +54,8 @@
     controls: document.getElementById("controls"),
     coins: document.getElementById("coin-count"),
     combo: document.getElementById("combo-count"),
-    round: document.getElementById("round-count"),
-    time: document.getElementById("time-left"),
+    lifeChip: document.getElementById("life-chip"),
+    lifeFill: document.getElementById("life-fill"),
     stick: document.getElementById("stick"),
     stickBase: document.getElementById("stick-base"),
     stickKnob: document.getElementById("stick-knob"),
@@ -104,7 +97,8 @@
       id: "track",
       name: "삼선 셋업",
       vibe: "스트릿",
-      for: "boy",
+      for: "any",
+      cost: 50,
       cut: "track",
       bottom: "track",
       top: "#1c1c1c",
@@ -124,6 +118,7 @@
       name: "네온 아노락",
       vibe: "캠퍼스",
       for: "any",
+      cost: 100,
       cut: "anorak",
       bottom: "cargo",
       top: "#8cff4d",
@@ -142,7 +137,8 @@
       id: "rugby",
       name: "럭비 셔츠",
       vibe: "프레피",
-      for: "boy",
+      for: "any",
+      cost: 110,
       cut: "rugby",
       bottom: "bermuda",
       top: "#d62828",
@@ -179,7 +175,8 @@
       id: "tennis",
       name: "테니스 클럽",
       vibe: "스포츠",
-      for: "girl",
+      for: "any",
+      cost: 70,
       cut: "polo",
       bottom: "tennis",
       top: "#ffffff",
@@ -199,7 +196,8 @@
       id: "ribbon",
       name: "리본 가디건",
       vibe: "리본룩",
-      for: "girl",
+      for: "any",
+      cost: 150,
       cut: "cardigan",
       bottom: "skirt",
       top: "#ffd6e7",
@@ -219,7 +217,7 @@
       id: "midnight",
       name: "올블랙",
       vibe: "미니멀",
-      for: "boy",
+      for: "any",
       cut: "hoodie",
       bottom: "wide",
       top: "#222226",
@@ -238,7 +236,8 @@
       id: "cherry",
       name: "체리 니트",
       vibe: "페어코어",
-      for: "girl",
+      for: "any",
+      cost: 120,
       cut: "knit",
       bottom: "skirt",
       top: "#ff5a6a",
@@ -256,7 +255,8 @@
       id: "jersey",
       name: "10번 져지",
       vibe: "유니폼",
-      for: "boy",
+      for: "any",
+      cost: 130,
       cut: "jersey",
       bottom: "shorts",
       top: "#3b6cff",
@@ -275,7 +275,8 @@
       id: "ballet",
       name: "발레코어",
       vibe: "발레코어",
-      for: "girl",
+      for: "any",
+      cost: 170,
       cut: "cardigan",
       bottom: "skirt",
       top: "#ffe4f0",
@@ -295,7 +296,8 @@
       id: "hachi",
       name: "비니 레이어드",
       vibe: "하치웨어",
-      for: "girl",
+      for: "any",
+      cost: 190,
       cut: "tee",
       bottom: "wide",
       top: "#5a7cff",
@@ -315,7 +317,8 @@
       id: "varsity",
       name: "바시티 자켓",
       vibe: "캠퍼스",
-      for: "boy",
+      for: "any",
+      cost: 200,
       cut: "varsity",
       bottom: "bermuda",
       top: "#1c2a6b",
@@ -389,6 +392,87 @@
       sockStripe: "#9b6dff",
       strings: "#7dff4a",
       clip: "#7dff4a",
+    },
+    {
+      id: "puffer",
+      name: "크롭 패딩",
+      vibe: "윈터",
+      for: "any",
+      cost: 90,
+      cut: "anorak",
+      bottom: "wide",
+      top: "#ff8ab8",
+      topShade: "#e46a9a",
+      panel: "#fff6e4",
+      bottomGirl: "#2a2a32",
+      bottomBoy: "#2a2a32",
+      shoesGirl: "#ffffff",
+      shoesBoy: "#ffffff",
+      shoeStripe: "#ff8ab8",
+      socks: "#ffffff",
+      sockStripe: "#ff8ab8",
+      clip: "#ff8ab8",
+    },
+    {
+      id: "denim",
+      name: "청자켓",
+      vibe: "데님",
+      for: "any",
+      cost: 160,
+      cut: "varsity",
+      bottom: "wide",
+      top: "#3d5a8a",
+      topShade: "#2a3f66",
+      sleeve: "#8aa4c8",
+      letter: "#ffd15c",
+      bottomGirl: "#1c1c1c",
+      bottomBoy: "#1c1c1c",
+      shoesGirl: "#f5f5f5",
+      shoesBoy: "#f5f5f5",
+      shoeStripe: "#3d5a8a",
+      socks: "#ffffff",
+      sockStripe: "#3d5a8a",
+      clip: "#3d5a8a",
+    },
+    {
+      id: "cityboy",
+      name: "시티보이",
+      vibe: "시티보이",
+      for: "any",
+      cost: 220,
+      cut: "rugby",
+      bottom: "bermuda",
+      top: "#e8dcc8",
+      topShade: "#d0c4ae",
+      stripe: "#2f4f9a",
+      bottomGirl: "#3d4f3a",
+      bottomBoy: "#3d4f3a",
+      shoesGirl: "#f4efe4",
+      shoesBoy: "#f4efe4",
+      shoeStripe: "#2f4f9a",
+      socks: "#ffffff",
+      sockStripe: "#2f4f9a",
+      clip: "#2f4f9a",
+    },
+    {
+      id: "moto",
+      name: "라이더 자켓",
+      vibe: "라이더",
+      for: "any",
+      cost: 280,
+      cut: "hoodie",
+      bottom: "wide",
+      top: "#1a1a1e",
+      topShade: "#0c0c10",
+      bottomGirl: "#111114",
+      bottomBoy: "#111114",
+      shoesGirl: "#111114",
+      shoesBoy: "#111114",
+      shoeStripe: "#e23b3b",
+      socks: "#2a2a2e",
+      sockStripe: "#e23b3b",
+      strings: "#e23b3b",
+      clip: "#e23b3b",
     },
   ];
 
@@ -512,54 +596,6 @@
     },
   ];
 
-  const STAGES = [
-    {
-      id: "park-1",
-      name: "공원 낮",
-      hint: "천천히",
-      unlockScore: 0,
-      tint: null,
-      trap: 0.16,
-      intervalBoost: 0,
-      maxUpAdd: 0,
-      burstAdd: 0,
-      stayMin: 2.1,
-      stayVar: 1.2,
-      riseTime: 0.32,
-      hideTime: 0.18,
-    },
-    {
-      id: "park-2",
-      name: "공원 노을",
-      hint: "빠르게",
-      unlockScore: 90,
-      tint: "rgba(255,120,50,0.18)",
-      trap: 0.24,
-      intervalBoost: 0.045,
-      maxUpAdd: 12,
-      burstAdd: 2,
-      stayMin: 1.25,
-      stayVar: 0.7,
-      riseTime: 0.22,
-      hideTime: 0.11,
-    },
-    {
-      id: "park-3",
-      name: "공원 밤",
-      hint: "아주 빠르게",
-      unlockScore: 160,
-      tint: "rgba(18,28,70,0.36)",
-      trap: 0.3,
-      intervalBoost: 0.075,
-      maxUpAdd: 24,
-      burstAdd: 4,
-      stayMin: 0.75,
-      stayVar: 0.45,
-      riseTime: 0.16,
-      hideTime: 0.07,
-    },
-  ];
-
   const keys = Object.create(null);
   const joy = { x: 0, y: 0, pointerId: null };
   let viewW = 800;
@@ -601,11 +637,9 @@
   let coins = 0;
   let combo = 0;
   let comboTimer = 0;
-  let round = 1;
-  let timeLeft = ROUND_TIME;
+  let life = LIFE_MAX;
   let spawnAcc = 0;
   let playTime = 0;
-  let roundCaught = 0;
   let totalCaught = 0;
   let demoTime = 0;
   let hammerPulse = 0;
@@ -631,11 +665,9 @@
   let runScore = 0;
   let progress = {
     wallet: 0,
-    stageId: "park-1",
-    unlocked: ["park-1"],
     ownedOutfits: [],
     ownedHammers: [],
-    best: {},
+    best: 0,
   };
 
   function progressKey() {
@@ -653,41 +685,34 @@
   function loadProgress() {
     progress = {
       wallet: 0,
-      stageId: "park-1",
-      unlocked: ["park-1"],
       ownedOutfits: freeOutfitIds(),
       ownedHammers: freeHammerIds(),
-      best: {},
+      best: 0,
     };
     try {
       const raw = JSON.parse(localStorage.getItem(progressKey()) || "{}");
       if (typeof raw.wallet === "number") progress.wallet = Math.max(0, raw.wallet);
-      if (STAGES.some((s) => s.id === raw.stageId)) progress.stageId = raw.stageId;
-      if (Array.isArray(raw.unlocked)) {
-        progress.unlocked = STAGES.map((s) => s.id).filter(
-          (id) => raw.unlocked.includes(id) || id === "park-1"
-        );
-      }
       if (Array.isArray(raw.ownedOutfits)) {
         progress.ownedOutfits = [...new Set([...freeOutfitIds(), ...raw.ownedOutfits])];
       }
       if (Array.isArray(raw.ownedHammers)) {
         progress.ownedHammers = [...new Set([...freeHammerIds(), ...raw.ownedHammers])];
       }
-      if (raw.best && typeof raw.best === "object") progress.best = raw.best;
+      if (typeof raw.best === "number") progress.best = Math.max(0, raw.best);
+      else if (raw.best && typeof raw.best === "object") {
+        progress.best = Math.max(
+          0,
+          ...Object.values(raw.best).filter((n) => typeof n === "number")
+        );
+      }
     } catch (err) {
       /* keep defaults */
     }
-    if (!progress.unlocked.includes(progress.stageId)) progress.stageId = "park-1";
   }
 
   function persistProgress() {
     localStorage.setItem(progressKey(), JSON.stringify(progress));
     syncWalletUI();
-  }
-
-  function currentStage() {
-    return STAGES.find((s) => s.id === progress.stageId) || STAGES[0];
   }
 
   function ownsOutfit(id) {
@@ -706,6 +731,7 @@
     progress.wallet -= o.cost;
     progress.ownedOutfits.push(id);
     persistProgress();
+    sfx("buy");
     return true;
   }
 
@@ -715,6 +741,7 @@
     progress.wallet -= h.cost;
     progress.ownedHammers.push(id);
     persistProgress();
+    sfx("buy");
     return true;
   }
 
@@ -725,26 +752,15 @@
   function settleRun(title, note) {
     const payout = scoreToCoins(runScore);
     progress.wallet += payout;
-    const st = currentStage();
-    progress.best[st.id] = Math.max(progress.best[st.id] || 0, runScore);
-    const idx = STAGES.findIndex((s) => s.id === st.id);
-    const next = STAGES[idx + 1];
-    let extra = "";
-    if (next && runScore >= next.unlockScore && !progress.unlocked.includes(next.id)) {
-      progress.unlocked.push(next.id);
-      extra = `${next.name}이 열렸습니다.`;
-    } else if (next && !progress.unlocked.includes(next.id)) {
-      extra = `${next.name}은 ${next.unlockScore}점이면 열립니다.`;
-    }
+    progress.best = Math.max(progress.best || 0, runScore);
     persistProgress();
     if (el.resultTitle) el.resultTitle.textContent = title;
     if (el.resultScore) el.resultScore.textContent = String(runScore);
     if (el.resultCoins) el.resultCoins.textContent = `+${payout}`;
     if (el.resultMoles) el.resultMoles.textContent = String(totalCaught);
     if (el.resultNote) {
-      const text = [note, extra].filter(Boolean).join(" ");
-      el.resultNote.textContent = text;
-      el.resultNote.classList.toggle("hidden", !text);
+      el.resultNote.textContent = note || "";
+      el.resultNote.classList.toggle("hidden", !note);
     }
   }
 
@@ -980,19 +996,13 @@
     const start = document.getElementById("btn-start");
     if (start) start.textContent = "시작";
     syncWalletUI();
-    if (ready) {
-      mountStageCards(el.titleStages, true);
-      mountStageCards(el.stageRow, false);
-    }
   }
 
   function updateProfileHome() {
-    const st = currentStage();
     if (el.profileStageNow) {
-      const best = progress.best[st.id] || 0;
-      el.profileStageNow.textContent = best
-        ? `다음 공원 · ${st.name} · 최고 ${best}`
-        : `다음 공원 · ${st.name}`;
+      el.profileStageNow.textContent = progress.best
+        ? `공원편 · 최고 ${progress.best}점`
+        : "공원편";
     }
   }
 
@@ -1000,11 +1010,9 @@
     profilePage = page;
     if (el.profileHome) el.profileHome.classList.toggle("hidden", page !== "home");
     if (el.profileCustom) el.profileCustom.classList.toggle("hidden", page !== "custom");
-    if (el.profileStages) el.profileStages.classList.toggle("hidden", page !== "stages");
-    const titles = { home: "캐릭터", custom: "코디", stages: "공원" };
+    const titles = { home: "캐릭터", custom: "코디" };
     if (el.profileHeading) el.profileHeading.textContent = titles[page] || "프로필";
     if (page === "custom") renderProfileStep();
-    if (page === "stages") mountStageCards(el.stageRow, false);
     if (page === "home") updateProfileHome();
   }
 
@@ -1012,39 +1020,6 @@
     const text = `코인 ${progress.wallet}`;
     if (el.titleWallet) el.titleWallet.textContent = text;
     if (el.profileWallet) el.profileWallet.textContent = text;
-  }
-
-  function mountStageCards(root, compact) {
-    if (!root) return;
-    root.innerHTML = "";
-    STAGES.forEach((st) => {
-      const locked = !progress.unlocked.includes(st.id);
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "stage-chip";
-      if (progress.stageId === st.id) btn.classList.add("selected");
-      if (locked) btn.classList.add("locked");
-      const name = document.createElement("b");
-      name.textContent = st.name;
-      const hint = document.createElement("small");
-      const best = progress.best[st.id] || 0;
-      if (locked) hint.textContent = `${st.unlockScore}점 필요`;
-      else if (compact) hint.textContent = best ? `최고 ${best}` : "기록 없음";
-      else hint.textContent = best ? `${st.hint} · 최고 ${best}` : st.hint;
-      btn.append(name, hint);
-      btn.disabled = locked;
-      btn.addEventListener("click", () => {
-        if (locked) return;
-        progress.stageId = st.id;
-        persistProgress();
-        mountStageCards(el.titleStages, true);
-        mountStageCards(el.stageRow, false);
-        updateProfileHome();
-        const start = document.getElementById("btn-start");
-        if (start) start.textContent = "시작";
-      });
-      root.append(btn);
-    });
   }
 
   function openProfile() {
@@ -1072,17 +1047,16 @@
     show("profile", false);
     show("login", false);
     show("result", false);
-    show("roundOver", false);
     show("hud", false);
     show("controls", false);
     show("briefing", true);
     const briefTitle = document.getElementById("briefing-title");
-    if (briefTitle) briefTitle.textContent = currentStage().name;
+    if (briefTitle) briefTitle.textContent = "공원편";
   }
 
   function beginPlay() {
     show("briefing", false);
-    startRound();
+    startPlay();
   }
 
   function rng(seed) {
@@ -1238,7 +1212,7 @@
     coins = 0;
     combo = 0;
     comboTimer = 0;
-    round = 1;
+    life = LIFE_MAX;
     totalCaught = 0;
     runScore = 0;
     playTime = 0;
@@ -1409,17 +1383,18 @@
     if (!empty.length) return;
     const hole = empty[(Math.random() * empty.length) | 0];
     let kind = "normal";
-    if (scene === "play" && !forceGold && Math.random() < currentStage().trap) {
+    if (scene === "play" && !forceGold && Math.random() < difficulty().trap) {
       kind = ["skunk", "rabbit", "raccoon"][(Math.random() * 3) | 0];
     } else if (forceGold || Math.random() < 0.12) {
       kind = "gold";
     }
+    const d = difficulty();
     hole.mole = {
       kind,
       state: "rise",
       t: 0,
       height: 0,
-      stay: currentStage().stayMin + Math.random() * currentStage().stayVar,
+      stay: d.stayMin + Math.random() * d.stayVar,
       bob: Math.random() * Math.PI * 2,
     };
     sfx("pop");
@@ -1445,8 +1420,8 @@
     const gain = Math.round(base * upgradeValue("luck") * (1 + Math.min(combo, 12) * 0.08));
     coins += gain;
     runScore += gain;
-    roundCaught += 1;
     totalCaught += 1;
+    life = Math.min(LIFE_MAX, life + (mole.kind === "gold" ? 18 : 10) + Math.min(combo, 8));
     shake = mole.kind === "gold" ? 8 : 5;
     sfx("hit");
     sfx("coin");
@@ -1502,6 +1477,7 @@
   }
 
   function gameOver(reason) {
+    if (scene === "result") return;
     soaked = 0;
     stunKind = null;
     scene = "result";
@@ -1558,11 +1534,10 @@
     }
   }
 
-  function startRound() {
+  function startPlay() {
     scene = "play";
-    timeLeft = ROUND_TIME;
+    life = LIFE_MAX;
     spawnAcc = 1;
-    roundCaught = 0;
     combo = 0;
     comboTimer = 0;
     holes.forEach((h) => {
@@ -1579,7 +1554,6 @@
     show("login", false);
     show("profile", false);
     show("briefing", false);
-    show("roundOver", false);
     show("result", false);
     show("soaked", false);
     show("hud", true);
@@ -1589,19 +1563,12 @@
     el.soaked.classList.remove("gas");
     el.soakCount.classList.remove("hidden");
     resetStick();
-    el.round.textContent = `${round}/${TOTAL_ROUNDS}`;
-  }
-
-  function nextRound() {
-    round += 1;
-    player.x = SAFE_SPAWN.x;
-    player.y = SAFE_SPAWN.y;
-    startRound();
+    syncHud();
   }
 
   // helper attached below after buttons exist
   function show(name, on) {
-    const node = name === "roundOver" ? el.roundOver : el[name];
+    const node = el[name];
     if (!node) return;
     node.classList.toggle("hidden", !on);
   }
@@ -1610,17 +1577,25 @@
     el.coins.textContent = String(coins);
     if (el.score) el.score.textContent = String(runScore);
     el.combo.textContent = String(combo);
-    el.time.textContent = String(Math.ceil(timeLeft));
-    el.round.textContent = `${round}/${TOTAL_ROUNDS}`;
+    const pct = clamp((life / LIFE_MAX) * 100, 0, 100);
+    if (el.lifeFill) el.lifeFill.style.width = `${pct}%`;
+    if (el.lifeChip) {
+      el.lifeChip.classList.toggle("low", pct <= 40 && pct > 18);
+      el.lifeChip.classList.toggle("critical", pct <= 18);
+    }
   }
 
   function difficulty() {
-    const st = currentStage();
-    const t = playTime + (round - 1) * 18;
+    const t = scene === "play" ? playTime : 0;
     return {
-      interval: Math.max(0.02, 0.1 - t * 0.0025 - st.intervalBoost),
-      maxUp: Math.min(80, 32 + Math.floor(t / 5) + st.maxUpAdd),
-      burst: (t > 24 ? 8 : t > 8 ? 6 : 4) + st.burstAdd,
+      interval: Math.max(0.022, 0.1 - t * 0.0022),
+      maxUp: Math.min(80, 28 + Math.floor(t / 4.5)),
+      burst: t > 50 ? 8 : t > 22 ? 6 : t > 8 ? 5 : 4,
+      trap: Math.min(0.32, 0.14 + t * 0.0032),
+      stayMin: Math.max(0.72, 2.15 - t * 0.022),
+      stayVar: Math.max(0.38, 1.15 - t * 0.012),
+      riseTime: Math.max(0.14, 0.32 - t * 0.0028),
+      hideTime: Math.max(0.07, 0.18 - t * 0.0018),
     };
   }
 
@@ -1639,7 +1614,7 @@
       if (!m) continue;
       m.bob += dt * 8;
       if (m.state === "rise") {
-        m.t += dt / (currentStage().riseTime || 0.32);
+        m.t += dt / (diff.riseTime || 0.32);
         m.height = clamp(m.t, 0, 1);
         if (m.t >= 1) {
           m.state = "up";
@@ -1653,7 +1628,7 @@
           m.t = 0;
         }
       } else if (m.state === "hide") {
-        m.t += dt / (currentStage().hideTime || 0.18);
+        m.t += dt / (diff.hideTime || 0.18);
         m.height = 1 - clamp(m.t, 0, 1);
         if (m.t >= 1) {
           hole.mole = null;
@@ -1824,28 +1799,12 @@
     });
   }
 
-  function endRound() {
-    if (stunKind === "skunk") {
-      recoverFromStun();
-      return;
-    }
-    soaked = 0;
-    stunKind = null;
-    carrots = [];
-    gasClouds = [];
-    show("soaked", false);
-    if (round >= TOTAL_ROUNDS) {
-      scene = "result";
-      show("controls", false);
-      show("hud", true);
-      show("result", true);
-      settleRun("결과");
-      return;
-    }
-    scene = "roundOver";
-    show("roundOver", true);
-    if (el.roundNum) el.roundNum.textContent = `${round} / ${TOTAL_ROUNDS}`;
-    if (el.roundMoles) el.roundMoles.textContent = String(roundCaught);
+  function drainLife(dt) {
+    if (stunKind === "skunk") return;
+    life -= (2.8 + playTime * 0.07) * dt;
+    if (life > 0) return;
+    life = 0;
+    gameOver("생명 바가 다 떨어졌습니다.");
   }
 
   function update(dt) {
@@ -1866,7 +1825,11 @@
     }
     if (scene === "play") {
       playTime += dt;
-      timeLeft -= dt;
+      drainLife(dt);
+      if (scene !== "play") {
+        syncHud();
+        return;
+      }
       if (soaked > 0) {
         soaked -= dt;
         if (stunKind !== "skunk") {
@@ -1878,14 +1841,12 @@
         updateMoles(dt);
         updateFx(dt);
         if (soaked <= 0) recoverFromStun();
-        if (timeLeft <= 0 && scene === "play") endRound();
         syncHud();
         return;
       }
       updatePlayer(dt);
       updateMoles(dt);
       updateFx(dt);
-      if (timeLeft <= 0) endRound();
       syncHud();
       return;
     }
@@ -3026,11 +2987,6 @@
       ctx.stroke();
     }
     ctx.restore();
-    const tint = currentStage().tint;
-    if (tint) {
-      ctx.fillStyle = tint;
-      ctx.fillRect(0, 0, viewW, viewH);
-    }
     if (stunKind === "skunk") {
       ctx.fillStyle = "rgba(150, 190, 40, 0.28)";
       ctx.fillRect(0, 0, viewW, viewH);
@@ -3151,14 +3107,8 @@
       profileStep = 0;
       showProfilePage("custom");
     });
-    document.getElementById("btn-page-stages").addEventListener("click", () => {
-      showProfilePage("stages");
-    });
     document.getElementById("btn-profile-to-title").addEventListener("click", () => {
       showTitle();
-    });
-    document.getElementById("btn-stages-back").addEventListener("click", () => {
-      showProfilePage("home");
     });
     document.getElementById("btn-profile-back").addEventListener("click", () => {
       if (profileStep === 0) {
@@ -3185,10 +3135,6 @@
     document.getElementById("btn-briefing-go").addEventListener("click", () => {
       ensureAudio();
       beginPlay();
-    });
-    document.getElementById("btn-next-round").addEventListener("click", () => {
-      ensureAudio();
-      nextRound();
     });
     document.getElementById("btn-retry").addEventListener("click", () => {
       ensureAudio();

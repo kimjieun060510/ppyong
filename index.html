@@ -43,13 +43,11 @@
         </div>
       </div>
       <div class="hud-right">
-        <div class="chip">
-          <span class="k">라운드</span>
-          <span id="round-count">1/6</span>
-        </div>
-        <div class="chip time">
-          <span class="k">시간</span>
-          <span id="time-left">40</span>
+        <div class="life-chip" id="life-chip">
+          <span class="k">생명</span>
+          <div class="life-track">
+            <i id="life-fill"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -87,8 +85,6 @@
           <p class="hello" id="title-hello"></p>
           <p class="wallet-line" id="title-wallet">코인 0</p>
           <canvas id="title-me" width="220" height="250"></canvas>
-          <p class="picker-label">공원</p>
-          <div id="title-stages" class="stage-row"></div>
           <div class="title-actions">
             <button id="btn-start" type="button" class="primary">시작</button>
             <button id="btn-open-profile" type="button">캐릭터</button>
@@ -113,12 +109,11 @@
 
         <div id="profile-home" class="profile-page">
           <canvas id="profile-me" width="220" height="250"></canvas>
-          <p class="stage-now" id="profile-stage-now">다음 공원 · 낮</p>
+          <p class="stage-now" id="profile-stage-now">공원편</p>
           <div class="profile-menu">
             <button id="btn-page-custom" type="button" class="primary">
               코디
             </button>
-            <button id="btn-page-stages" type="button">공원</button>
             <button id="btn-profile-to-title" type="button">돌아가기</button>
           </div>
         </div>
@@ -140,34 +135,27 @@
           </div>
         </div>
 
-        <div id="profile-stages" class="profile-page hidden">
-          <p class="picker-label">다음 판에서 시작할 공원을 고르세요.</p>
-          <div id="stage-row" class="stage-list"></div>
-          <div class="profile-nav">
-            <button id="btn-stages-back" type="button">돌아가기</button>
-          </div>
-        </div>
       </div>
     </div>
 
     <div id="briefing" class="overlay hidden">
       <div class="panel">
-        <h2 id="briefing-title">공원 낮</h2>
-        <p class="lead">두더지만 잡고, 나머지는 피하세요.</p>
+        <h2 id="briefing-title">공원편</h2>
+        <p class="lead">생명 바가 떨어지기 전에 두더지만 잡으세요.</p>
         <section class="rumors" aria-label="규칙">
           <p class="section-label">잡기</p>
           <article class="rumor" data-kind="mole">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>두더지</h3>
-              <p>잡으면 점수가 올라갑니다.</p>
+              <p>잡으면 점수와 생명이 올라갑니다.</p>
             </div>
           </article>
           <article class="rumor" data-kind="gold">
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>황금 두더지</h3>
-              <p>더 많은 점수를 줍니다.</p>
+              <p>점수와 생명을 더 많이 줍니다.</p>
             </div>
           </article>
           <p class="section-label">피하기</p>
@@ -197,30 +185,11 @@
             <span class="rumor-swatch" aria-hidden="true"></span>
             <div>
               <h3>연못</h3>
-              <p>빠지면 5초 정지. 시간은 그대로 갑니다.</p>
+              <p>빠지면 5초 정지. 생명 바는 그대로 줄어듭니다.</p>
             </div>
           </article>
         </section>
         <button id="btn-briefing-go" type="button" class="primary">시작</button>
-      </div>
-    </div>
-
-    <div id="round-over" class="overlay hidden">
-      <div class="panel">
-        <h2>라운드 종료</h2>
-        <ul class="stat-list">
-          <li>
-            <span>라운드</span>
-            <b id="round-num">1 / 6</b>
-          </li>
-          <li>
-            <span>두더지</span>
-            <b id="round-moles">0</b>
-          </li>
-        </ul>
-        <button id="btn-next-round" type="button" class="primary">
-          다음 라운드
-        </button>
       </div>
     </div>
 

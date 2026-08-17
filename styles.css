@@ -97,9 +97,48 @@ canvas#game {
   color: #b08628;
 }
 
-.chip.time {
-  min-width: 56px;
-  text-align: center;
+.life-chip {
+  pointer-events: none;
+  min-width: min(220px, 42vw);
+  background: rgba(255, 246, 228, 0.94);
+  border: 3px solid #2b3a24;
+  border-radius: 14px;
+  padding: 4px 10px 6px;
+  box-shadow: 0 3px 0 #2b3a24;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.life-chip .k {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #4a5a42;
+  line-height: 1;
+}
+
+.life-track {
+  height: 12px;
+  background: #d8c8a0;
+  border: 2px solid #2b3a24;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#life-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(#9dff6a, #4cbf3a);
+  transform-origin: left center;
+}
+
+.life-chip.low #life-fill {
+  background: linear-gradient(#ffd15c, #ff7a28);
+}
+
+.life-chip.critical #life-fill {
+  background: linear-gradient(#ff8a8a, #e23b3b);
 }
 
 #btn-hammer,
@@ -975,10 +1014,13 @@ canvas#game {
   }
 
   .hud-right {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: block;
     width: 100%;
-    gap: 6px;
+  }
+
+  .life-chip {
+    min-width: 0;
+    width: 100%;
   }
 
   .chip {
@@ -1042,6 +1084,22 @@ canvas#game {
 
   .chip .k {
     font-size: 9px;
+  }
+
+  .life-chip {
+    min-width: 168px;
+    padding: 3px 8px 5px;
+    box-shadow: 0 2px 0 #2b3a24;
+    border-width: 2px;
+    border-radius: 12px;
+  }
+
+  .life-chip .k {
+    font-size: 9px;
+  }
+
+  .life-track {
+    height: 10px;
   }
 
   #controls {
