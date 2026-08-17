@@ -324,6 +324,7 @@
   let slashes = [];
   let slashT = 0;
   let waterIFrames = 0;
+  let lastSfxAt = { pop: -9, miss: -9 };
   let avatar = {
     gender: "girl",
     outfitId: "lemon",
@@ -407,7 +408,13 @@
 
   function sfx(name) {
     if (!audioCtx) return;
-    if (name === "pop") tone(180, 0.12, "square", 0.04, 320);
+    const now = audioCtx.currentTime;
+    if (name === "pop") {
+      if (now - lastSfxAt.pop < 0.22) return;
+      lastSfxAt.pop = now;
+      tone(180, 0.12, "square", 0.04, 320);
+      return;
+    }
     if (name === "hit") {
       tone(140, 0.1, "sawtooth", 0.06, 60);
       tone(420, 0.08, "square", 0.03, 180);
@@ -416,7 +423,12 @@
       tone(660, 0.08, "sine", 0.05, 990);
     }
     if (name === "buy") tone(520, 0.16, "triangle", 0.05, 780);
-    if (name === "miss") tone(180, 0.14, "sine", 0.04, 90);
+    if (name === "miss") {
+      if (now - lastSfxAt.miss < 0.28) return;
+      lastSfxAt.miss = now;
+      tone(180, 0.14, "sine", 0.04, 90);
+      return;
+    }
     if (name === "swing") tone(240, 0.06, "triangle", 0.03, 120);
     if (name === "splash") {
       tone(90, 0.22, "sine", 0.06, 40);
@@ -616,10 +628,10 @@
       state: "rise",
       t: 0,
       height: 0,
-      stay: 3.4 + Math.random() * 1.6,
+      stay: 2.1 + Math.random() * 1.2,
       bob: Math.random() * Math.PI * 2,
     };
-    sfx("pop");
+    if (scene === "play") sfx("pop");
     burst(hole.x, hole.y - 8, isTrap(kind) ? "#c45c5c" : "#c9a36b", 7);
   }
 
@@ -848,9 +860,9 @@
   function difficulty() {
     const t = playTime + (round - 1) * 18;
     return {
-      interval: Math.max(0.08, 0.22 - t * 0.004),
-      maxUp: Math.min(36, 14 + Math.floor(t / 10)),
-      burst: t > 40 ? 4 : t > 16 ? 3 : 2,
+      interval: Math.max(0.035, 0.1 - t * 0.0025),
+      maxUp: Math.min(70, 32 + Math.floor(t / 5)),
+      burst: t > 24 ? 8 : t > 8 ? 6 : 4,
     };
   }
 
@@ -1081,11 +1093,9 @@
         player.runT += dt * 8;
         player.facing = Math.sin(demoTime * 0.8) >= 0 ? 0 : Math.PI;
       }
-      spawnAcc += dt;
-      if (spawnAcc > 0.28) {
-        spawnAcc = 0;
+      if (demoTime > 0.9) {
+        demoTime = 0;
         spawnMole(Math.random() < 0.2);
-        spawnMole(Math.random() < 0.15);
       }
       updateMoles(dt);
       updateFx(dt);
