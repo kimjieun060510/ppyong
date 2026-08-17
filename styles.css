@@ -10,11 +10,16 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
+  --ui: 1;
 }
 
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: calc(16px * var(--ui));
 }
 
 html,
@@ -44,13 +49,13 @@ canvas#game {
 
 #hud {
   position: fixed;
-  top: calc(8px + var(--safe-top));
-  left: calc(10px + var(--safe-left));
-  right: calc(10px + var(--safe-right));
+  top: calc(0.5rem + var(--safe-top));
+  left: calc(0.625rem + var(--safe-left));
+  right: calc(0.625rem + var(--safe-right));
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: start;
-  gap: 6px 8px;
+  gap: 0.375rem 0.5rem;
   pointer-events: none;
   z-index: 5;
 }
@@ -59,7 +64,7 @@ canvas#game {
 .hud-right {
   display: flex;
   flex-wrap: nowrap;
-  gap: 6px;
+  gap: 0.375rem;
   align-items: stretch;
   min-width: 0;
 }
@@ -67,11 +72,11 @@ canvas#game {
 .chip {
   pointer-events: none;
   background: rgba(255, 246, 228, 0.94);
-  border: 3px solid #2b3a24;
-  border-radius: 14px;
-  padding: 4px 10px 5px;
-  font-size: clamp(15px, 2.8vw, 18px);
-  box-shadow: 0 3px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 0.875rem;
+  padding: 0.25rem 0.625rem 0.3125rem;
+  font-size: 0.9375rem;
+  box-shadow: 0 0.1875rem 0 #2b3a24;
   white-space: nowrap;
   display: inline-flex;
   flex-direction: column;
@@ -79,11 +84,11 @@ canvas#game {
   justify-content: center;
   gap: 0;
   line-height: 1.15;
-  min-height: 36px;
+  min-height: 2.25rem;
 }
 
 .chip .k {
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.06em;
   color: #6b7a62;
   line-height: 1.2;
@@ -102,67 +107,67 @@ canvas#game {
   cursor: pointer;
   font-family: inherit;
   background: rgba(255, 246, 228, 0.94);
-  border: 3px solid #2b3a24;
-  border-radius: 14px;
-  padding: 6px 12px;
-  font-size: 16px;
-  box-shadow: 0 3px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 0.875rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  box-shadow: 0 0.1875rem 0 #2b3a24;
   color: var(--ink);
-  min-height: 36px;
+  min-height: 2.25rem;
 }
 
 .hud-btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #2b3a24;
+  transform: translateY(0.125rem);
+  box-shadow: 0 0.0625rem 0 #2b3a24;
 }
 
 .stack-actions {
   display: grid;
-  gap: 10px;
-  margin-top: 8px;
+  gap: 0.625rem;
+  margin-top: 0.5rem;
 }
 
 .stack-actions button:not(.primary) {
   font-family: inherit;
   cursor: pointer;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 16px;
-  padding: 10px 18px;
-  font-size: 18px;
-  box-shadow: 0 4px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1rem;
+  padding: 0.625rem 1.125rem;
+  font-size: 1.125rem;
+  box-shadow: 0 0.25rem 0 #2b3a24;
 }
 
 .stack-actions button:not(.primary):active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #2b3a24;
+  transform: translateY(0.1875rem);
+  box-shadow: 0 0.0625rem 0 #2b3a24;
 }
 
 .life-chip {
   pointer-events: none;
-  min-width: min(220px, 42vw);
+  min-width: min(13.75rem, 42vw);
   background: rgba(255, 246, 228, 0.94);
-  border: 3px solid #2b3a24;
-  border-radius: 14px;
-  padding: 4px 10px 6px;
-  box-shadow: 0 3px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 0.875rem;
+  padding: 0.25rem 0.625rem 0.375rem;
+  box-shadow: 0 0.1875rem 0 #2b3a24;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 0.1875rem;
 }
 
 .life-chip .k {
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.04em;
   color: #4a5a42;
   line-height: 1;
 }
 
 .life-track {
-  height: 12px;
+  height: 0.75rem;
   background: #d8c8a0;
-  border: 2px solid #2b3a24;
-  border-radius: 8px;
+  border: 0.125rem solid #2b3a24;
+  border-radius: 0.5rem;
   overflow: hidden;
 }
 
@@ -186,14 +191,14 @@ canvas#game {
 .primary {
   font-family: inherit;
   cursor: pointer;
-  border: 3px solid #2b3a24;
-  box-shadow: 0 4px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  box-shadow: 0 0.25rem 0 #2b3a24;
 }
 
 .primary:active,
 #btn-hammer:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #2b3a24;
+  transform: translateY(0.1875rem);
+  box-shadow: 0 0.0625rem 0 #2b3a24;
 }
 
 .overlay {
@@ -202,7 +207,7 @@ canvas#game {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: max(12px, var(--safe-top)) 16px max(14px, var(--safe-bottom));
+  padding: max(0.75rem, var(--safe-top)) 1rem max(0.875rem, var(--safe-bottom));
   background: rgba(20, 40, 16, 0.38);
   z-index: 10;
   overflow: hidden;
@@ -210,16 +215,16 @@ canvas#game {
 }
 
 .panel {
-  width: min(560px, 100%);
+  width: min(35rem, 100%);
   background: var(--cream);
-  border: 4px solid #2b3a24;
-  border-radius: 28px;
-  padding: 28px 24px 22px;
-  box-shadow: 0 10px 0 #2b3a24;
+  border: 0.25rem solid #2b3a24;
+  border-radius: 1.75rem;
+  padding: 1.75rem 1.5rem 1.375rem;
+  box-shadow: 0 0.625rem 0 #2b3a24;
   text-align: center;
   touch-action: pan-y;
   max-height: calc(
-    100dvh - max(12px, var(--safe-top)) - max(14px, var(--safe-bottom)) - 12px
+    100dvh - max(0.75rem, var(--safe-top)) - max(0.875rem, var(--safe-bottom)) - 0.75rem
   );
   min-height: 0;
   overflow: auto;
@@ -227,95 +232,95 @@ canvas#game {
 
 .app-logo {
   display: block;
-  width: 108px;
-  height: 108px;
-  margin: 0 auto 12px;
+  width: 6.75rem;
+  height: 6.75rem;
+  margin: 0 auto 0.75rem;
   object-fit: cover;
-  border: 3px solid #2b3a24;
-  border-radius: 24px;
-  box-shadow: 0 4px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1.5rem;
+  box-shadow: 0 0.25rem 0 #2b3a24;
   background: #6bb34d;
 }
 
 .title-panel h1 {
   margin: 0;
-  font-size: clamp(36px, 9vw, 56px);
+  font-size: 2.25rem;
   letter-spacing: 0.04em;
   line-height: 1.1;
 }
 
 .title-panel:has(#play-block:not(.hidden)) h1 {
-  font-size: clamp(28px, 7vw, 42px);
-  margin-bottom: 2px;
+  font-size: 1.75rem;
+  margin-bottom: 0.125rem;
 }
 
 .stage {
-  margin: 8px 0 14px;
-  font-size: 18px;
+  margin: 0.5rem 0 0.875rem;
+  font-size: 1.125rem;
   color: var(--grass-dark);
 }
 
 .eyebrow {
-  margin: 0 0 6px;
+  margin: 0 0 0.375rem;
   letter-spacing: 0.14em;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--grass-dark);
 }
 
 .lead {
-  margin: 0 0 16px;
-  font-size: 17px;
+  margin: 0 0 1rem;
+  font-size: 1.0625rem;
   line-height: 1.45;
   font-weight: 400;
   color: #4a5a42;
 }
 
 .hello {
-  margin: 0 0 6px;
-  font-size: 16px;
+  margin: 0 0 0.375rem;
+  font-size: 1rem;
   color: var(--grass-dark);
 }
 
 .home-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin: 0 0 16px;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
 }
 
 .home-stats.compact {
   grid-template-columns: 1fr 1fr;
-  margin: 0 0 14px;
+  margin: 0 0 0.875rem;
 }
 
 .home-stat {
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 16px;
-  padding: 8px 6px 10px;
-  box-shadow: 0 3px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1rem;
+  padding: 0.5rem 0.375rem 0.625rem;
+  box-shadow: 0 0.1875rem 0 #2b3a24;
   min-width: 0;
 }
 
 .home-stat span {
   display: block;
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.06em;
   color: #6b7a62;
 }
 
 .home-stat b {
   display: block;
-  margin-top: 2px;
-  font-size: clamp(16px, 4.4vw, 22px);
+  margin-top: 0.125rem;
+  font-size: 1.125rem;
   font-weight: 400;
   line-height: 1.15;
   word-break: break-all;
 }
 
 .section-label {
-  margin: 12px 0 6px;
-  font-size: 12px;
+  margin: 0.75rem 0 0.375rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: var(--grass-dark);
 }
@@ -326,10 +331,10 @@ canvas#game {
 
 .stat-list {
   list-style: none;
-  margin: 0 0 16px;
+  margin: 0 0 1rem;
   padding: 0;
   display: grid;
-  gap: 8px;
+  gap: 0.5rem;
   text-align: left;
 }
 
@@ -337,20 +342,20 @@ canvas#game {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
+  gap: 0.75rem;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 14px;
-  padding: 10px 14px;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 0.875rem;
+  padding: 0.625rem 0.875rem;
 }
 
 .stat-list span {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #6b7a62;
 }
 
 .stat-list b {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 400;
 }
 
@@ -358,11 +363,11 @@ canvas#game {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 2px;
+  gap: 0.125rem;
 }
 
 .stat-list small {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: #6b7a62;
 }
 
@@ -371,13 +376,13 @@ canvas#game {
 }
 
 .record-cheer {
-  margin: 0 0 14px;
-  padding: 10px 12px;
+  margin: 0 0 0.875rem;
+  padding: 0.625rem 0.75rem;
   background: #fff4c2;
-  border: 3px solid #c48a00;
-  border-radius: 16px;
+  border: 0.1875rem solid #c48a00;
+  border-radius: 1rem;
   color: #9a6b00;
-  font-size: 22px;
+  font-size: 1.375rem;
 }
 
 .record-cheer.pop {
@@ -386,7 +391,7 @@ canvas#game {
 
 .panel.got-record {
   border-color: #c48a00;
-  box-shadow: 0 10px 0 #c48a00;
+  box-shadow: 0 0.625rem 0 #c48a00;
 }
 
 @keyframes pop-record {
@@ -402,70 +407,70 @@ canvas#game {
 }
 
 .best-line {
-  margin: 0 0 10px;
-  font-size: 15px;
+  margin: 0 0 0.625rem;
+  font-size: 0.9375rem;
   color: #4a5a42;
 }
 
 .note {
-  margin: 0 0 16px;
-  font-size: 15px;
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
   line-height: 1.4;
   color: var(--grass-dark);
 }
 
 .stage-now {
-  margin: 0 0 16px;
-  font-size: 15px;
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
   color: #4a5a42;
   text-align: center;
 }
 
 .howto {
   text-align: left;
-  margin: 0 0 22px;
-  padding: 0 8px 0 22px;
-  font-size: 16px;
+  margin: 0 0 1.375rem;
+  padding: 0 0.5rem 0 1.375rem;
+  font-size: 1rem;
   line-height: 1.55;
 }
 
 .rumors {
   display: grid;
-  gap: 8px;
-  margin: 0 0 16px;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
   text-align: left;
 }
 
 .rumor {
   display: grid;
-  grid-template-columns: 18px 1fr;
-  gap: 10px;
+  grid-template-columns: 1.125rem 1fr;
+  gap: 0.625rem;
   align-items: start;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 16px;
-  padding: 10px 12px;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1rem;
+  padding: 0.625rem 0.75rem;
 }
 
 .rumor h3 {
-  margin: 0 0 2px;
-  font-size: 17px;
+  margin: 0 0 0.125rem;
+  font-size: 1.0625rem;
   font-weight: 400;
 }
 
 .rumor p {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.4;
   color: #4a5a42;
 }
 
 .rumor-swatch {
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
-  border-radius: 6px;
-  border: 2px solid #2b3a24;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.125rem;
+  border-radius: 0.375rem;
+  border: 0.125rem solid #2b3a24;
 }
 
 .rumor[data-kind="mole"] .rumor-swatch {
@@ -493,13 +498,13 @@ canvas#game {
 }
 
 .picker {
-  margin: 0 0 18px;
+  margin: 0 0 1.125rem;
   text-align: left;
 }
 
 .picker-label {
-  margin: 0 0 8px;
-  font-size: 15px;
+  margin: 0 0 0.5rem;
+  font-size: 0.9375rem;
   letter-spacing: 0.04em;
   color: #3f8a32;
 }
@@ -507,24 +512,24 @@ canvas#game {
 .char-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 0.625rem;
+  margin-bottom: 0.875rem;
 }
 
 .char-card {
   font-family: inherit;
   cursor: pointer;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 20px;
-  padding: 8px 8px 10px;
-  box-shadow: 0 4px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1.25rem;
+  padding: 0.5rem 0.5rem 0.625rem;
+  box-shadow: 0 0.25rem 0 #2b3a24;
   color: inherit;
 }
 
 .char-card.selected {
   background: #fff4c2;
-  box-shadow: 0 4px 0 #c48a00;
+  box-shadow: 0 0.25rem 0 #c48a00;
   border-color: #c48a00;
 }
 
@@ -534,21 +539,21 @@ canvas#game {
   height: auto;
   aspect-ratio: 8 / 9;
   background: linear-gradient(#9fd8ff, #b8e986);
-  border-radius: 14px;
+  border-radius: 0.875rem;
   pointer-events: none;
 }
 
 .char-card span {
   display: block;
-  margin-top: 8px;
+  margin-top: 0.5rem;
   text-align: center;
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 .outfit-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .outfit-chip {
@@ -556,49 +561,49 @@ canvas#game {
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   text-align: left;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 14px;
-  padding: 8px 10px;
-  box-shadow: 0 3px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 0.875rem;
+  padding: 0.5rem 0.625rem;
+  box-shadow: 0 0.1875rem 0 #2b3a24;
   color: inherit;
 }
 
 .outfit-chip.selected {
   background: #e7f8c8;
   border-color: #3f8a32;
-  box-shadow: 0 3px 0 #3f8a32;
+  box-shadow: 0 0.1875rem 0 #3f8a32;
 }
 
 .outfit-swatch {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  border: 2px solid #2b3a24;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  border: 0.125rem solid #2b3a24;
   flex: 0 0 auto;
   background: linear-gradient(135deg, var(--sw-a), var(--sw-b));
 }
 
 .outfit-chip b {
   display: block;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 400;
 }
 
 .outfit-chip small {
   display: block;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #6b7a62;
 }
 
 .coordi-block {
-  margin: 0 0 16px;
-  padding: 12px;
+  margin: 0 0 1rem;
+  padding: 0.75rem;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 18px;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1.125rem;
 }
 
 .char-row.compact .char-card canvas {
@@ -606,96 +611,96 @@ canvas#game {
 }
 
 .outfit-grid.compact {
-  margin-top: 8px;
+  margin-top: 0.5rem;
 }
 
 .hammer-studio {
   display: grid;
-  grid-template-columns: 88px 1fr;
-  gap: 10px;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.625rem;
   align-items: start;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 16px;
-  padding: 10px;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1rem;
+  padding: 0.625rem;
 }
 
 .hammer-studio canvas {
-  width: 88px;
-  height: 88px;
+  width: 5.5rem;
+  height: 5.5rem;
   background: #f3f0e6;
-  border-radius: 12px;
-  border: 2px solid #2b3a24;
+  border-radius: 0.75rem;
+  border: 0.125rem solid #2b3a24;
 }
 
 .color-row,
 .pattern-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .color-dot,
 .pattern-chip {
   font-family: inherit;
   cursor: pointer;
-  border: 3px solid #2b3a24;
+  border: 0.1875rem solid #2b3a24;
   background: #fff;
   color: inherit;
   padding: 0;
 }
 
 .color-dot {
-  width: 26px;
-  height: 26px;
+  width: 1.625rem;
+  height: 1.625rem;
   border-radius: 50%;
 }
 
 .color-dot.selected,
 .pattern-chip.selected {
-  outline: 3px solid #c48a00;
-  outline-offset: 1px;
+  outline: 0.1875rem solid #c48a00;
+  outline-offset: 0.0625rem;
 }
 
 .pattern-chip {
-  border-radius: 999px;
-  padding: 4px 8px;
-  font-size: 13px;
-  box-shadow: 0 2px 0 #2b3a24;
+  border-radius: 62.4375rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8125rem;
+  box-shadow: 0 0.125rem 0 #2b3a24;
 }
 
 .custom-color {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin: 8px 0;
-  font-size: 13px;
+  gap: 0.375rem;
+  margin: 0.5rem 0;
+  font-size: 0.8125rem;
 }
 
 .custom-color input {
-  width: 36px;
-  height: 24px;
-  border: 2px solid #2b3a24;
-  border-radius: 6px;
+  width: 2.25rem;
+  height: 1.5rem;
+  border: 0.125rem solid #2b3a24;
+  border-radius: 0.375rem;
   padding: 0;
   background: #fff;
 }
 
 .char-card:active,
 .outfit-chip:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #2b3a24;
+  transform: translateY(0.125rem);
+  box-shadow: 0 0.0625rem 0 #2b3a24;
 }
 
 .primary {
   background: #ffd15c;
-  border-radius: 16px;
-  padding: 12px 22px;
-  font-size: 22px;
+  border-radius: 1rem;
+  padding: 0.75rem 1.375rem;
+  font-size: 1.375rem;
 }
 
 .shop-panel {
-  width: min(640px, 100%);
+  width: min(40rem, 100%);
   overflow: auto;
   text-align: left;
 }
@@ -704,51 +709,51 @@ canvas#game {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .panel h2 {
-  margin: 0 0 8px;
-  font-size: 28px;
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
 }
 
 .briefing-panel {
   display: flex;
   flex-direction: column;
-  padding: 16px 16px 14px;
+  padding: 1rem 1rem 0.875rem;
 }
 
 .briefing-panel h2 {
-  font-size: 24px;
-  margin: 0 0 4px;
+  font-size: 1.5rem;
+  margin: 0 0 0.25rem;
 }
 
 .briefing-panel .lead {
-  margin: 0 0 10px;
-  font-size: 15px;
+  margin: 0 0 0.625rem;
+  font-size: 0.9375rem;
 }
 
 .briefing-panel .rumors {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
-  gap: 6px;
-  margin: 0 0 10px;
+  gap: 0.375rem;
+  margin: 0 0 0.625rem;
 }
 
 .briefing-panel .rumor {
-  padding: 7px 10px;
-  border-width: 2px;
-  border-radius: 12px;
+  padding: 0.4375rem 0.625rem;
+  border-width: 0.125rem;
+  border-radius: 0.75rem;
 }
 
 .briefing-panel .rumor h3 {
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 
 .briefing-panel .rumor p {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .briefing-panel .stack-actions {
@@ -756,19 +761,19 @@ canvas#game {
   margin-top: 0;
 }
 
-@media (max-height: 860px) {
+@media (max-height: 1100px) {
   .briefing-panel .rumors {
     grid-template-columns: 1fr 1fr;
   }
 
   .briefing-panel .section-label {
     grid-column: 1 / -1;
-    margin: 2px 0 0;
+    margin: 0.125rem 0 0;
   }
 
   .briefing-panel .lead {
-    font-size: 14px;
-    margin-bottom: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -782,23 +787,23 @@ canvas#game {
 }
 
 .buy-panel {
-  width: min(400px, 100%);
-  padding: 22px 20px 18px;
+  width: min(25rem, 100%);
+  padding: 1.375rem 1.25rem 1.125rem;
 }
 
 .buy-panel .stat-list {
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 }
 
 .buy-panel .primary:disabled {
   opacity: 0.45;
   cursor: default;
   transform: none;
-  box-shadow: 0 2px 0 #2b3a24;
+  box-shadow: 0 0.125rem 0 #2b3a24;
 }
 
 .stun-overlay .panel {
-  width: min(400px, 100%);
+  width: min(25rem, 100%);
   pointer-events: none;
 }
 
@@ -811,17 +816,17 @@ canvas#game {
 }
 
 .countdown {
-  margin: 4px 0 0;
-  font-size: 40px;
+  margin: 0.25rem 0 0;
+  font-size: 2.5rem;
   line-height: 1;
   color: #1a6a8a;
 }
 
 #controls {
   position: fixed;
-  left: calc(34px + var(--safe-left));
-  right: calc(36px + var(--safe-right));
-  bottom: calc(24px + var(--safe-bottom));
+  left: calc(2.125rem + var(--safe-left));
+  right: calc(2.25rem + var(--safe-right));
+  bottom: calc(1.5rem + var(--safe-bottom));
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -830,8 +835,8 @@ canvas#game {
 }
 
 #stick {
-  width: 92px;
-  height: 92px;
+  width: 5.75rem;
+  height: 5.75rem;
   pointer-events: auto;
   touch-action: none;
   display: flex;
@@ -840,25 +845,25 @@ canvas#game {
 }
 
 #stick-base {
-  width: 92px;
-  height: 92px;
+  width: 5.75rem;
+  height: 5.75rem;
   border-radius: 50%;
   background:
     radial-gradient(circle at 46% 34%, #fff8ea 0%, #f3e4b8 42%, #d8c48a 100%);
-  border: 3px solid #2b3a24;
+  border: 0.1875rem solid #2b3a24;
   box-shadow:
-    0 4px 0 #2b3a24,
-    inset 0 2px 0 rgba(255, 255, 255, 0.5);
+    0 0.25rem 0 #2b3a24,
+    inset 0 0.125rem 0 rgba(255, 255, 255, 0.5);
   position: relative;
 }
 
 #stick-base::before {
   content: "";
   position: absolute;
-  inset: 9px;
+  inset: 0.5625rem;
   border-radius: 50%;
-  border: 2px solid #3f8a32;
-  box-shadow: inset 0 0 0 4px rgba(107, 179, 77, 0.28);
+  border: 0.125rem solid #3f8a32;
+  box-shadow: inset 0 0 0 0.25rem rgba(107, 179, 77, 0.28);
   pointer-events: none;
 }
 
@@ -871,39 +876,39 @@ canvas#game {
 }
 
 .stick-dir.north {
-  top: 7px;
+  top: 0.4375rem;
   left: 50%;
   transform: translateX(-50%);
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 8px solid #2b3a24;
+  border-left: 0.375rem solid transparent;
+  border-right: 0.375rem solid transparent;
+  border-bottom: 0.5rem solid #2b3a24;
 }
 
 .stick-dir.south {
-  bottom: 7px;
+  bottom: 0.4375rem;
   left: 50%;
   transform: translateX(-50%);
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid #2b3a24;
+  border-left: 0.375rem solid transparent;
+  border-right: 0.375rem solid transparent;
+  border-top: 0.5rem solid #2b3a24;
 }
 
 .stick-dir.east {
-  right: 7px;
+  right: 0.4375rem;
   top: 50%;
   transform: translateY(-50%);
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-left: 8px solid #2b3a24;
+  border-top: 0.375rem solid transparent;
+  border-bottom: 0.375rem solid transparent;
+  border-left: 0.5rem solid #2b3a24;
 }
 
 .stick-dir.west {
-  left: 7px;
+  left: 0.4375rem;
   top: 50%;
   transform: translateY(-50%);
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-right: 8px solid #2b3a24;
+  border-top: 0.375rem solid transparent;
+  border-bottom: 0.375rem solid transparent;
+  border-right: 0.5rem solid #2b3a24;
 }
 
 #stick.active #stick-base {
@@ -912,13 +917,13 @@ canvas#game {
 }
 
 #stick-knob {
-  width: 42px;
-  height: 42px;
+  width: 2.625rem;
+  height: 2.625rem;
   border-radius: 50%;
   background:
     radial-gradient(circle at 32% 28%, #fff8ea 0%, #ffe34a 46%, #e8c01c 100%);
-  border: 3px solid #2b3a24;
-  box-shadow: 0 3px 0 #2b3a24, inset 0 2px 0 rgba(255, 255, 255, 0.45);
+  border: 0.1875rem solid #2b3a24;
+  box-shadow: 0 0.1875rem 0 #2b3a24, inset 0 0.125rem 0 rgba(255, 255, 255, 0.45);
   position: absolute;
   left: 50%;
   top: 50%;
@@ -929,14 +934,14 @@ canvas#game {
 
 #btn-hammer {
   pointer-events: auto;
-  width: 92px;
-  height: 92px;
+  width: 5.75rem;
+  height: 5.75rem;
   margin: 0;
   border-radius: 50%;
   background:
     radial-gradient(circle at 32% 28%, #fff8ea 0%, #f0d7a0 42%, #d4a45a 100%);
-  border: 3px solid #2b3a24;
-  box-shadow: 0 4px 0 #2b3a24, inset 0 2px 0 rgba(255, 255, 255, 0.45);
+  border: 0.1875rem solid #2b3a24;
+  box-shadow: 0 0.25rem 0 #2b3a24, inset 0 0.125rem 0 rgba(255, 255, 255, 0.45);
   color: #fff;
   touch-action: none;
   user-select: none;
@@ -947,18 +952,18 @@ canvas#game {
 }
 
 #btn-hammer .mallet-icon {
-  width: 42px;
-  height: 42px;
+  width: 2.625rem;
+  height: 2.625rem;
   transform: rotate(-28deg);
-  filter: drop-shadow(0 3px 0 rgba(43, 58, 36, 0.35));
+  filter: drop-shadow(0 0.1875rem 0 rgba(43, 58, 36, 0.35));
   pointer-events: none;
 }
 
 #btn-hammer.held {
   background:
     radial-gradient(circle at 32% 28%, #ffe7c2 0%, #e2c078 50%, #c48a3a 100%);
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #2b3a24, inset 0 2px 0 rgba(255, 255, 255, 0.35);
+  transform: translateY(0.1875rem);
+  box-shadow: 0 0.125rem 0 #2b3a24, inset 0 0.125rem 0 rgba(255, 255, 255, 0.35);
 }
 
 #btn-hammer.held .mallet-icon {
@@ -969,92 +974,97 @@ canvas#game {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 0.625rem;
   width: 100%;
   background: #111;
   color: #fff;
-  border: 3px solid #111;
-  border-radius: 16px;
-  padding: 14px 18px;
+  border: 0.1875rem solid #111;
+  border-radius: 1rem;
+  padding: 0.875rem 1.125rem;
   font-family: inherit;
-  font-size: 20px;
+  font-size: 1.25rem;
   cursor: pointer;
-  box-shadow: 0 4px 0 #000;
+  box-shadow: 0 0.25rem 0 #000;
+}
+
+.apple-btn svg {
+  width: 1.125rem;
+  height: 1.375rem;
 }
 
 .apple-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #000;
+  transform: translateY(0.1875rem);
+  box-shadow: 0 0.0625rem 0 #000;
 }
 
 .wallet-line {
-  margin: 0 0 12px;
-  font-size: 15px;
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
   color: #9a6b00;
 }
 
 #profile-me {
   display: block;
-  width: min(180px, 48vw);
+  width: min(11.25rem, 48vw);
   height: auto;
-  margin: 4px auto 16px;
+  margin: 0.25rem auto 1rem;
   background: linear-gradient(#9fd8ff, #b8e986);
-  border: 3px solid #2b3a24;
-  border-radius: 22px;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1.375rem;
 }
 
 .profile-menu {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .gender-shop {
-  margin-top: 12px;
+  margin-top: 0.75rem;
 }
 
 .profile-menu button:not(.primary):not(.text-btn) {
   font-family: inherit;
   cursor: pointer;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 16px;
-  padding: 10px 18px;
-  font-size: 18px;
-  box-shadow: 0 4px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1rem;
+  padding: 0.625rem 1.125rem;
+  font-size: 1.125rem;
+  box-shadow: 0 0.25rem 0 #2b3a24;
 }
 
 .stage-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
-  margin: 0 0 14px;
+  gap: 0.5rem;
+  margin: 0 0 0.875rem;
 }
 
 .stage-row .stage-chip {
-  padding: 8px 4px;
+  padding: 0.5rem 0.25rem;
   text-align: center;
 }
 
 .stage-list {
   display: grid;
-  gap: 10px;
-  margin: 0 0 14px;
+  gap: 0.625rem;
+  margin: 0 0 0.875rem;
 }
 
 .stage-list .stage-chip {
   text-align: left;
-  padding: 12px 14px;
+  padding: 0.75rem 0.875rem;
 }
 
 .stage-chip {
   font-family: inherit;
   cursor: pointer;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 14px;
-  padding: 8px 6px;
-  box-shadow: 0 3px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 0.875rem;
+  padding: 0.5rem 0.375rem;
+  box-shadow: 0 0.1875rem 0 #2b3a24;
   color: inherit;
 }
 
@@ -1064,15 +1074,15 @@ canvas#game {
 }
 
 .stage-chip small {
-  margin-top: 2px;
-  font-size: 11px;
+  margin-top: 0.125rem;
+  font-size: 0.6875rem;
   color: #6b7a62;
 }
 
 .stage-chip.selected {
   background: #fff4c2;
   border-color: #c48a00;
-  box-shadow: 0 3px 0 #c48a00;
+  box-shadow: 0 0.1875rem 0 #c48a00;
 }
 
 .stage-chip.locked,
@@ -1086,54 +1096,54 @@ canvas#game {
 }
 
 .login-note {
-  margin: 14px 0 0;
-  font-size: 13px;
+  margin: 0.875rem 0 0;
+  font-size: 0.8125rem;
   color: #6b7a62;
   line-height: 1.4;
 }
 
 #title-me {
   display: block;
-  width: min(168px, 44vw);
+  width: min(10.5rem, 44vw);
   height: auto;
-  margin: 2px auto 12px;
+  margin: 0.125rem auto 0.75rem;
   background: linear-gradient(#9fd8ff, #b8e986);
-  border: 3px solid #2b3a24;
-  border-radius: 22px;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1.375rem;
 }
 
 .title-actions {
   display: grid;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .title-actions button:not(.primary) {
   font-family: inherit;
   cursor: pointer;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 16px;
-  padding: 10px 18px;
-  font-size: 18px;
-  box-shadow: 0 4px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1rem;
+  padding: 0.625rem 1.125rem;
+  font-size: 1.125rem;
+  box-shadow: 0 0.25rem 0 #2b3a24;
 }
 
 .profile-nav {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 0.625rem;
+  margin-top: 1rem;
 }
 
 .profile-nav button {
   font-family: inherit;
   cursor: pointer;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 14px;
-  padding: 10px 14px;
-  font-size: 18px;
-  box-shadow: 0 4px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 0.875rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 1.125rem;
+  box-shadow: 0 0.25rem 0 #2b3a24;
 }
 
 .profile-nav button.primary {
@@ -1149,7 +1159,7 @@ canvas#game {
 .account-actions {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .login-note a {
@@ -1163,7 +1173,7 @@ canvas#game {
   color: #6b7a62;
   text-decoration: underline;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.875rem;
   padding: 0;
 }
 
@@ -1174,7 +1184,7 @@ canvas#game {
 .hammer-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .hammer-card {
@@ -1182,52 +1192,52 @@ canvas#game {
   cursor: pointer;
   display: grid;
   justify-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   text-align: center;
   background: #fff;
-  border: 3px solid #2b3a24;
-  border-radius: 20px;
-  padding: 12px 10px 14px;
-  box-shadow: 0 4px 0 #2b3a24;
+  border: 0.1875rem solid #2b3a24;
+  border-radius: 1.25rem;
+  padding: 0.75rem 0.625rem 0.875rem;
+  box-shadow: 0 0.25rem 0 #2b3a24;
   color: inherit;
 }
 
 .hammer-card.selected {
   background: #fff4c2;
   border-color: #c48a00;
-  box-shadow: 0 4px 0 #c48a00;
+  box-shadow: 0 0.25rem 0 #c48a00;
 }
 
 .hammer-card canvas {
-  width: 220px;
-  height: 220px;
+  width: 13.75rem;
+  height: 13.75rem;
   max-width: 100%;
   background: #efe8d4;
-  border-radius: 16px;
-  border: 3px solid #2b3a24;
+  border-radius: 1rem;
+  border: 0.1875rem solid #2b3a24;
   pointer-events: none;
 }
 
 .hammer-card b {
   display: block;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 400;
 }
 
 .hammer-card small {
   display: block;
-  margin-top: 4px;
-  font-size: 14px;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
   color: #6b7a62;
 }
 
 .outfit-chip canvas {
-  width: 72px;
-  height: 88px;
+  width: 4.5rem;
+  height: 5.5rem;
   flex: 0 0 auto;
   background: linear-gradient(#9fd8ff, #b8e986);
-  border-radius: 12px;
-  border: 2px solid #2b3a24;
+  border-radius: 0.75rem;
+  border: 0.125rem solid #2b3a24;
   pointer-events: none;
 }
 
@@ -1237,7 +1247,7 @@ canvas#game {
   }
 }
 
-@media (orientation: portrait) and (max-width: 430px) {
+@media (orientation: portrait) and (max-width: 500px) {
   #hud {
     grid-template-columns: 1fr;
   }
@@ -1246,7 +1256,7 @@ canvas#game {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
     width: 100%;
-    gap: 6px;
+    gap: 0.375rem;
   }
 
   .hud-right {
@@ -1262,45 +1272,45 @@ canvas#game {
   .chip {
     width: 100%;
     min-width: 0;
-    font-size: 15px;
-    padding: 4px 4px 5px;
-    box-shadow: 0 3px 0 #2b3a24;
+    font-size: 0.9375rem;
+    padding: 0.25rem 0.25rem 0.3125rem;
+    box-shadow: 0 0.1875rem 0 #2b3a24;
   }
 
   #stick {
-    width: 88px;
-    height: 88px;
+    width: 5.5rem;
+    height: 5.5rem;
   }
 
   #stick-base {
-    width: 88px;
-    height: 88px;
+    width: 5.5rem;
+    height: 5.5rem;
   }
 
   #stick-knob {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
   #btn-hammer {
-    width: 88px;
-    height: 88px;
+    width: 5.5rem;
+    height: 5.5rem;
   }
 
   #btn-hammer .mallet-icon {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
   .hammer-card canvas {
-    width: 200px;
-    height: 200px;
+    width: 12.5rem;
+    height: 12.5rem;
   }
 }
 
 @media (orientation: landscape) {
   #hud {
-    top: max(6px, var(--safe-top));
+    top: max(0.375rem, var(--safe-top));
     grid-template-columns: 1fr auto;
   }
 
@@ -1310,100 +1320,100 @@ canvas#game {
   }
 
   .chip {
-    font-size: 14px;
-    padding: 3px 8px 4px;
-    min-height: 30px;
-    box-shadow: 0 2px 0 #2b3a24;
-    border-width: 2px;
-    border-radius: 12px;
+    font-size: 0.875rem;
+    padding: 0.1875rem 0.5rem 0.25rem;
+    min-height: 1.875rem;
+    box-shadow: 0 0.125rem 0 #2b3a24;
+    border-width: 0.125rem;
+    border-radius: 0.75rem;
   }
 
   .chip .k {
-    font-size: 9px;
+    font-size: 0.5625rem;
   }
 
   .hud-btn {
-    font-size: 14px;
-    min-height: 30px;
-    padding: 3px 10px;
-    box-shadow: 0 2px 0 #2b3a24;
-    border-width: 2px;
+    font-size: 0.875rem;
+    min-height: 1.875rem;
+    padding: 0.1875rem 0.625rem;
+    box-shadow: 0 0.125rem 0 #2b3a24;
+    border-width: 0.125rem;
   }
 
   .life-chip {
-    min-width: 168px;
-    padding: 3px 8px 5px;
-    box-shadow: 0 2px 0 #2b3a24;
-    border-width: 2px;
-    border-radius: 12px;
+    min-width: 10.5rem;
+    padding: 0.1875rem 0.5rem 0.3125rem;
+    box-shadow: 0 0.125rem 0 #2b3a24;
+    border-width: 0.125rem;
+    border-radius: 0.75rem;
   }
 
   .life-chip .k {
-    font-size: 9px;
+    font-size: 0.5625rem;
   }
 
   .life-track {
-    height: 10px;
+    height: 0.625rem;
   }
 
   #controls {
-    left: calc(32px + var(--safe-left));
-    right: calc(34px + var(--safe-right));
-    bottom: max(16px, var(--safe-bottom));
+    left: calc(2rem + var(--safe-left));
+    right: calc(2.125rem + var(--safe-right));
+    bottom: max(1rem, var(--safe-bottom));
   }
 
   #stick {
-    width: 78px;
-    height: 78px;
+    width: 4.875rem;
+    height: 4.875rem;
   }
 
   #stick-base {
-    width: 78px;
-    height: 78px;
+    width: 4.875rem;
+    height: 4.875rem;
   }
 
   #stick-knob {
-    width: 34px;
-    height: 34px;
+    width: 2.125rem;
+    height: 2.125rem;
   }
 
   #btn-hammer {
-    width: 78px;
-    height: 78px;
+    width: 4.875rem;
+    height: 4.875rem;
     margin: 0;
   }
 
   #btn-hammer .mallet-icon {
-    width: 36px;
-    height: 36px;
+    width: 2.25rem;
+    height: 2.25rem;
   }
 
   .overlay {
-    padding: max(8px, var(--safe-top)) calc(16px + var(--safe-right))
-      max(8px, var(--safe-bottom)) calc(16px + var(--safe-left));
+    padding: max(0.5rem, var(--safe-top)) calc(1rem + var(--safe-right))
+      max(0.5rem, var(--safe-bottom)) calc(1rem + var(--safe-left));
     align-items: stretch;
   }
 
   .panel {
     max-height: calc(
-      100dvh - max(8px, var(--safe-top)) - max(8px, var(--safe-bottom)) - 12px
+      100dvh - max(0.5rem, var(--safe-top)) - max(0.5rem, var(--safe-bottom)) - 0.75rem
     );
-    padding: 14px 18px 12px;
+    padding: 0.875rem 1.125rem 0.75rem;
     margin: auto;
   }
 
   .app-logo {
-    width: 52px;
-    height: 52px;
-    margin-bottom: 4px;
+    width: 3.25rem;
+    height: 3.25rem;
+    margin-bottom: 0.25rem;
   }
 
   .title-panel h1 {
-    font-size: clamp(24px, 6vh, 36px);
+    font-size: 1.5rem;
   }
 
   .hammer-card canvas {
-    width: 160px;
-    height: 160px;
+    width: 10rem;
+    height: 10rem;
   }
 }

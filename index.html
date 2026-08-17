@@ -12,6 +12,25 @@
     <link rel="icon" type="image/png" href="assets/app-icon.png" />
     <link rel="apple-touch-icon" href="assets/app-icon.png" />
     <title>뿅 두더지</title>
+    <script>
+      window.ppyongUiScale = function () {
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        var raw =
+          h >= w ? Math.min(w / 393, h / 852) : Math.min(w / 852, h / 393);
+        var ui = Math.min(1.28, Math.max(0.78, raw));
+        document.documentElement.style.setProperty("--ui", String(ui));
+        return ui;
+      };
+      window.ppyongUiScale();
+      window.addEventListener("resize", window.ppyongUiScale);
+      window.addEventListener("orientationchange", function () {
+        setTimeout(window.ppyongUiScale, 120);
+      });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", window.ppyongUiScale);
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
