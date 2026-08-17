@@ -45,6 +45,13 @@
 
     <div id="title" class="overlay">
       <div class="panel title-panel">
+        <img
+          class="app-logo"
+          src="assets/app-icon.png"
+          width="1024"
+          height="1024"
+          alt="뿅"
+        />
         <p class="eyebrow">PPYONG</p>
         <h1>뿅</h1>
         <p class="stage">공원편</p>
@@ -62,7 +69,13 @@
             </svg>
             Apple로 로그인
           </button>
-          <p class="login-note">iOS 출시용. 미리보기에서는 버튼만 눌러도 계정이 만들어져요.</p>
+          <p class="login-note">
+            iPhone 앱에서는 Apple 로그인 창이 열려요. 브라우저 미리보기에서는 이
+            기기 계정으로 진행돼요.
+          </p>
+          <p class="login-note">
+            <a href="privacy.html">개인정보 처리방침</a>
+          </p>
         </div>
 
         <div id="play-block" class="hidden">
@@ -90,8 +103,11 @@
           <p id="profile-account">Apple ID</p>
         </div>
         <p class="wallet-line" id="profile-wallet">보유 코인 0</p>
-        <p class="login-note">
+        <p class="login-note account-actions">
           <button id="btn-logout" type="button" class="text-btn">로그아웃</button>
+          <button id="btn-delete-account" type="button" class="text-btn danger">
+            계정 삭제
+          </button>
         </p>
 
         <div id="profile-home" class="profile-page">
@@ -246,6 +262,10 @@
       </button>
     </div>
 
+    <script>
+      window.PpyongApple = { isNative: function () { return false; } };
+    </script>
+    <script src="apple-native.js"></script>
     <script src="game.js"></script>
   </body>
 </html>
