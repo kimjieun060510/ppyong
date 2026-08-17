@@ -1,0 +1,21 @@
+{
+  "name": "ppyong",
+  "private": true,
+  "version": "1.0.0",
+  "description": "뿅 두더지 — 공원에서 두더지를 잡는 iOS 게임",
+  "scripts": {
+    "build:native": "esbuild src/apple-native.js --bundle --format=iife --outfile=apple-native.js --legal-comments=none",
+    "build:www": "npm run build:native && rm -rf www && mkdir -p www/assets && cp index.html game.js styles.css privacy.html apple-native.js www/ && cp -R assets/. www/assets/",
+    "sync": "npm run build:www && npx cap sync ios && bash scripts/apply-app-icon.sh && bash scripts/register-apple-plugin.sh",
+    "ios": "npm run sync && npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor-community/apple-sign-in": "^7.1.0",
+    "@capacitor/core": "^7.4.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/ios": "^7.4.4",
+    "esbuild": "^0.25.12"
+  }
+}

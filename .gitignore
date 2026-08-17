@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+www/
+/apple-native.js
+*.log
+.idea/
+.vscode/
+ios/App/Pods
+ios/App/App/public
+ios/DerivedData
+ios/App/App.xcworkspace/xcuserdata
+ios/App/App.xcodeproj/xcuserdata
+*.xcuserstate
