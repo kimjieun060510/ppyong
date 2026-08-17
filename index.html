@@ -77,6 +77,7 @@
         <div id="play-block" class="hidden">
           <p class="hello" id="title-hello"></p>
           <p class="wallet-line" id="title-wallet">코인 0</p>
+          <p class="best-line" id="title-best"></p>
           <canvas id="title-me" width="220" height="250"></canvas>
           <div class="title-actions">
             <button id="btn-start" type="button" class="primary">시작</button>
@@ -192,10 +193,21 @@
     <div id="result" class="overlay hidden">
       <div class="panel">
         <h2 id="result-title">결과</h2>
+        <p id="result-cheer" class="record-cheer hidden">최고기록 달성!</p>
         <ul class="stat-list">
           <li>
             <span>점수</span>
-            <b id="result-score">0</b>
+            <div class="stat-vals">
+              <b id="result-score">0</b>
+              <small id="result-score-cmp">최고 0</small>
+            </div>
+          </li>
+          <li>
+            <span>시간</span>
+            <div class="stat-vals">
+              <b id="result-time">0:00</b>
+              <small id="result-time-cmp">최고 0:00</small>
+            </div>
           </li>
           <li>
             <span>코인</span>

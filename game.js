@@ -47,10 +47,15 @@
     briefing: document.getElementById("briefing"),
     result: document.getElementById("result"),
     resultTitle: document.getElementById("result-title"),
+    resultCheer: document.getElementById("result-cheer"),
     resultScore: document.getElementById("result-score"),
+    resultScoreCmp: document.getElementById("result-score-cmp"),
+    resultTime: document.getElementById("result-time"),
+    resultTimeCmp: document.getElementById("result-time-cmp"),
     resultCoins: document.getElementById("result-coins"),
     resultMoles: document.getElementById("result-moles"),
     resultNote: document.getElementById("result-note"),
+    titleBest: document.getElementById("title-best"),
     pause: document.getElementById("pause"),
     controls: document.getElementById("controls"),
     lifeChip: document.getElementById("life-chip"),
@@ -752,6 +757,7 @@
     ownedOutfits: [],
     ownedHammers: [],
     best: 0,
+    bestTime: 0,
     shopRev: 2,
   };
 
@@ -773,6 +779,7 @@
       ownedOutfits: freeOutfitIds(),
       ownedHammers: freeHammerIds(),
       best: 0,
+      bestTime: 0,
       shopRev: 2,
     };
     try {
@@ -810,6 +817,7 @@
           ...Object.values(raw.best).filter((n) => typeof n === "number")
         );
       }
+      if (typeof raw.bestTime === "number") progress.bestTime = Math.max(0, raw.bestTime);
     } catch (err) {
       /* keep defaults */
     }
@@ -856,21 +864,88 @@
     return Math.max(1, Math.floor(score / 4));
   }
 
+  function formatTime(sec) {
+    const s = Math.max(0, Math.floor(sec));
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}:${String(r).padStart(2, "0")}`;
+  }
+
+  function bestLine() {
+    if (!progress.best && !progress.bestTime) return "";
+    const bits = [];
+    if (progress.best) bits.push(`최고 ${progress.best}점`);
+    if (progress.bestTime) bits.push(formatTime(progress.bestTime));
+    return bits.join(" · ");
+  }
+
+  function syncBestUI() {
+    const line = bestLine();
+    if (el.titleBest) {
+      el.titleBest.textContent = line;
+      el.titleBest.classList.toggle("hidden", !line);
+    }
+    if (el.profileStageNow) {
+      el.profileStageNow.textContent = line ? `공원편 · ${line}` : "공원편";
+    }
+  }
+
   function settleRun(title, note) {
     if (runSettled) return;
     runSettled = true;
     const payout = scoreToCoins(runScore);
+    const prevBest = progress.best || 0;
+    const prevBestTime = progress.bestTime || 0;
+    const beatScore = runScore > prevBest;
+    const beatTime = playTime > prevBestTime;
+    const firstRecord = prevBest <= 0 && prevBestTime <= 0;
+    if (beatScore) progress.best = runScore;
+    if (beatTime) progress.bestTime = playTime;
     progress.wallet += payout;
-    progress.best = Math.max(progress.best || 0, runScore);
     persistProgress();
-    if (el.resultTitle) el.resultTitle.textContent = title;
+    syncBestUI();
+
+    const record = !firstRecord && (beatScore || beatTime);
+    if (el.resultTitle) {
+      el.resultTitle.textContent = record ? "최고기록 달성!" : title;
+    }
+    if (el.resultCheer) {
+      let cheer = "";
+      if (record && beatScore && beatTime) cheer = "점수와 생존 시간 모두 갱신!";
+      else if (record && beatScore) cheer = "개인 최고 점수를 갱신했어요!";
+      else if (record && beatTime) cheer = "최장 생존 기록을 갱신했어요!";
+      else if (firstRecord && (runScore > 0 || playTime > 1)) cheer = "첫 기록이 저장됐어요!";
+      el.resultCheer.textContent = cheer;
+      el.resultCheer.classList.toggle("hidden", !cheer);
+      el.resultCheer.classList.remove("pop");
+      void el.resultCheer.offsetWidth;
+      if (cheer) el.resultCheer.classList.add("pop");
+    }
+    if (el.result) {
+      const panel = el.result.querySelector(".panel");
+      if (panel) panel.classList.toggle("got-record", record);
+    }
     if (el.resultScore) el.resultScore.textContent = String(runScore);
+    if (el.resultScoreCmp) {
+      el.resultScoreCmp.textContent = beatScore
+        ? prevBest ? `최고 ${prevBest} → ${runScore}` : "새 최고 점수"
+        : `최고 ${progress.best}`;
+      el.resultScoreCmp.classList.toggle("fresh", beatScore);
+    }
+    if (el.resultTime) el.resultTime.textContent = formatTime(playTime);
+    if (el.resultTimeCmp) {
+      el.resultTimeCmp.textContent = beatTime
+        ? prevBestTime ? `최고 ${formatTime(prevBestTime)} → ${formatTime(playTime)}` : "새 최장 생존"
+        : `최고 ${formatTime(progress.bestTime)}`;
+      el.resultTimeCmp.classList.toggle("fresh", beatTime);
+    }
     if (el.resultCoins) el.resultCoins.textContent = `+${payout}`;
     if (el.resultMoles) el.resultMoles.textContent = String(totalCaught);
     if (el.resultNote) {
       el.resultNote.textContent = note || "";
       el.resultNote.classList.toggle("hidden", !note);
     }
+    if (record) sfx("record");
   }
 
   function outfitsFor(gender) {
@@ -1113,11 +1188,7 @@
   }
 
   function updateProfileHome() {
-    if (el.profileStageNow) {
-      el.profileStageNow.textContent = progress.best
-        ? `공원편 · 최고 ${progress.best}점`
-        : "공원편";
-    }
+    syncBestUI();
   }
 
   function showProfilePage(page) {
@@ -1134,6 +1205,7 @@
     const text = `코인 ${progress.wallet}`;
     if (el.titleWallet) el.titleWallet.textContent = text;
     if (el.profileWallet) el.profileWallet.textContent = text;
+    syncBestUI();
   }
 
   function openProfile() {
@@ -1305,6 +1377,12 @@
     }
     if (name === "buy") {
       tone(520, 0.16, "triangle", 0.06, 780);
+      return;
+    }
+    if (name === "record") {
+      tone(523.25, 0.14, "sine", 0.08, 659.25);
+      tone(659.25, 0.16, "triangle", 0.07, 783.99);
+      tone(783.99, 0.28, "sine", 0.08, 1046.5);
       return;
     }
     if (name === "splash") {
