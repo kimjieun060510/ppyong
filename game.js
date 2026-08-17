@@ -1747,8 +1747,13 @@
     }
   }
 
-  function blockedByTree(x, y) {
-    return trees.some((t) => Math.hypot(t.x - x, t.y - y) < 26);
+  function blocked(x, y) {
+    if (trees.some((t) => Math.hypot(t.x - x, t.y - y) < 26)) return true;
+    return holes.some((h) => {
+      const dx = (x - h.x) / 30;
+      const dy = (y - h.y) / 18;
+      return dx * dx + dy * dy < 1;
+    });
   }
 
   function updatePlayer(dt) {
@@ -1775,8 +1780,8 @@
       const sp = upgradeValue("move");
       const nx = clamp(player.x + ix * sp * dt, 36, WORLD_W - 36);
       const ny = clamp(player.y + iy * sp * dt, 48, WORLD_H - 36);
-      if (!blockedByTree(nx, player.y)) player.x = nx;
-      if (!blockedByTree(player.x, ny)) player.y = ny;
+      if (!blocked(nx, player.y)) player.x = nx;
+      if (!blocked(player.x, ny)) player.y = ny;
       if (waterIFrames <= 0 && inPond(player.x, player.y, -14)) fallInWater();
     } else {
       player.runT *= 0.85;
