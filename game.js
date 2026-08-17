@@ -1727,21 +1727,25 @@
     }
 
     if (parts !== "body") {
-      ctx.lineWidth = 2.6;
+      ctx.lineWidth = 2.4;
       ctx.strokeStyle = INK;
       [-1, 1].forEach((side) => {
+        const sx = x + side * (rx * 0.7);
+        const sy = y - h * 0.36;
+        ctx.fillStyle = body;
         ctx.beginPath();
-        ctx.moveTo(x + side * (rx - 3), y - h * 0.28);
-        ctx.quadraticCurveTo(x + side * 8, y - 2, x + side * 7, y + 3);
+        ctx.ellipse(sx + side * 3.6, sy + 2, 7.4, 6.6, side * 0.48, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(sx + side * 7.2, sy + 11, 6.8, 8.4, side * 0.32, 0, Math.PI * 2);
+        ctx.fill();
         ctx.stroke();
         ctx.fillStyle = "#f2d4c2";
         ctx.beginPath();
-        ctx.ellipse(x + side * 8, y + 4, 4.2, 3.2, side * 0.3, 0, Math.PI * 2);
+        ctx.ellipse(sx + side * 8.2, sy + 18.5, 5.6, 4.8, side * 0.22, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = INK;
-        ctx.lineWidth = 2;
         ctx.stroke();
-        ctx.lineWidth = 2.6;
       });
     }
   }
