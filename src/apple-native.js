@@ -1,14 +1,12 @@
-import { Capacitor } from "@capacitor/core";
-import { SignInWithApple } from "@capacitor-community/apple-sign-in";
+import { Capacitor, registerPlugin } from "@capacitor/core";
+
+const PpyongAppleAuth = registerPlugin("PpyongAppleAuth");
 
 window.PpyongApple = {
   isNative() {
     return Capacitor.isNativePlatform();
   },
   async signIn() {
-    return SignInWithApple.authorize({
-      clientId: "com.kimjieun.ppyong",
-      scopes: "email name",
-    });
+    return PpyongAppleAuth.authorize();
   },
 };
