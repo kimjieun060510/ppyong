@@ -44,12 +44,13 @@ canvas#game {
 
 #hud {
   position: fixed;
-  top: calc(12px + var(--safe-top));
-  left: calc(12px + var(--safe-left));
-  right: calc(12px + var(--safe-right));
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
+  top: calc(8px + var(--safe-top));
+  left: calc(10px + var(--safe-left));
+  right: calc(10px + var(--safe-right));
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 6px 8px;
   pointer-events: none;
   z-index: 5;
 }
@@ -57,9 +58,10 @@ canvas#game {
 .hud-left,
 .hud-right {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  align-items: stretch;
+  min-width: 0;
 }
 
 .chip {
@@ -67,9 +69,16 @@ canvas#game {
   background: rgba(255, 246, 228, 0.94);
   border: 3px solid #2b3a24;
   border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 18px;
-  box-shadow: 0 4px 0 #2b3a24;
+  padding: 5px 10px;
+  font-size: clamp(13px, 2.6vw, 18px);
+  box-shadow: 0 3px 0 #2b3a24;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  line-height: 1.1;
+  min-height: 32px;
 }
 
 .chip.coin {
@@ -84,7 +93,7 @@ canvas#game {
 }
 
 .chip.time {
-  min-width: 72px;
+  min-width: 56px;
   text-align: center;
 }
 
@@ -102,8 +111,13 @@ canvas#game {
   pointer-events: auto;
   background: #fff1c2;
   border-radius: 999px;
-  padding: 6px 14px;
-  font-size: 18px;
+  padding: 5px 12px;
+  font-size: clamp(13px, 2.6vw, 18px);
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 #btn-shop:active,
@@ -961,39 +975,135 @@ canvas#game {
   }
 }
 
-@media (max-width: 520px) {
-  .chip {
-    font-size: 15px;
-    padding: 5px 10px;
+@media (orientation: portrait) and (max-width: 430px) {
+  #hud {
+    grid-template-columns: 1fr;
+  }
+
+  .hud-left,
+  .hud-right {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 6px;
+  }
+
+  .chip,
+  #btn-shop {
+    width: 100%;
+    min-width: 0;
+    font-size: 13px;
+    padding: 5px 4px;
+    box-shadow: 0 3px 0 #2b3a24;
   }
 
   #stick {
-    width: 150px;
-    height: 150px;
-  }
-
-  #stick-base {
     width: 132px;
     height: 132px;
   }
 
+  #stick-base {
+    width: 116px;
+    height: 116px;
+  }
+
   #stick-knob {
-    width: 60px;
-    height: 60px;
+    width: 52px;
+    height: 52px;
   }
 
   #btn-hammer {
-    width: 100px;
-    height: 100px;
+    width: 92px;
+    height: 92px;
   }
 
   #btn-hammer .mallet-icon {
-    width: 56px;
-    height: 56px;
+    width: 50px;
+    height: 50px;
   }
 
   .hammer-card canvas {
     width: 200px;
     height: 200px;
+  }
+}
+
+@media (orientation: landscape) {
+  #hud {
+    top: max(6px, var(--safe-top));
+    grid-template-columns: 1fr auto;
+  }
+
+  .hud-left,
+  .hud-right {
+    flex-wrap: nowrap;
+  }
+
+  .chip,
+  #btn-shop {
+    font-size: 13px;
+    padding: 4px 9px;
+    min-height: 28px;
+    box-shadow: 0 2px 0 #2b3a24;
+    border-width: 2px;
+  }
+
+  #controls {
+    left: calc(10px + var(--safe-left));
+    right: calc(10px + var(--safe-right));
+    bottom: max(8px, var(--safe-bottom));
+  }
+
+  #stick {
+    width: 118px;
+    height: 118px;
+  }
+
+  #stick-base {
+    width: 104px;
+    height: 104px;
+  }
+
+  #stick-knob {
+    width: 46px;
+    height: 46px;
+  }
+
+  #btn-hammer {
+    width: 78px;
+    height: 78px;
+    margin: 4px;
+  }
+
+  #btn-hammer .mallet-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .overlay {
+    padding: calc(8px + var(--safe-top)) calc(16px + var(--safe-right))
+      calc(8px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    align-items: stretch;
+  }
+
+  .panel {
+    max-height: calc(100dvh - 16px);
+    padding: 14px 18px 12px;
+    margin: auto;
+  }
+
+  .app-logo {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 4px;
+  }
+
+  .title-panel h1 {
+    font-size: clamp(28px, 8vh, 48px);
+  }
+
+  .hammer-card canvas {
+    width: 160px;
+    height: 160px;
   }
 }

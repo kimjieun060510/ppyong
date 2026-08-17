@@ -6,4 +6,8 @@ class PpyongBridgeViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(PpyongAppleAuth())
     }
+
+    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .allButUpsideDown
+    }
 }
