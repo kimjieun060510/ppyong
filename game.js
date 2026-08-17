@@ -1188,14 +1188,14 @@
   function placeHoles() {
     const list = [];
     let tries = 0;
-    while (list.length < 80 && tries < 9000) {
+    while (list.length < 220 && tries < 28000) {
       tries += 1;
       const x = 130 + Math.random() * (WORLD_W - 260);
       const y = 150 + Math.random() * (WORLD_H - 280);
       if (inPond(x, y, 80)) continue;
       if (Math.hypot(x - SAFE_SPAWN.x, y - SAFE_SPAWN.y) < 90) continue;
-      if (list.some((h) => dist(h, { x, y }) < 118)) continue;
-      if (trees.some((t) => Math.hypot(t.x - x, t.y - y) < 46)) continue;
+      if (list.some((h) => dist(h, { x, y }) < 92)) continue;
+      if (trees.some((t) => Math.hypot(t.x - x, t.y - y) < 40)) continue;
       list.push({ x, y, mole: null });
     }
     return list;
