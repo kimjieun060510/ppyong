@@ -455,7 +455,7 @@
     }
   }
 
-  function trySwing(auto) {
+  function trySwing() {
     if (!player || player.swingCd > 0 || soaked > 0) return;
     const range = upgradeValue("range");
     const targets = [];
@@ -466,7 +466,6 @@
       if (d <= range) targets.push({ hole, d });
     }
     targets.sort((a, b) => a.d - b.d);
-    if (auto && !targets.length) return;
 
     player.swingCd = upgradeValue("swing");
     player.swingT = 0.2;
@@ -637,8 +636,10 @@
         tx: px + Math.cos(a) * d,
         ty: py + Math.sin(a) * d * 0.7,
         t: 0,
-        rot: Math.random() * Math.PI,
+        rot: Math.random() * Math.PI * 2,
         delay: Math.random() * 0.2,
+        drawX: px,
+        drawY: py - 8,
       });
     }
   }
@@ -733,8 +734,6 @@
     } else {
       player.runT *= 0.85;
     }
-
-    trySwing(true);
   }
 
   function updateFx(dt) {
@@ -909,7 +908,7 @@
   function drawAnimal(kind, x, y) {
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    ctx.lineWidth = 2.6;
+    ctx.lineWidth = 2.4;
     const gold = kind === "gold";
     let body = "#8a542c";
     let belly = "#d4a06a";
@@ -932,123 +931,127 @@
       paw = "#8b8176";
     }
 
+    [-1, 1].forEach((side) => {
+      ctx.fillStyle = body;
+      ctx.beginPath();
+      ctx.ellipse(x + side * 22, y + 2, 9, 5.5, side * 0.45, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#f3b89a";
+      ctx.beginPath();
+      ctx.ellipse(x + side * 28, y + 3, 4.5, 3.6, side * 0.45, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = body;
+      ctx.beginPath();
+      ctx.ellipse(x + side * 11, y + 26, 6.5, 8.5, side * 0.12, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
     ctx.fillStyle = body;
     ctx.beginPath();
-    ctx.ellipse(x, y + 16, 26, 24, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y, 22, 28, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = "rgba(40, 24, 12, 0.28)";
     ctx.stroke();
     ctx.fillStyle = belly;
     ctx.beginPath();
-    ctx.ellipse(x, y + 18, 13, 14, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 7, 11, 14, 0, 0, Math.PI * 2);
     ctx.fill();
 
     if (kind === "skunk") {
       ctx.fillStyle = "#f4f1ea";
       ctx.beginPath();
-      ctx.moveTo(x, y + 36);
-      ctx.quadraticCurveTo(x - 7, y + 8, x, y - 28);
-      ctx.quadraticCurveTo(x + 7, y + 8, x, y + 36);
+      ctx.moveTo(x, y + 26);
+      ctx.quadraticCurveTo(x - 6, y, x, y - 26);
+      ctx.quadraticCurveTo(x + 6, y, x, y + 26);
       ctx.fill();
     }
 
     if (kind === "rabbit") {
       [-1, 1].forEach((side) => {
         ctx.save();
-        ctx.translate(x + side * 12, y - 18);
-        ctx.rotate(side * 0.14);
+        ctx.translate(x + side * 10, y - 24);
+        ctx.rotate(side * 0.16);
         ctx.fillStyle = body;
         ctx.beginPath();
-        ctx.ellipse(0, -20, 8, 24, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, -16, 7, 20, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = "#ffb7c8";
         ctx.beginPath();
-        ctx.ellipse(0, -18, 3.6, 16, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, -14, 3.2, 13, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       });
-    }
-
-    if (kind === "skunk" || kind === "raccoon") {
+    } else if (kind === "skunk" || kind === "raccoon") {
       [-1, 1].forEach((side) => {
         ctx.fillStyle = body;
         ctx.beginPath();
-        ctx.ellipse(x + side * 16, y - 20, 7, 8, side * 0.28, 0, Math.PI * 2);
+        ctx.ellipse(x + side * 14, y - 26, 6.5, 8, side * 0.3, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = kind === "raccoon" ? "#f0cbb8" : "#f4f1ea";
         ctx.beginPath();
-        ctx.ellipse(x + side * 16, y - 19, 3, 3.6, side * 0.28, 0, Math.PI * 2);
+        ctx.ellipse(x + side * 14, y - 25, 2.8, 3.4, side * 0.3, 0, Math.PI * 2);
         ctx.fill();
       });
+    } else {
+      ctx.fillStyle = body;
+      ctx.beginPath();
+      ctx.ellipse(x, y - 28, 4.2, 3.6, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    if (gold) {
+      ctx.fillStyle = "#ffe56b";
+      ctx.beginPath();
+      ctx.moveTo(x - 11, y - 26);
+      ctx.lineTo(x - 5, y - 40);
+      ctx.lineTo(x, y - 27);
+      ctx.lineTo(x + 5, y - 40);
+      ctx.lineTo(x + 11, y - 26);
+      ctx.closePath();
+      ctx.fill();
     }
 
     if (kind === "raccoon") {
       ctx.fillStyle = "#1c120c";
       ctx.beginPath();
-      ctx.ellipse(x, y - 6, 22, 9, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y - 8, 20, 8, 0, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    ctx.fillStyle = body;
-    ctx.beginPath();
-    ctx.ellipse(x, y - 8, 22, 20, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = belly;
-    ctx.beginPath();
-    ctx.ellipse(x, y - 2, 11, 9, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    if (kind !== "rabbit" && kind !== "skunk" && kind !== "raccoon") {
-      ctx.fillStyle = body;
-      ctx.beginPath();
-      ctx.ellipse(x, y - 26, 4.5, 4, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    if (gold) {
-      ctx.fillStyle = "#ffe56b";
-      ctx.beginPath();
-      ctx.moveTo(x - 12, y - 24);
-      ctx.lineTo(x - 6, y - 38);
-      ctx.lineTo(x, y - 25);
-      ctx.lineTo(x + 6, y - 38);
-      ctx.lineTo(x + 12, y - 24);
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    drawGlossyEyes(x, y - 10, kind === "skunk" || kind === "raccoon");
+    const faceY = y - 8;
+    drawGlossyEyes(x, faceY, kind === "skunk" || kind === "raccoon");
     if (kind === "skunk") {
       ctx.strokeStyle = "#4a1020";
       ctx.lineWidth = 2.4;
       ctx.beginPath();
-      ctx.moveTo(x - 14, y - 18);
-      ctx.lineTo(x - 5, y - 13);
-      ctx.moveTo(x + 14, y - 18);
-      ctx.lineTo(x + 5, y - 13);
+      ctx.moveTo(x - 13, faceY - 8);
+      ctx.lineTo(x - 5, faceY - 3);
+      ctx.moveTo(x + 13, faceY - 8);
+      ctx.lineTo(x + 5, faceY - 3);
       ctx.stroke();
     }
     ctx.fillStyle = kind === "skunk" || kind === "raccoon" ? "#1a120c" : "#ff8aa8";
     ctx.beginPath();
-    ctx.arc(x, y - 2, kind === "rabbit" ? 3.2 : 4.2, 0, Math.PI * 2);
+    ctx.arc(x, y, kind === "rabbit" ? 3.2 : 4.2, 0, Math.PI * 2);
     ctx.fill();
     if (kind !== "skunk" && kind !== "raccoon") {
       ctx.strokeStyle = "#3b2418";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(x - 5, y);
-      ctx.lineTo(x - 15, y - 2);
       ctx.moveTo(x - 5, y + 2);
-      ctx.lineTo(x - 14, y + 5);
-      ctx.moveTo(x + 5, y);
-      ctx.lineTo(x + 15, y - 2);
+      ctx.lineTo(x - 15, y);
+      ctx.moveTo(x - 5, y + 4);
+      ctx.lineTo(x - 14, y + 7);
       ctx.moveTo(x + 5, y + 2);
-      ctx.lineTo(x + 14, y + 5);
+      ctx.lineTo(x + 15, y);
+      ctx.moveTo(x + 5, y + 4);
+      ctx.lineTo(x + 14, y + 7);
       ctx.stroke();
     }
     ctx.strokeStyle = "#1a120c";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(x, y + 5, 5.5, 0.15, Math.PI - 0.15);
+    ctx.arc(x, y + 8, 5.5, 0.15, Math.PI - 0.15);
     ctx.stroke();
     return paw;
   }
@@ -1058,14 +1061,14 @@
     if (!m || m.height <= 0.02) return;
     const pop = m.height;
     const x = hole.x;
-    const chestY = hole.y - 10 - pop * 36 + Math.sin(m.bob) * 1.2;
+    const bodyY = hole.y - 8 - pop * 30 + Math.sin(m.bob) * 1.2;
     drawShadow(x, hole.y + 6, 16 + pop * 10, 7);
 
     ctx.save();
     ctx.beginPath();
     ctx.rect(x - 70, hole.y - 130, 140, 132);
     ctx.clip();
-    const paw = drawAnimal(m.kind, x, chestY);
+    const paw = drawAnimal(m.kind, x, bodyY);
     ctx.restore();
 
     ctx.fillStyle = "#6b4324";
@@ -1076,26 +1079,37 @@
   }
 
   function drawCarrot(c) {
-    const x = c.drawX;
-    const y = c.drawY;
+    const x = c.drawX ?? c.x;
+    const y = c.drawY ?? c.y;
     if (x == null) return;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(c.rot);
     ctx.fillStyle = "#ff8a2a";
     ctx.beginPath();
-    ctx.moveTo(0, 14);
-    ctx.lineTo(5, -8);
-    ctx.lineTo(-5, -8);
+    ctx.moveTo(0, 16);
+    ctx.quadraticCurveTo(7, 2, 6, -6);
+    ctx.lineTo(-6, -6);
+    ctx.quadraticCurveTo(-7, 2, 0, 16);
     ctx.closePath();
     ctx.fill();
-    ctx.fillStyle = "#5cb85c";
+    ctx.fillStyle = "#2e7d32";
     ctx.beginPath();
-    ctx.moveTo(0, -8);
-    ctx.lineTo(-4, -16);
-    ctx.lineTo(0, -11);
-    ctx.lineTo(4, -16);
-    ctx.closePath();
+    ctx.moveTo(0, -5);
+    ctx.quadraticCurveTo(-9, -12, -5, -22);
+    ctx.quadraticCurveTo(-2, -12, 0, -6);
+    ctx.fill();
+    ctx.fillStyle = "#43a047";
+    ctx.beginPath();
+    ctx.moveTo(0, -5);
+    ctx.quadraticCurveTo(0, -16, 1, -24);
+    ctx.quadraticCurveTo(3, -14, 0, -6);
+    ctx.fill();
+    ctx.fillStyle = "#66bb6a";
+    ctx.beginPath();
+    ctx.moveTo(0, -5);
+    ctx.quadraticCurveTo(9, -12, 6, -22);
+    ctx.quadraticCurveTo(2, -12, 0, -6);
     ctx.fill();
     ctx.restore();
   }
@@ -1354,7 +1368,7 @@
       e.preventDefault();
       hammer.classList.add("held");
       ensureAudio();
-      trySwing(false);
+      trySwing();
     });
     const releaseHammer = () => hammer.classList.remove("held");
     hammer.addEventListener("pointerup", releaseHammer);
@@ -1366,7 +1380,7 @@
       if (e.key === " " || e.code === "Space") {
         e.preventDefault();
         ensureAudio();
-        trySwing(false);
+        trySwing();
       }
       if (e.key.toLowerCase() === "e" && scene === "play") openShop(false);
     });
