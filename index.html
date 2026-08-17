@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#6bb34d" />
+    <title>공원 두더지 팡!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+
+    <div id="hud" class="hidden">
+      <div class="hud-left">
+        <div class="chip coin">
+          <span class="icon">●</span>
+          <span id="coin-count">0</span>
+        </div>
+        <div class="chip">
+          콤보 <span id="combo-count">0</span>
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="chip">라운드 <span id="round-count">1</span></div>
+        <div class="chip time"><span id="time-left">40</span>초</div>
+        <button id="btn-shop" type="button">상점</button>
+      </div>
+    </div>
+
+    <div id="title" class="overlay">
+      <div class="panel title-panel">
+        <p class="eyebrow">PARK MOLE CATCHER</p>
+        <h1>공원 두더지 팡!</h1>
+        <p class="lead">
+          공원 곳곳에 구멍이 열려요. 뛰어다니며 두더지를 잡고,
+          모은 코인으로 뿅망치를 업그레이드하세요.
+        </p>
+        <ul class="howto">
+          <li>이동: 키보드 WASD / 화면 왼쪽 조이스틱</li>
+          <li>공격: 스페이스 · 근처로 달려가기 · 오른쪽 뿅 버튼</li>
+        </ul>
+        <button id="btn-start" type="button" class="primary">게임 시작</button>
+      </div>
+    </div>
+
+    <div id="shop" class="overlay hidden">
+      <div class="panel shop-panel">
+        <div class="shop-head">
+          <h2>뿅망치 상점</h2>
+          <p>코인 <strong id="shop-coins">0</strong></p>
+        </div>
+        <div id="shop-list" class="shop-list"></div>
+        <div class="shop-actions">
+          <button id="btn-close-shop" type="button" class="primary">
+            다시 잡으러 가기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="round-over" class="overlay hidden">
+      <div class="panel">
+        <h2>라운드 끝!</h2>
+        <p id="round-summary" class="lead"></p>
+        <button id="btn-to-shop" type="button" class="primary">
+          상점에서 업그레이드
+        </button>
+      </div>
+    </div>
+
+    <div id="result" class="overlay hidden">
+      <div class="panel">
+        <h2>오늘 공원은 여기까지!</h2>
+        <p id="result-summary" class="lead"></p>
+        <button id="btn-retry" type="button" class="primary">한 판 더</button>
+      </div>
+    </div>
+
+    <div id="controls" class="hidden">
+      <div id="joy-zone">
+        <div id="joy-base">
+          <div id="joy-knob"></div>
+        </div>
+      </div>
+      <button id="btn-hammer" type="button" aria-label="뿅망치">뿅</button>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>

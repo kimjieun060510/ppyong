@@ -1,0 +1,314 @@
+:root {
+  --grass: #6bb34d;
+  --grass-dark: #3f8a32;
+  --cream: #fff6e4;
+  --ink: #2b3a24;
+  --gold: #f4c430;
+  --wood: #c47a3a;
+  --shadow: rgba(30, 50, 20, 0.28);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #4e9a3c;
+  font-family: "Jua", "Apple SD Gothic Neo", sans-serif;
+  color: var(--ink);
+  user-select: none;
+  touch-action: none;
+}
+
+canvas#game {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  inset: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#hud {
+  position: fixed;
+  top: calc(12px + var(--safe-top));
+  left: calc(12px + var(--safe-left));
+  right: calc(12px + var(--safe-right));
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hud-left,
+.hud-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip {
+  pointer-events: none;
+  background: rgba(255, 246, 228, 0.94);
+  border: 3px solid #2b3a24;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 18px;
+  box-shadow: 0 4px 0 #2b3a24;
+}
+
+.chip.coin {
+  color: #9a6b00;
+}
+
+.chip.coin .icon {
+  display: inline-block;
+  width: 0.9em;
+  color: var(--gold);
+  text-shadow: 0 0 0 #c48a00;
+}
+
+.chip.time {
+  min-width: 72px;
+  text-align: center;
+}
+
+#btn-shop,
+#btn-hammer,
+.primary,
+.shop-item button {
+  font-family: inherit;
+  cursor: pointer;
+  border: 3px solid #2b3a24;
+  box-shadow: 0 4px 0 #2b3a24;
+}
+
+#btn-shop {
+  pointer-events: auto;
+  background: #fff1c2;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 18px;
+}
+
+#btn-shop:active,
+.primary:active,
+.shop-item button:active,
+#btn-hammer:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #2b3a24;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));
+  background: rgba(20, 40, 16, 0.38);
+  z-index: 10;
+}
+
+.panel {
+  width: min(520px, 100%);
+  background: var(--cream);
+  border: 4px solid #2b3a24;
+  border-radius: 28px;
+  padding: 28px 24px 22px;
+  box-shadow: 0 10px 0 #2b3a24;
+  text-align: center;
+}
+
+.title-panel h1 {
+  margin: 0 0 10px;
+  font-size: clamp(34px, 8vw, 52px);
+  letter-spacing: -0.02em;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  letter-spacing: 0.14em;
+  font-size: 13px;
+  color: var(--grass-dark);
+}
+
+.lead {
+  margin: 0 0 16px;
+  font-size: 18px;
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+.howto {
+  text-align: left;
+  margin: 0 0 22px;
+  padding: 0 8px 0 22px;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.primary {
+  background: #ffd15c;
+  border-radius: 16px;
+  padding: 12px 22px;
+  font-size: 22px;
+}
+
+.shop-panel {
+  width: min(640px, 100%);
+  max-height: min(88vh, 820px);
+  overflow: auto;
+  text-align: left;
+}
+
+.shop-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.shop-head h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.shop-list {
+  display: grid;
+  gap: 10px;
+}
+
+.shop-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  align-items: center;
+  background: #fff;
+  border: 3px solid #2b3a24;
+  border-radius: 18px;
+  padding: 12px 14px;
+}
+
+.shop-item h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.shop-item p {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: #5a6b52;
+  grid-column: 1 / 2;
+}
+
+.shop-item button {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  background: #b6eb86;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.shop-item button:disabled {
+  background: #ddd;
+  color: #777;
+  box-shadow: 0 2px 0 #999;
+  cursor: default;
+  transform: none;
+}
+
+.shop-actions {
+  margin-top: 16px;
+  text-align: center;
+}
+
+#controls {
+  position: fixed;
+  left: calc(8px + var(--safe-left));
+  right: calc(8px + var(--safe-right));
+  bottom: calc(12px + var(--safe-bottom));
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  z-index: 6;
+  pointer-events: none;
+}
+
+#joy-zone {
+  width: 150px;
+  height: 150px;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+#joy-base {
+  width: 118px;
+  height: 118px;
+  margin: 16px;
+  border-radius: 50%;
+  background: rgba(255, 246, 228, 0.35);
+  border: 3px solid rgba(43, 58, 36, 0.45);
+  position: relative;
+}
+
+#joy-knob {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(255, 246, 228, 0.92);
+  border: 3px solid #2b3a24;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 0 #2b3a24;
+}
+
+#btn-hammer {
+  pointer-events: auto;
+  width: 92px;
+  height: 92px;
+  margin: 12px;
+  border-radius: 50%;
+  background: #ff8a5b;
+  color: #fff;
+  font-size: 32px;
+}
+
+@media (pointer: fine) {
+  #joy-zone {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 520px) {
+  .chip {
+    font-size: 15px;
+    padding: 5px 10px;
+  }
+
+  #btn-hammer {
+    width: 80px;
+    height: 80px;
+    font-size: 28px;
+  }
+}
