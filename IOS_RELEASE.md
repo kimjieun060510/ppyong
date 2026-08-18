@@ -13,7 +13,7 @@ Bundle ID는 `com.kimjieun.ppyong` 입니다.
 4. [App Store Connect](https://appstoreconnect.apple.com)에서 새 앱을 만듭니다.
    - Bundle ID: `com.kimjieun.ppyong`
    - 이름: 뿅 두더지
-   - 개인정보 처리방침 URL: 아래 `privacy.html`을 공개 주소로 올린 뒤 그 URL
+   - 개인정보 처리방침 URL: GitHub Pages 등 HTTPS 주소 (아래 2번 참고)
 
 ## 이 저장소에서 빌드
 
@@ -39,6 +39,8 @@ Xcode에서:
 
 ## App Store에 올리기
 
+빌드 번호(`CURRENT_PROJECT_VERSION`)는 TestFlight에 올릴 때마다 이전보다 크게 올립니다. 최소 iOS는 15입니다.
+
 1. Xcode 메뉴 Product → Archive
 2. Organizer에서 Distribute App → App Store Connect
 3. App Store Connect에서 스크린샷, 설명, 연령, 개인정보 설문(계정·게임 진행은 기기에만 저장)을 채웁니다.
@@ -52,4 +54,4 @@ Xcode에서:
 - Apple Developer 유료 등록·계약 서명
 - App Store Connect 업로드와 심사 제출
 - 실기기 서명에 쓰는 인증서를 다른 사람 맥에 설치하기
-- 개인정보 처리방침을 항상 켜져 있는 HTTPS 주소에 호스팅하기 (`privacy.html` 파일은 준비되어 있습니다)
+- 개인정보 처리방침을 항상 켜져 있는 HTTPS 주소에 호스팅하기 (`privacy.html`은 저장소 루트에 있음. GitHub Pages 사용법은 출시 안내 참고)
