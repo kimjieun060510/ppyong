@@ -997,6 +997,20 @@ canvas#game {
   box-shadow: 0 0.0625rem 0 #000;
 }
 
+.apple-btn.optional {
+  padding: 0.625rem 1.125rem;
+  font-size: 1.0625rem;
+}
+
+#guest-block {
+  margin-top: 1rem;
+}
+
+.title-panel:has(#guest-block:not(.hidden)) #title-me {
+  width: min(8.75rem, 38vw);
+  margin-bottom: 0.5rem;
+}
+
 .wallet-line {
   margin: 0 0 0.75rem;
   font-size: 0.9375rem;

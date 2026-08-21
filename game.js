@@ -888,7 +888,7 @@
     gender: "girl",
     outfitId: "g-lemon",
     hammerId: "cherry-stripe",
-    complete: false,
+    complete: true,
   };
   let pendingBuy = null;
   let profileStep = 0;
@@ -1180,7 +1180,7 @@
       gender: "girl",
       outfitId: "g-lemon",
       hammerId: "cherry-stripe",
-      complete: false,
+      complete: true,
     };
     avatar = { ...empty };
     try {
@@ -1198,7 +1198,8 @@
         const match = HAMMER_DESIGNS.find((h) => h.color === src.hammerColor);
         if (match) avatar.hammerId = match.id;
       }
-      avatar.complete = Boolean(src.complete);
+      if (typeof src.complete === "boolean") avatar.complete = src.complete;
+      else avatar.complete = true;
       ensureOutfitForGender();
     } catch (err) {
       /* keep defaults */
@@ -1246,13 +1247,60 @@
     };
   }
 
+  function paidUnlocks(p) {
+    const outfits = (p.ownedOutfits || []).filter((id) => {
+      const o = OUTFITS.find((item) => item.id === id);
+      return Boolean(o && o.cost);
+    });
+    const hammers = (p.ownedHammers || []).filter((id) => {
+      const h = HAMMER_DESIGNS.find((item) => item.id === id);
+      return Boolean(h && h.cost);
+    });
+    return { outfits, hammers };
+  }
+
+  function progressIsFresh(p) {
+    const paid = paidUnlocks(p);
+    return (
+      (p.wallet || 0) === 0 &&
+      (p.best || 0) === 0 &&
+      (p.bestTime || 0) === 0 &&
+      paid.outfits.length === 0 &&
+      paid.hammers.length === 0
+    );
+  }
+
   function finishLogin(next) {
+    const guestProgress = {
+      wallet: progress.wallet,
+      ownedOutfits: [...progress.ownedOutfits],
+      ownedHammers: [...progress.ownedHammers],
+      best: progress.best,
+      bestTime: progress.bestTime,
+      shopRev: progress.shopRev,
+    };
+    const guestAvatar = { ...avatar };
+    const fromGuest = !account;
     account = next;
     persistAccount();
+    let appleHadAvatar = false;
+    try {
+      const raw = JSON.parse(localStorage.getItem(avatarStorageKey()) || "null");
+      appleHadAvatar = Boolean(raw && raw.gender);
+    } catch (err) {
+      appleHadAvatar = false;
+    }
     loadProgress();
     loadAvatar();
-    if (avatar.complete) showTitle();
-    else openProfile();
+    if (fromGuest && progressIsFresh(progress) && !progressIsFresh(guestProgress)) {
+      progress = guestProgress;
+      persistProgress();
+    }
+    if (fromGuest && !appleHadAvatar) {
+      avatar = { ...guestAvatar, complete: true };
+      persistAvatar();
+    }
+    showTitle();
   }
 
   function isNativeApple() {
@@ -1328,25 +1376,6 @@
   function logout() {
     account = null;
     persistAccount();
-    avatar.complete = false;
-    show("profile", false);
-    show("briefing", false);
-    showTitle();
-  }
-
-  function deleteAccount() {
-    if (!account) return;
-    const ok = window.confirm(
-      "캐릭터와 기록이 모두 삭제됩니다. 계속할까요?"
-    );
-    if (!ok) return;
-    const id = account.id;
-    localStorage.removeItem(ACCOUNT_KEY);
-    localStorage.removeItem(`ppyong-progress-${id}`);
-    localStorage.removeItem(`ppyong-avatar-${id}`);
-    localStorage.removeItem("ppyong-local-id");
-    account = null;
-    avatar.complete = false;
     loadProgress();
     loadAvatar();
     show("profile", false);
@@ -1354,8 +1383,39 @@
     showTitle();
   }
 
-  function loggedIn() {
-    return Boolean(account && avatar.complete);
+  function deleteAccount() {
+    const ok = window.confirm(
+      "캐릭터와 기록이 모두 삭제됩니다. 계속할까요?"
+    );
+    if (!ok) return;
+    if (account) {
+      const id = account.id;
+      localStorage.removeItem(`ppyong-progress-${id}`);
+      localStorage.removeItem(`ppyong-avatar-${id}`);
+      localStorage.removeItem("ppyong-local-id");
+      account = null;
+      persistAccount();
+    } else {
+      localStorage.removeItem("ppyong-progress-guest");
+      localStorage.removeItem("ppyong-avatar-guest");
+    }
+    loadProgress();
+    loadAvatar();
+    show("profile", false);
+    show("briefing", false);
+    showTitle();
+  }
+
+  function syncAccountUI() {
+    if (el.profileAccount) {
+      el.profileAccount.textContent = account
+        ? account.apple
+          ? account.email || "Apple ID"
+          : "이 기기"
+        : "게스트";
+    }
+    const logoutBtn = document.getElementById("btn-logout");
+    if (logoutBtn) logoutBtn.classList.toggle("hidden", !account);
   }
 
   function showTitle() {
@@ -1369,9 +1429,8 @@
     show("soaked", false);
     closeBuyConfirm();
     show("title", true);
-    const ready = loggedIn();
-    if (el.guestBlock) el.guestBlock.classList.toggle("hidden", ready);
-    if (el.playBlock) el.playBlock.classList.toggle("hidden", !ready);
+    if (el.guestBlock) el.guestBlock.classList.toggle("hidden", Boolean(account));
+    if (el.playBlock) el.playBlock.classList.remove("hidden");
     if (el.titleHello) {
       const name = account && account.name && account.name !== "플레이어" ? account.name : "";
       el.titleHello.textContent = name;
@@ -1379,6 +1438,7 @@
     }
     const start = document.getElementById("btn-start");
     if (start) start.textContent = "시작";
+    syncAccountUI();
     syncWalletUI();
   }
 
@@ -1416,13 +1476,7 @@
     show("controls", false);
     show("profile", true);
     syncWalletUI();
-    if (el.profileAccount) {
-      el.profileAccount.textContent = account
-        ? account.apple
-          ? account.email || "Apple ID"
-          : "이 기기"
-        : "Apple ID";
-    }
+    syncAccountUI();
     renderProfileStep();
     showProfilePage(avatar.complete ? "home" : "custom");
   }
@@ -3323,7 +3377,7 @@
       const g = cv.getContext("2d");
       drawHammerPortrait(g, hammerOf(cv.dataset.hammerPreview), cv.width, cv.height);
     });
-    if (el.titleMe && scene === "title" && loggedIn()) {
+    if (el.titleMe && scene === "title") {
       const cv = el.titleMe;
       const g = cv.getContext("2d");
       paintPreviewBg(g, cv.width, cv.height);
@@ -3656,7 +3710,6 @@
     resetProgress();
     bindControls();
     showTitle();
-    if (account && !avatar.complete) openProfile();
     window.addEventListener("resize", resize);
     window.addEventListener("orientationchange", () => setTimeout(resize, 120));
     if (window.visualViewport) {
