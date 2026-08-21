@@ -249,7 +249,7 @@ canvas#game {
   line-height: 1.1;
 }
 
-.title-panel:has(#play-block:not(.hidden)) h1 {
+#title .title-panel h1 {
   font-size: 1.75rem;
   margin-bottom: 0.125rem;
 }
@@ -997,18 +997,14 @@ canvas#game {
   box-shadow: 0 0.0625rem 0 #000;
 }
 
-.apple-btn.optional {
-  padding: 0.625rem 1.125rem;
-  font-size: 1.0625rem;
+.welcome-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
 }
 
-#guest-block {
-  margin-top: 1rem;
-}
-
-.title-panel:has(#guest-block:not(.hidden)) #title-me {
-  width: min(8.75rem, 38vw);
-  margin-bottom: 0.5rem;
+.welcome-actions .primary {
+  width: 100%;
 }
 
 .wallet-line {

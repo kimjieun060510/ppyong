@@ -25,14 +25,13 @@
   const el = {
     hud: document.getElementById("hud"),
     login: document.getElementById("login"),
+    welcome: document.getElementById("welcome"),
     title: document.getElementById("title"),
     titleMe: document.getElementById("title-me"),
     titleHello: document.getElementById("title-hello"),
     titleWallet: document.getElementById("title-wallet"),
     titleBestTime: document.getElementById("title-best-time"),
     titleBestScore: document.getElementById("title-best-score"),
-    guestBlock: document.getElementById("guest-block"),
-    playBlock: document.getElementById("play-block"),
     profileWallet: document.getElementById("profile-wallet"),
     profileHeading: document.getElementById("profile-heading"),
     profileHome: document.getElementById("profile-home"),
@@ -882,6 +881,7 @@
   let waterIFrames = 0;
   let lastSfxAt = { pop: -9, miss: -9 };
   const ACCOUNT_KEY = "ppyong-account";
+  const GUEST_KEY = "ppyong-guest";
   const APPLE_CLIENT_ID = "";
   let account = null;
   let avatar = {
@@ -1376,11 +1376,12 @@
   function logout() {
     account = null;
     persistAccount();
+    localStorage.removeItem(GUEST_KEY);
     loadProgress();
     loadAvatar();
     show("profile", false);
     show("briefing", false);
-    showTitle();
+    showWelcome();
   }
 
   function deleteAccount() {
@@ -1399,11 +1400,12 @@
       localStorage.removeItem("ppyong-progress-guest");
       localStorage.removeItem("ppyong-avatar-guest");
     }
+    localStorage.removeItem(GUEST_KEY);
     loadProgress();
     loadAvatar();
     show("profile", false);
     show("briefing", false);
-    showTitle();
+    showWelcome();
   }
 
   function syncAccountUI() {
@@ -1416,10 +1418,12 @@
     }
     const logoutBtn = document.getElementById("btn-logout");
     if (logoutBtn) logoutBtn.classList.toggle("hidden", !account);
+    const loginBtn = document.getElementById("btn-login");
+    if (loginBtn) loginBtn.classList.toggle("hidden", Boolean(account));
   }
 
-  function showTitle() {
-    scene = "title";
+  function hideMenus() {
+    show("welcome", false);
     show("profile", false);
     show("briefing", false);
     show("result", false);
@@ -1428,9 +1432,29 @@
     show("controls", false);
     show("soaked", false);
     closeBuyConfirm();
+  }
+
+  function enteredApp() {
+    return Boolean(account || localStorage.getItem(GUEST_KEY));
+  }
+
+  function enterAsGuest() {
+    localStorage.setItem(GUEST_KEY, "1");
+    showTitle();
+  }
+
+  function showWelcome() {
+    scene = "welcome";
+    hideMenus();
+    show("title", false);
+    show("welcome", true);
+  }
+
+  function showTitle() {
+    scene = "title";
+    hideMenus();
+    show("welcome", false);
     show("title", true);
-    if (el.guestBlock) el.guestBlock.classList.toggle("hidden", Boolean(account));
-    if (el.playBlock) el.playBlock.classList.remove("hidden");
     if (el.titleHello) {
       const name = account && account.name && account.name !== "플레이어" ? account.name : "";
       el.titleHello.textContent = name;
@@ -1468,6 +1492,7 @@
     profileStep = 0;
     closeBuyConfirm();
     show("login", false);
+    show("welcome", false);
     show("title", false);
     show("briefing", false);
     show("result", false);
@@ -1483,6 +1508,7 @@
 
   function openBriefing() {
     scene = "briefing";
+    show("welcome", false);
     show("title", false);
     show("profile", false);
     show("login", false);
@@ -2029,6 +2055,7 @@
     slashT = 0;
     waterIFrames = 0;
     show("title", false);
+    show("welcome", false);
     show("login", false);
     show("profile", false);
     show("briefing", false);
@@ -2289,7 +2316,7 @@
   }
 
   function update(dt) {
-    if (scene === "title" || scene === "login" || scene === "profile" || scene === "briefing") {
+    if (scene === "title" || scene === "welcome" || scene === "login" || scene === "profile" || scene === "briefing") {
       demoTime += dt;
       if (player) {
         player.runT += dt * 8;
@@ -3612,7 +3639,15 @@
       player = makePlayer();
       openBriefing();
     });
+    document.getElementById("btn-guest").addEventListener("click", () => {
+      ensureAudio();
+      enterAsGuest();
+    });
     document.getElementById("btn-apple").addEventListener("click", () => {
+      ensureAudio();
+      signInWithApple();
+    });
+    document.getElementById("btn-login").addEventListener("click", () => {
       ensureAudio();
       signInWithApple();
     });
@@ -3709,7 +3744,8 @@
     player = makePlayer();
     resetProgress();
     bindControls();
-    showTitle();
+    if (enteredApp()) showTitle();
+    else showWelcome();
     window.addEventListener("resize", resize);
     window.addEventListener("orientationchange", () => setTimeout(resize, 120));
     if (window.visualViewport) {
